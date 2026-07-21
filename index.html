@@ -1881,8 +1881,24 @@ const origAddNote=addNote;
 addNote=function(){origAddNote();saveApp();};
 const origAddBook=addBook;
 addBook=function(){origAddBook();saveApp();};
-const origDrawFortune=drawFortune;
-drawFortune=function(){origDrawFortune();saveApp();};
+// Save fortune on draw
+const origDrawFortune=window.drawFortune||drawFortune;
+function drawFortune(){
+  if(fortuneDrawn)return;
+  fortuneDrawn=true;
+  const today=new Date();
+  const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
+  const idx=seed%fortunePool.length;
+  const f=fortunePool[idx];
+  const levelCls={'大吉':'daji','吉':'ji','小吉':'xiaoji','末吉':'moji','臭臭签':'chou'};
+  document.getElementById('fortune-level').textContent=f.l;
+  document.getElementById('fortune-level').className='fortune-level '+(levelCls[f.l]||'');
+  document.getElementById('fortune-msg').textContent=f.m;
+  document.getElementById('fortune-result').classList.add('show');
+  document.getElementById('fortune-btn').classList.add('drawn');
+  document.getElementById('fortune-btn').textContent='今日已抽';
+  saveApp();
+}
 const origAbebeAction=abebeAction;
 abebeAction=function(type){origAbebeAction(type);saveApp();};
 
@@ -2069,22 +2085,6 @@ const fortunePool=[
 ];
 
 let fortuneDrawn=false;
-function drawFortune(){
-  if(fortuneDrawn)return;
-  fortuneDrawn=true;
-  // Use date as seed for consistent daily fortune
-  const today=new Date();
-  const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
-  const idx=seed%fortunePool.length;
-  const f=fortunePool[idx];
-  const levelCls={'\u5927\u5409':'daji','\u5409':'ji','\u5c0f\u5409':'xiaoji','\u672b\u5409':'moji','\u81ed\u81ed\u7b7e':'chou'};
-  document.getElementById('fortune-level').textContent=f.l;
-  document.getElementById('fortune-level').className='fortune-level '+(levelCls[f.l]||'');
-  document.getElementById('fortune-msg').textContent=f.m;
-  document.getElementById('fortune-result').classList.add('show');
-  document.getElementById('fortune-btn').classList.add('drawn');
-  document.getElementById('fortune-btn').textContent='今日已抽';
-}
 
 // ===== ABEBE SYSTEM =====
 const abebeLines={
