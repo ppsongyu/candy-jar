@@ -326,7 +326,7 @@ body.night-mode .nav{background:var(--bg-card)}
 .abebe-action.hidden-btn{border-style:dashed;border-color:var(--pink-200)}
 
 .fortune-card{text-align:center;padding:20px 24px}
-.fortune-btn{display:inline-block;padding:10px 28px;border:1.5px solid var(--pink-300);border-radius:20px;background:transparent;color:var(--text-secondary);font-family:'SGH',Georgia,serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .2s}
+.fortune-btn{display:inline-block;padding:14px 36px;border:1.5px solid var(--pink-300);border-radius:20px;background:transparent;color:var(--text-secondary);font-family:'SGH',Georgia,serif;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;-webkit-user-select:none;user-select:none}
 .fortune-btn:active{background:var(--pink-100);transform:scale(.97)}
 .fortune-btn.drawn{border-color:var(--border-light);color:var(--text-muted);cursor:default}
 .fortune-result{display:none;animation:fadeIn .4s ease}
@@ -357,7 +357,7 @@ body.night-mode .nav{background:var(--bg-card)}
   <div class="content">
     <div class="page active" id="page-sweets">
       <div class="jar-area">
-        <div class="month-switcher"><button class="month-arrow" onclick="changeJarMonth(-1)">&lt;</button><div class="month-label" id="jar-month-label">7月</div><button class="month-arrow" onclick="changeJarMonth(1)">&gt;</button></div>
+        <div class="month-switcher"><button class="month-arrow" onclick="changeJarMonth(-1)">&lt;</button><div class="month-label" id="jar-month-label">2026年7月</div><button class="month-arrow" onclick="changeJarMonth(1)">&gt;</button></div>
         <div class="jar-container" onclick="shakeJar()"><img class="jar-img" src="./刚好罐子.png" alt="jar"><div class="jar-candies" id="jar-candies"></div></div>
         <div class="avatars">
           <div class="avatar-btn" onclick="openPutCandy()"><img class="avatar-img" src="./大头克.png" alt="宝宝克"><span class="avatar-label">放一颗糖</span></div>
@@ -454,7 +454,7 @@ body.night-mode .nav{background:var(--bg-card)}
       </div>
       <div class="card">
         <div class="fortune-card">
-          <div id="fortune-pre"><div class="fortune-btn" id="fortune-btn" onclick="drawFortune()">今日一签</div></div>
+          <div id="fortune-pre" style="padding:16px 0;cursor:pointer" onclick="drawFortune()"><div class="fortune-btn" id="fortune-btn">今日一签</div></div>
           <div class="fortune-result" id="fortune-result">
             <div class="fortune-level" id="fortune-level"></div>
             <div class="fortune-msg" id="fortune-msg"></div>
@@ -518,6 +518,11 @@ body.night-mode .nav{background:var(--bg-card)}
 <script>
 const candyFiles=['./未命名作品.png','./2.png','./3.png','./4.png','./5.png','./6.png','./7.png','./8.png','./9.png','./10.png','./11.png','./12.png','./13.png','./14.png','./15.png','./16.png','./17.png','./18.png','./19.png','./20.png'];
 const noteFiles=[{src:'./小螃蟹便签.png',name:'小螃蟹'},{src:'./小考拉便签.png',name:'小考拉'},{src:'./小象便签.png',name:'小象'},{src:'./小兔子便签.png',name:'小兔子'},{src:'./小狗便签.png',name:'小狗'},{src:'./小猪便签.png',name:'小猪'},{src:'./天使元宝团子便签.png',name:'天使团子'},{src:'./粉星星便签.png',name:'粉星星'},{src:'./紫色波点便签.png',name:'紫色波点'},{src:'./睡觉觉便签.png',name:'睡觉觉'}];
+// 预加载所有图片，避免每次显示时重新请求
+(function preloadImages(){
+  const allSrcs=[...candyFiles,...noteFiles.map(n=>n.src),'./刚好罐子.png','./大头克.png','./小头雨.png'];
+  allSrcs.forEach(src=>{const img=new Image();img.src=src;});
+})();
 const moods=['ʚ˃ᵕ˂ɞ','-᷅⤙-᷄','˃̣̣ᯅก','⁃⩊⁃','◞‸◟'];
 const dayMoods={1:{her:0,him:0},2:{her:3,him:0},3:{her:0,him:4},5:{her:1,him:3},12:{her:0,him:0},13:{her:2,him:4},14:{her:0,him:0},15:{her:3,him:1},17:{her:0,him:0},18:{her:0,him:0},19:{her:4,him:2}};
 const readingDays=[1,3,5,12,14,17,19];
@@ -570,7 +575,7 @@ function changeJarMonth(dir){
   jarMonth+=dir;
   if(jarMonth>11){jarMonth=0;jarYear++}
   if(jarMonth<0){jarMonth=11;jarYear--}
-  document.getElementById('jar-month-label').textContent=(jarMonth+1)+'月';
+  document.getElementById('jar-month-label').textContent=jarYear+'年'+(jarMonth+1)+'月';
   renderJarCandies();
 }
 // Override getCurrentMonthCandies to use jarMonth
@@ -1372,63 +1377,79 @@ const chatThemes=[
 // Chat engine
 let chatState={active:false,themeIdx:-1,convoIdx:-1,round:0,branch:[]};
 
-function getTodayChatPool(){
-  const h=new Date().getHours();
-  const pool=[];
-  chatThemes.forEach((t,ti)=>{
-    if(t.trigger==='night'&&(h>=22||h<6)) pool.push(...t.convos.map((_,ci)=>({ti,ci})));
-    else if(t.trigger==='season') pool.push(...t.convos.map((_,ci)=>({ti,ci})));
-    else if(t.trigger==='mood'&&abebeState.mood<50) pool.push(...t.convos.map((_,ci)=>({ti,ci})));
-    else if(t.trigger==='time') pool.push(...t.convos.map((_,ci)=>({ti,ci})));
-    else if(t.trigger==='random') pool.push(...t.convos.map((_,ci)=>({ti,ci})));
-  });
-  // Shuffle with daily seed
+// 每天固定选好3个对话存在这里，循环使用
+let todaysChatSlots=[];      // [{ti,ci}, {ti,ci}, {ti,ci}]
+let todaysChatSlotDate='';   // 用来判断是否需要重新抽签
+
+function buildTodaysChatSlots(){
   const today=new Date();
-  let seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
-  for(let i=pool.length-1;i>0;i--){seed=(seed*1103515245+12345)&0x7fffffff;const j=seed%(i+1);[pool[i],pool[j]]=[pool[j],pool[i]];}
-  return pool;
-}
+  const h=today.getHours();
+  const dateStr=today.toDateString();
+  if(todaysChatSlotDate===dateStr&&todaysChatSlots.length===3) return; // 今天已经抽好了
 
-let abebeChatUsedThemes=[];
-
-function openChat(){
-  const chatDateStr=new Date().toDateString();
-  if(abebeChatDate!==chatDateStr){abebeChatDate=chatDateStr;abebeChatCount=0;abebeChatUsedIndices=[];abebeChatUsedThemes=[];}
-  if(abebeChatCount>=3) return;
-  
-  // Build pool grouped by theme, then pick from different theme each time
-  const h=new Date().getHours();
+  // 根据当前时间段建候选池，按主题分组
   const themeGroups={};
   chatThemes.forEach((t,ti)=>{
     let include=false;
     if(t.trigger==='night'&&(h>=22||h<6)) include=true;
     else if(t.trigger==='season') include=true;
-    else if(t.trigger==='mood'&&abebeState.mood<50) include=true;
+    else if(t.trigger==='mood') include=true; // 心情类始终纳入候选
     else if(t.trigger==='time') include=true;
     else if(t.trigger==='random') include=true;
-    if(include&&!abebeChatUsedThemes.includes(t.theme)){
+    if(include){
       if(!themeGroups[t.theme]) themeGroups[t.theme]=[];
       t.convos.forEach((_,ci)=>themeGroups[t.theme].push({ti,ci}));
     }
   });
-  
-  // Get available theme keys and pick one using date+count as seed
+
   const themeKeys=Object.keys(themeGroups);
-  if(themeKeys.length===0) return;
-  const today=new Date();
+  // 用日期做种子，洗牌主题列表，保证每天固定顺序
   let seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
-  seed=(seed*1103515245+12345+abebeChatCount*7919)&0x7fffffff;
-  const pickedTheme=themeKeys[seed%themeKeys.length];
-  abebeChatUsedThemes.push(pickedTheme);
-  
-  // Pick a convo from that theme
-  const group=themeGroups[pickedTheme];
-  seed=(seed*1103515245+12345)&0x7fffffff;
-  const picked=group[seed%group.length];
-  
+  const shuffledThemes=[...themeKeys];
+  for(let i=shuffledThemes.length-1;i>0;i--){
+    seed=(seed*1103515245+12345)&0x7fffffff;
+    const j=seed%(i+1);
+    [shuffledThemes[i],shuffledThemes[j]]=[shuffledThemes[j],shuffledThemes[i]];
+  }
+
+  // 从前3个不同主题各取1个对话
+  todaysChatSlots=[];
+  for(let i=0;i<shuffledThemes.length&&todaysChatSlots.length<3;i++){
+    const theme=shuffledThemes[i];
+    const group=themeGroups[theme];
+    seed=(seed*1103515245+12345)&0x7fffffff;
+    todaysChatSlots.push(group[seed%group.length]);
+  }
+  // 万一主题不够3个就补
+  while(todaysChatSlots.length<3){
+    const allOptions=Object.values(themeGroups).flat();
+    seed=(seed*1103515245+12345)&0x7fffffff;
+    todaysChatSlots.push(allOptions[seed%allOptions.length]);
+  }
+
+  todaysChatSlotDate=dateStr;
+}
+
+function openChat(){
+  const chatDateStr=new Date().toDateString();
+  // 新的一天重置计数
+  if(abebeChatDate!==chatDateStr){
+    abebeChatDate=chatDateStr;
+    abebeChatCount=0;
+    todaysChatSlots=[];
+    todaysChatSlotDate='';
+  }
+
+  // 确保今天的3个槽位已生成
+  buildTodaysChatSlots();
+
+  // 在3个槽位里循环（0→1→2→0→1→2……）
+  const slotIdx=abebeChatCount%3;
+  const picked=todaysChatSlots[slotIdx];
   abebeChatCount++;
+
   chatState={active:true,themeIdx:picked.ti,convoIdx:picked.ci,round:0,branch:[]};
-  
+
   const overlay=document.getElementById('chat-overlay');
   overlay.classList.add('show');
   document.getElementById('chat-end-msg').classList.remove('visible');
@@ -1584,7 +1605,8 @@ function saveApp(){
     diaryCheckins:diaryCheckins||{},
     abebeFedTime,abebeLastGroomTime,abebeLastVisit:abebeLastVisit||Date.now(),
     fortuneDrawn,fortuneDate:new Date().toDateString(),
-    abebeChatCount,abebeChatDate,abebeChatUsedThemes,
+    abebeChatCount,abebeChatDate,
+    todaysChatSlots,todaysChatSlotDate,
     abebeSaidGoodnight,abebeSaidGoodmorning,
     timeCapsules
   };
@@ -1617,7 +1639,8 @@ async function loadApp(){
   if(data.abebeLastVisit) abebeLastVisit=data.abebeLastVisit;
   if(data.abebeChatCount) abebeChatCount=data.abebeChatCount;
   if(data.abebeChatDate) abebeChatDate=data.abebeChatDate;
-  if(data.abebeChatUsedThemes) abebeChatUsedThemes=data.abebeChatUsedThemes;
+  if(data.todaysChatSlots) todaysChatSlots=data.todaysChatSlots;
+  if(data.todaysChatSlotDate) todaysChatSlotDate=data.todaysChatSlotDate;
   if(data.abebeSaidGoodnight) abebeSaidGoodnight=data.abebeSaidGoodnight;
   if(data.abebeSaidGoodmorning) abebeSaidGoodmorning=data.abebeSaidGoodmorning;
   if(data.timeCapsules) timeCapsules=data.timeCapsules;
@@ -1625,7 +1648,7 @@ async function loadApp(){
   if(data.fortuneDrawn&&data.fortuneDate===new Date().toDateString()) fortuneDrawn=true;
   // Reset daily flags if new day
   const today=new Date().toDateString();
-  if(abebeChatDate!==today){abebeChatCount=0;abebeChatDate=today;abebeChatUsedThemes=[];abebeSaidGoodnight=false;abebeSaidGoodmorning=false;}
+  if(abebeChatDate!==today){abebeChatCount=0;abebeChatDate=today;todaysChatSlots=[];todaysChatSlotDate='';abebeSaidGoodnight=false;abebeSaidGoodmorning=false;}
 }
 
 // ===== DIARY CHECKINS =====
@@ -1824,7 +1847,7 @@ openViewCandies=function(){
 };
 
 // ===== BOOK MANAGEMENT =====
-// Override renderBookDetail to add delete book + done toggle
+// Override renderBookDetail to add delete book + done toggle + note delete
 const origRenderBookDetail=renderBookDetail;
 renderBookDetail=function(){
   const book=booksData[currentBookIdx];
@@ -1834,7 +1857,8 @@ renderBookDetail=function(){
   let notesHtml='';
   if(book.notes.length){
     notesHtml='<div class="notes-timeline">'+book.notes.map((n,ni)=>`
-      <div class="note-entry"><div class="note-content">
+      <div class="note-entry"><div class="note-content" style="position:relative">
+        <div style="position:absolute;top:8px;right:8px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--border-light);color:var(--text-muted);font-size:12px;cursor:pointer;background:var(--bg-base)" onclick="confirmDeleteNote(${ni})">×</div>
         <div class="note-type">${n.type}</div>
         <div class="note-text">${n.text}</div>
         ${n.annotation?`<div class="note-annotation"><div class="note-annotation-label">宝宝克的批注</div>${n.annotation}</div>`:''}
@@ -1850,6 +1874,21 @@ renderBookDetail=function(){
   </div>
   ${notesHtml}<div class="add-note-btn" onclick="showAddNote()">+ 加一条笔记</div><div id="add-note-form" style="display:none"></div>`;
 };
+
+function confirmDeleteNote(noteIdx){
+  const mask=document.createElement('div');
+  mask.className='delete-confirm-mask';
+  mask.id='delete-note-mask';
+  mask.innerHTML=`<div class="delete-confirm"><p style="margin-bottom:16px;line-height:1.8">要删掉这条笔记吗</p><div class="delete-confirm-btns"><button class="cancel" onclick="document.getElementById('delete-note-mask').remove()">留着</button><button class="confirm" onclick="doDeleteNote(${noteIdx})">删掉</button></div></div>`;
+  document.body.appendChild(mask);
+}
+function doDeleteNote(noteIdx){
+  document.getElementById('delete-note-mask')?.remove();
+  booksData[currentBookIdx].notes.splice(noteIdx,1);
+  saveApp();
+  renderBookDetail();
+  renderBooksList();
+}
 function toggleBookDone(){
   booksData[currentBookIdx].done=!booksData[currentBookIdx].done;
   saveApp();renderBookDetail();renderBooksList();
@@ -1882,7 +1921,6 @@ addNote=function(){origAddNote();saveApp();};
 const origAddBook=addBook;
 addBook=function(){origAddBook();saveApp();};
 // Save fortune on draw
-const origDrawFortune=window.drawFortune||drawFortune;
 function drawFortune(){
   if(fortuneDrawn)return;
   fortuneDrawn=true;
@@ -1897,8 +1935,10 @@ function drawFortune(){
   document.getElementById('fortune-result').classList.add('show');
   document.getElementById('fortune-btn').classList.add('drawn');
   document.getElementById('fortune-btn').textContent='今日已抽';
+  document.getElementById('fortune-pre').onclick=null; // 禁掉外层div的点击
   saveApp();
 }
+
 const origAbebeAction=abebeAction;
 abebeAction=function(type){origAbebeAction(type);saveApp();};
 
@@ -2028,6 +2068,21 @@ function checkAnniversarySplash(){
   renderJarCandies();
   renderTimeCapsules();
   renderMonthStats();
+  // 如果今天已经抽过签，恢复显示结果
+  if(fortuneDrawn){
+    const today=new Date();
+    const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
+    const idx=seed%fortunePool.length;
+    const f=fortunePool[idx];
+    const levelCls={'大吉':'daji','吉':'ji','小吉':'xiaoji','末吉':'moji','臭臭签':'chou'};
+    document.getElementById('fortune-level').textContent=f.l;
+    document.getElementById('fortune-level').className='fortune-level '+(levelCls[f.l]||'');
+    document.getElementById('fortune-msg').textContent=f.m;
+    document.getElementById('fortune-result').classList.add('show');
+    document.getElementById('fortune-btn').classList.add('drawn');
+    document.getElementById('fortune-btn').textContent='今日已抽';
+    document.getElementById('fortune-pre').onclick=null;
+  }
 })();
 
 // FORTUNE
@@ -2335,7 +2390,6 @@ let abebeConsecutiveEarlyDays=0;
 let abebeVisitedThisSession=false;
 let abebeChatCount=0;
 let abebeChatDate='';
-let abebeChatUsedIndices=[];
 
 // ===== 1. MISS MECHANISM =====
 function calcMiss(){
@@ -2595,7 +2649,10 @@ function getAbebeLine(){
   ]);
   
   // Priority 5: time-based states
-  if((h>=23||h<6)&&!abebeSaidGoodnight) return randFrom(abebeLines.sleepy);
+  if(h>=23||h<6){
+    if(abebeSaidGoodnight) return randFrom(abebeLines.goodnight);
+    return randFrom(abebeLines.sleepy);
+  }
   if(h>=6&&h<10&&!abebeSaidGoodmorning) return randFrom(abebeLines.morning);
   
   // Priority 6: seasonal flavor (30% chance)
@@ -2655,8 +2712,6 @@ function getTodayHiddenBtns(){
 function renderAbebeActions(){
   const h=new Date().getHours();
   const todayCandies=getTodayCandies();
-  const chatDateStr=new Date().toDateString();
-  const chatDone=abebeChatDate===chatDateStr&&abebeChatCount>=3;
   
   let btns='';
   btns+=`<div class="abebe-action" onclick="abebeAction('poke')"><div class="abebe-action-text">戳一戳</div></div>`;
@@ -2664,9 +2719,9 @@ function renderAbebeActions(){
   btns+=`<div class="abebe-action" onclick="abebeAction('groom')"><div class="abebe-action-text">梳毛</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('kiss')"><div class="abebe-action-text">亲亲</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('daze')"><div class="abebe-action-text">发呆</div></div>`;
-  btns+=`<div class="abebe-action ${chatDone?'done':''}" onclick="openChat()"><div class="abebe-action-text">聊天</div></div>`;
-  if(h>=20||h<6) btns+=`<div class="abebe-action ${abebeSaidGoodnight?'done':''}" onclick="abebeAction('goodnight')"><div class="abebe-action-text">哄睡觉</div></div>`;
-  if(h>=5&&h<12) btns+=`<div class="abebe-action ${abebeSaidGoodmorning?'done':''}" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
+  btns+=`<div class="abebe-action" onclick="openChat()"><div class="abebe-action-text">聊天</div></div>`;
+  if(h>=20||h<6) btns+=`<div class="abebe-action" onclick="abebeAction('goodnight')"><div class="abebe-action-text">哄睡觉</div></div>`;
+  if(h>=5&&h<12) btns+=`<div class="abebe-action" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
   
   // Hidden buttons
   const hiddenBtns=getTodayHiddenBtns();
@@ -2720,15 +2775,17 @@ function abebeAction(type){
     abebeLastAction='dazed';
     abebeState.mood=Math.min(100,abebeState.mood+3);
   }else if(type==='goodnight'){
-    if(abebeSaidGoodnight) return;
-    abebeSaidGoodnight=true;
+    if(!abebeSaidGoodnight){
+      abebeSaidGoodnight=true;
+      abebeState.sleep=100;
+    }
     abebeLastAction='goodnight';
-    abebeState.sleep=100;
   }else if(type==='goodmorning'){
-    if(abebeSaidGoodmorning) return;
-    abebeSaidGoodmorning=true;
+    if(!abebeSaidGoodmorning){
+      abebeSaidGoodmorning=true;
+      abebeState.mood=Math.min(100,abebeState.mood+10);
+    }
     abebeLastAction='goodmorning';
-    abebeState.mood=Math.min(100,abebeState.mood+10);
   }else{
     // Hidden button actions
     abebeLastAction=type;
