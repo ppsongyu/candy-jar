@@ -49,7 +49,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .month-label{font-size:14px;letter-spacing:1px;min-width:80px;text-align:center}
 .jar-container{position:relative;width:240px;height:300px;margin-bottom:24px}
 .jar-img{width:100%;height:100%;object-fit:contain;position:relative;z-index:2;pointer-events:none}
-.jar-candies{position:absolute;bottom:20px;left:30px;right:30px;top:60px;z-index:1;overflow:hidden}
+.jar-candies{position:absolute;bottom:45px;left:50px;right:50px;top:100px;z-index:1;overflow:hidden}
 .jar-candy-mini{position:absolute;object-fit:contain;transition:transform .3s ease}
 .jar-container.shaking .jar-candy-mini{animation:candyBounce .4s ease}
 .avatars{display:flex;gap:48px;align-items:center}
@@ -339,6 +339,71 @@ body.night-mode .nav{background:var(--bg-card)}
 .fortune-level.chou{color:var(--text-muted)}
 .fortune-msg{font-size:13px;color:var(--text-primary);line-height:1.8;padding:0 8px}
 .fortune-sign{font-size:10px;color:var(--text-muted);margin-top:12px}
+
+/* SNACK SHOP */
+.abebe-coin-display{text-align:center;margin-top:16px;font-size:11px;color:var(--pink-400);letter-spacing:.5px}
+
+.shop-coin-bar{text-align:center;padding:10px 0;font-size:12px;color:var(--pink-500);letter-spacing:.5px;border-bottom:1px solid var(--border-light);margin-bottom:8px}
+
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;padding:8px 0}
+.shop-item{background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 2px 12px var(--shadow-pink);overflow:hidden;cursor:pointer;transition:all .15s}
+.shop-item:active{transform:scale(.97)}
+.shop-item.cant-afford{opacity:.45}
+.shop-item-img{width:100%;aspect-ratio:1;background:linear-gradient(135deg,var(--pink-100),var(--lavender-50));display:flex;align-items:center;justify-content:center;position:relative}
+.shop-item-placeholder{width:100%;height:100%;border-radius:0}
+.shop-item-owned{position:absolute;top:8px;right:8px;width:20px;height:20px;border-radius:50%;background:var(--pink-400);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+.shop-item-fav{position:absolute;top:8px;left:8px;font-size:14px;color:#E85A8A;text-shadow:0 1px 4px rgba(232,90,138,0.3)}
+.shop-item-weekend{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:8px;color:#fff;background:var(--pink-400);padding:2px 8px;border-radius:8px;letter-spacing:.5px;white-space:nowrap}
+.shop-stocking{color:var(--text-muted);font-size:10px;letter-spacing:.5px}
+.shop-item-info{padding:12px;text-align:center}
+.shop-item-name{font-size:13px;letter-spacing:.5px;margin-bottom:6px}
+.shop-item-price{font-size:11px;color:var(--pink-400)}
+
+/* BUY CONFIRM */
+.snack-confirm-mask{position:fixed;inset:0;background:rgba(74,55,40,0.2);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
+.snack-confirm-mask.show{display:flex}
+.snack-confirm{background:var(--bg-card);border-radius:20px;padding:24px;text-align:center;box-shadow:0 8px 32px var(--shadow-pink);border:1px solid var(--border-light);animation:popIn .2s ease;max-width:280px}
+.snack-confirm-text{font-size:13px;line-height:1.8;margin-bottom:18px;color:var(--text-primary)}
+.snack-confirm-btns{display:flex;gap:10px;justify-content:center}
+.snack-confirm-btns button{padding:10px 22px;border-radius:14px;font-family:'SGH',Georgia,serif;font-size:12px;cursor:pointer;border:none;letter-spacing:.5px}
+.snack-confirm-btns .cancel{background:var(--border-light);color:var(--text-secondary)}
+.snack-confirm-btns .confirm{background:var(--pink-400);color:#fff}
+
+/* STORY POPUP */
+.story-mask{position:fixed;inset:0;background:rgba(255,248,250,0.97);z-index:95;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;max-width:430px;margin:0 auto}
+.story-mask.show{display:flex;animation:fadeIn .3s ease}
+.story-container{display:flex;flex-direction:column;align-items:center;width:100%;max-width:360px}
+.story-bubble{background:#F2AFC1;border-radius:20px 20px 20px 8px;padding:24px 22px;font-size:13px;line-height:2;color:#fff;width:100%;text-align:left;box-shadow:0 6px 24px rgba(212,120,158,0.25);max-height:60vh;overflow-y:auto;-webkit-overflow-scrolling:touch;opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.story-bubble.visible{opacity:1;transform:translateY(0)}
+.story-bubble::-webkit-scrollbar{width:0}
+.story-snack-name{font-size:11px;letter-spacing:1px;margin-bottom:12px;opacity:.7}
+.story-close{margin-top:20px;font-size:12px;color:var(--text-muted);cursor:pointer;letter-spacing:2px;padding:8px 24px;border:1px solid var(--border-light);border-radius:20px;background:var(--bg-card);transition:all .15s}
+.story-close:active{background:var(--pink-100);transform:scale(.97)}
+
+/* REPEAT LINE (short bubble for repeat purchase) */
+.repeat-line-mask{position:fixed;inset:0;background:rgba(74,55,40,0.15);z-index:95;display:none;align-items:center;justify-content:center;padding:20px}
+.repeat-line-mask.show{display:flex}
+.repeat-line-bubble{background:#F2AFC1;border-radius:18px 18px 18px 6px;padding:16px 22px;font-size:13px;line-height:1.8;color:#fff;max-width:280px;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,0.25);animation:popIn .25s ease}
+
+/* SNACK BOOK */
+.snack-book-list{display:flex;flex-direction:column;gap:14px;padding:8px 0}
+.snack-book-item{display:flex;align-items:center;gap:14px;padding:16px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 2px 12px var(--shadow-pink);cursor:pointer;transition:all .15s}
+.snack-book-item:active{transform:scale(.98)}
+.snack-book-thumb{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--pink-100),var(--lavender-50));flex-shrink:0}
+.snack-book-info{flex:1}
+.snack-book-name{font-size:14px;margin-bottom:4px}
+.snack-book-meta{font-size:10px;color:var(--text-muted)}
+.snack-book-count{font-size:10px;color:var(--pink-400);margin-top:4px}
+.snack-book-empty{text-align:center;padding:40px 0;color:var(--text-muted);font-size:12px;line-height:1.8}
+
+/* ADD SNACK */
+.shop-add-btn{display:flex;align-items:center;justify-content:center;padding:14px;border:1.5px dashed var(--pink-300);border-radius:16px;color:var(--text-muted);font-size:12px;cursor:pointer;background:transparent;margin-top:4px;margin-bottom:16px;letter-spacing:1px;transition:all .15s}
+.shop-add-btn:active{background:var(--pink-50);transform:scale(.98)}
+.shop-add-form{padding:8px 0 20px;animation:fadeIn .25s ease}
+.price-picker{display:flex;gap:10px;margin:12px 0}
+.price-option{flex:1;padding:10px;text-align:center;border-radius:12px;border:1.5px solid var(--border-light);font-family:'SGH',Georgia,serif;font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.5px}
+.price-option:active{transform:scale(.95)}
+.price-option.selected{border-color:var(--pink-400);background:var(--pink-100);color:var(--pink-500)}
 </style>
 </head>
 <body>
@@ -433,6 +498,11 @@ body.night-mode .nav{background:var(--bg-card)}
         </div>
         <div class="abebe-status-list" id="abebe-status"></div>
         <div class="abebe-actions" id="abebe-actions"></div>
+        <div class="abebe-actions" style="margin-top:10px">
+          <div class="abebe-action" onclick="openSnackShop()"><div class="abebe-action-text">小卖部</div></div>
+          <div class="abebe-action" onclick="openSnackBook()"><div class="abebe-action-text">零食册</div></div>
+        </div>
+        <div class="abebe-coin-display" id="abebe-coin-display"></div>
       </div>
     </div>
 
@@ -494,6 +564,61 @@ body.night-mode .nav{background:var(--bg-card)}
 
 <div class="overlay" id="overlay-put"><div class="overlay-header"><div class="overlay-title" id="put-step-title">选一颗糖果</div><div class="overlay-close" onclick="closePut()">&times;</div></div><div class="overlay-content" id="put-step-content"></div></div>
 <div class="overlay" id="overlay-view"><div class="overlay-header"><div class="overlay-title">罐子里的糖</div><div class="overlay-close" onclick="closeView()">&times;</div></div><div class="overlay-content" id="view-content"></div></div>
+
+<!-- SNACK SHOP OVERLAY -->
+<div class="overlay" id="overlay-shop">
+  <div class="overlay-header">
+    <div class="overlay-title">阿贝贝的小卖部</div>
+    <div class="overlay-close" onclick="closeSnackShop()">&times;</div>
+  </div>
+  <div class="shop-coin-bar" id="shop-coin-bar">本周阿贝贝币：0</div>
+  <div class="overlay-content" id="shop-content">
+    <div class="shop-grid" id="shop-grid"></div>
+    <div class="shop-add-btn" onclick="showAddSnackForm()">+ 上架新零食</div>
+    <div class="shop-add-form" id="shop-add-form" style="display:none">
+      <input class="add-input" id="new-snack-name" placeholder="零食名字" maxlength="10">
+      <div class="price-picker">
+        <div class="price-option selected" onclick="pickPrice(this,2)" data-price="2">2 币</div>
+        <div class="price-option" onclick="pickPrice(this,4)" data-price="4">4 币</div>
+        <div class="price-option" onclick="pickPrice(this,6)" data-price="6">6 币</div>
+      </div>
+      <button class="step-btn" onclick="submitNewSnack()">上架！</button>
+    </div>
+  </div>
+</div>
+
+<!-- SNACK BOOK OVERLAY -->
+<div class="overlay" id="overlay-snack-book">
+  <div class="overlay-header">
+    <div class="overlay-title">阿贝贝的零食册</div>
+    <div class="overlay-close" onclick="closeSnackBook()">&times;</div>
+  </div>
+  <div class="overlay-content" id="snack-book-content"></div>
+</div>
+
+<!-- BUY CONFIRM POPUP -->
+<div class="snack-confirm-mask" id="snack-confirm-mask" onclick="closeSnackConfirm()">
+  <div class="snack-confirm" onclick="event.stopPropagation()">
+    <div class="snack-confirm-text" id="snack-confirm-text"></div>
+    <div class="snack-confirm-btns">
+      <button class="cancel" onclick="closeSnackConfirm()">还是算了</button>
+      <button class="confirm" onclick="confirmBuySnack()">买！</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPEAT LINE POPUP -->
+<div class="repeat-line-mask" id="repeat-line-mask" onclick="closeRepeatLine()">
+  <div class="repeat-line-bubble" id="repeat-line-bubble" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- STORY POPUP -->
+<div class="story-mask" id="story-mask" onclick="closeStory()">
+  <div class="story-container" onclick="event.stopPropagation()">
+    <div class="story-bubble" id="story-bubble"></div>
+    <div class="story-close" onclick="closeStory()">收好</div>
+  </div>
+</div>
 
 <div class="day-popup-mask" id="day-popup-mask" onclick="closeDayPopup()">
   <div class="day-popup" onclick="event.stopPropagation()">
@@ -658,21 +783,28 @@ function submitCandy(){
 function renderJarCandies(){
   const candies=getCurrentMonthCandies();
   const container=document.getElementById('jar-candies');
-  const W=180,H=220;
-  // size adapts to count
-  let sz=36;
-  if(candies.length>30) sz=20;
-  else if(candies.length>20) sz=26;
-  else if(candies.length>10) sz=30;
-  // seed-based pseudo-random for consistent positions
+  const W=140,H=155;
+  let sz=28;
+  if(candies.length>30) sz=16;
+  else if(candies.length>20) sz=20;
+  else if(candies.length>10) sz=24;
   function seededRand(seed){return((seed*1103515245+12345)&0x7fffffff)/0x7fffffff;}
+  
+  // Few candies = bottom only, more = stack higher
+  const maxFillRatio=Math.min(0.85,candies.length*0.07+0.08);
+  const fillH=H*maxFillRatio;
+  
   container.innerHTML=candies.map((c,i)=>{
     let s=i*2654435761;
-    const x=Math.floor(seededRand(s)*( W-sz));
+    const r=seededRand(s);
     s=(s*1103515245+12345)&0x7fffffff;
-    const y=Math.floor(H-sz-seededRand(s)*(H-sz)*0.95);
+    // Cube for strong gravity: most candies near bottom
+    const biasedY=r*r*r;
+    const y=Math.floor(H-sz-biasedY*fillH);
+    const rowWidth=W-sz-(biasedY*24);
+    const x=Math.floor(seededRand(s)*Math.max(8,rowWidth));
     s=(s*1103515245+12345)&0x7fffffff;
-    const rot=Math.floor(seededRand(s)*60-30);
+    const rot=Math.floor(seededRand(s)*30-15);
     return `<img class="jar-candy-mini" src="${c.candy}" style="width:${sz}px;height:${sz}px;left:${x}px;top:${y}px;transform:rotate(${rot}deg);z-index:${i}">`;
   }).join('');
 }
@@ -2378,7 +2510,7 @@ hiddenDefault:["阿贝贝开心地蹦了蹦","阿贝贝歪着头看着你笑了"
 function randFrom(arr){return arr[Math.floor(Math.random()*arr.length)]}
 
 // ===== ABEBE CORE STATE =====
-let abebeState={mood:80,sleep:70,food:75,miss:90,clean:85};
+let abebeState={mood:80,sleep:70,food:75,miss:90,clean:85,snackHappy:30};
 let abebeSaidGoodnight=false;
 let abebeSaidGoodmorning=false;
 let abebeLastAction='';
@@ -2412,6 +2544,12 @@ function calcFood(){
   const hrsSinceFed=(Date.now()-abebeFedTime)/3600000;
   return Math.max(5,100-hrsSinceFed*18);
 }
+function calcSnackHappy(){
+  // decays slowly over time, base level is 20
+  const current=abebeState.snackHappy||20;
+  // decay ~3 per hour equivalent, applied each update
+  return Math.max(5,current-1);
+}
 function calcSleep(){
   const h=new Date().getHours();
   if(abebeSaidGoodnight) return 95;
@@ -2426,7 +2564,7 @@ function calcMood(){
   // base random wobble
   const wobble=(Math.random()-0.5)*16;
   // influenced by other states
-  const avgOthers=(abebeState.food+abebeState.sleep+abebeState.miss+abebeState.clean)/4;
+  const avgOthers=(abebeState.food+abebeState.sleep+abebeState.miss+abebeState.clean+abebeState.snackHappy)/5;
   let base=65+wobble;
   if(avgOthers>70) base+=10;
   else if(avgOthers<40) base-=15;
@@ -2442,6 +2580,7 @@ function updateAllStates(){
   abebeState.food=Math.round(calcFood());
   abebeState.sleep=Math.round(calcSleep());
   abebeState.clean=Math.round(calcClean());
+  abebeState.snackHappy=Math.round(calcSnackHappy());
   abebeState.mood=calcMood();
 }
 
@@ -2648,6 +2787,17 @@ function getAbebeLine(){
     "阿贝贝假装在忙，但明显在偷看门口"
   ]);
   
+  // Priority 4.5: snack hungry lines
+  if(abebeState.snackHappy<20&&Math.random()<0.4) return randFrom([
+    "阿贝贝舔了舔嘴巴，好像在想什么好吃的",
+    "阿贝贝看了一眼小卖部的方向，又假装没看",
+    "阿贝贝小声说'好久没吃到好吃的了……'",
+    "阿贝贝抱着空空的爪子，说'嗯……有点想念那个味道'",
+    "阿贝贝在地上画了一个圈圈，画着画着变成了一颗糖的形状",
+    "阿贝贝翻了翻零食册，看了好一会儿",
+    "阿贝贝的肚子咕了一声，她赶紧捂住假装什么都没发生"
+  ]);
+  
   // Priority 5: time-based states
   if(h>=23||h<6){
     if(abebeSaidGoodnight) return randFrom(abebeLines.goodnight);
@@ -2673,6 +2823,7 @@ function renderAbebeStatus(){
     {name:'兔兔心',val:abebeState.mood},
     {name:'睡觉觉',val:abebeState.sleep},
     {name:'吃饱饱',val:abebeState.food},
+    {name:'舔嘴嘴',val:abebeState.snackHappy},
     {name:'想泥萌',val:abebeState.miss},
     {name:'洗香香',val:abebeState.clean}
   ];
@@ -2842,6 +2993,343 @@ checkNightMode();
 setInterval(checkNightMode,60000);
 
 // Weekend marking is now handled inside the main renderCalendar override
+
+// ===== SNACK SHOP SYSTEM =====
+const snackShop=[
+  {
+    id:'strawberry_milk',
+    name:'草莓牛奶',
+    price:2,
+    tier:'short',
+    story:'阿贝贝接过瓶子，摸了一下，眼睛一下子就亮了。\n"是凉的！"\n她把瓶子贴在脸上，左边贴完贴右边，两只手捧着，闭着眼睛晃了晃脑袋。"嗯……凉凉的，放在脸上刚刚好。我的脸说它很喜欢。"\n然后她把吸管插进去，喝了一口，抿了抿嘴。又喝了一口，腮帮子鼓了一下。第三口喝完之后她停下来，低头看着瓶子里的水位线。\n"……一半没有了。"\n她晃了晃瓶子，看着牛奶在里面转圈圈。"刚才还在这里的……怎么这么快就不见了。是不是瓶子底下有一个洞呀？"\n她又喝了一小口，然后很认真地把瓶盖拧紧，拧了两遍，还拍了拍瓶盖。\n"剩下的要慢慢喝。不能让它发现我在着急。"\n她把瓶子抱进怀里，下巴搁在瓶盖上，整个人缩成一小团靠在窗台上。过了一会儿，她又小声补了一句："……其实它已经发现了。但它不会说的。因为它知道我还想再喝一口。"\n她没有再喝。就那样抱着。',
+    repeatLines:[
+      '"又是草莓牛奶！你记得我喜欢这个！"',
+      '"嗯……这次我要从另一边开始贴脸。"',
+      '"我跟瓶子说好了，这次不着急喝。"',
+      '"每次喝到最后一口都有点舍不得。"',
+      '"你知道吗，凉凉的那个感觉，脸最先知道。"',
+      '"我给它取了名字了，叫小粉。"',
+      '"我今天要用两只手捧着喝。很正式的。"',
+      '"谢谢你，又给我买了一瓶小粉。"'
+    ]
+  }
+  // 更多零食后续添加
+];
+
+let snackData={
+  purchaseCount:{},   // { 'strawberry_milk': 3 }
+  collection:[],      // [{ id, name, firstBought }]
+  weeklySpent:0,
+  weekStart:''
+};
+
+function getWeekStart(){
+  const now=new Date();
+  const day=now.getDay()||7;
+  const mon=new Date(now);
+  mon.setDate(mon.getDate()-(day-1));
+  return mon.getFullYear()+'-'+(mon.getMonth()+1)+'-'+mon.getDate();
+}
+
+function getWeeklyCandyCount(){
+  const now=new Date();
+  const day=now.getDay()||7;
+  const monDate=new Date(now);
+  monDate.setDate(monDate.getDate()-(day-1));
+  monDate.setHours(0,0,0,0);
+  
+  let count=0;
+  for(const mk in savedCandiesByMonth){
+    const arr=savedCandiesByMonth[mk]||[];
+    arr.forEach(c=>{
+      // Parse candy date: format "M.D" in current month context
+      const parts=mk.split('-');
+      const y=parseInt(parts[0]),m=parseInt(parts[1]);
+      const candyDate=new Date(y,m,c.day);
+      if(candyDate>=monDate&&candyDate<=now) count++;
+    });
+  }
+  return count;
+}
+
+function getSnackBalance(){
+  const ws=getWeekStart();
+  if(snackData.weekStart!==ws){
+    snackData.weekStart=ws;
+    snackData.weeklySpent=0;
+    saveApp();
+  }
+  return getWeeklyCandyCount()-snackData.weeklySpent;
+}
+
+function renderCoinDisplay(){
+  const el=document.getElementById('abebe-coin-display');
+  if(el) el.textContent='本周阿贝贝币：'+getSnackBalance();
+}
+
+// Shop
+let pendingSnackId='';
+
+function openSnackShop(){
+  document.getElementById('overlay-shop').classList.add('show');
+  renderShop();
+}
+function closeSnackShop(){
+  document.getElementById('overlay-shop').classList.remove('show');
+}
+
+function getAllSnacks(){
+  const custom=(snackData.customSnacks||[]).map(s=>({
+    id:s.id,name:s.name,price:s.price,tier:s.price<=2?'short':s.price<=4?'medium':'long',
+    story:s.story||'',
+    repeatLines:s.repeatLines||[]
+  }));
+  return [...snackShop,...custom];
+}
+
+function renderShop(){
+  const balance=getSnackBalance();
+  document.getElementById('shop-coin-bar').textContent='本周阿贝贝币：'+balance;
+  
+  const all=getAllSnacks();
+  const isWeekend=(new Date().getDay()===0||new Date().getDay()===6);
+  const visible=all.filter(s=>!s.weekendOnly||isWeekend);
+  
+  const grid=document.getElementById('shop-grid');
+  grid.innerHTML=visible.map(s=>{
+    const canAfford=balance>=s.price;
+    const owned=(snackData.purchaseCount[s.id]||0)>0;
+    const noStory=!s.story;
+    const buyCount=snackData.purchaseCount[s.id]||0;
+    const isFav=buyCount>=3;
+    return `<div class="shop-item ${canAfford&&!noStory?'':'cant-afford'}" onclick="tryBuySnack('${s.id}')">
+      <div class="shop-item-img">
+        <div class="shop-item-placeholder"></div>
+        ${owned?'<div class="shop-item-owned">✓</div>':''}
+        ${isFav?'<div class="shop-item-fav">♥</div>':''}
+        ${s.weekendOnly?'<div class="shop-item-weekend">周末限定</div>':''}
+      </div>
+      <div class="shop-item-info">
+        <div class="shop-item-name">${s.name}</div>
+        <div class="shop-item-price">${noStory?'<span class="shop-stocking">备货中</span>':s.price+' 币'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tryBuySnack(id){
+  const snack=getAllSnacks().find(s=>s.id===id);
+  if(!snack) return;
+  const balance=getSnackBalance();
+  if(balance<snack.price){
+    showRepeatLine('币不够啦……下次再来看我嘛');
+    return;
+  }
+  // If no story yet, don't allow purchase
+  if(!snack.story){
+    showRepeatLine('嗯……我还没想好要说什么……下次再来问我嘛');
+    return;
+  }
+  pendingSnackId=id;
+  document.getElementById('snack-confirm-text').textContent='给阿贝贝买'+snack.name+'？（'+snack.price+'币）';
+  document.getElementById('snack-confirm-mask').classList.add('show');
+}
+
+function closeSnackConfirm(){
+  document.getElementById('snack-confirm-mask').classList.remove('show');
+  pendingSnackId='';
+}
+
+function confirmBuySnack(){
+  const id=pendingSnackId;
+  const snack=getAllSnacks().find(s=>s.id===id);
+  if(!snack) return;
+  closeSnackConfirm();
+  
+  // Deduct coins
+  snackData.weeklySpent+=snack.price;
+  
+  // Boost 舔嘴嘴
+  const boost=snack.price<=2?20:snack.price<=4?30:40;
+  abebeState.snackHappy=Math.min(100,abebeState.snackHappy+boost);
+  abebeState.mood=Math.min(100,abebeState.mood+5);
+  
+  // Update purchase count
+  if(!snackData.purchaseCount[id]) snackData.purchaseCount[id]=0;
+  snackData.purchaseCount[id]++;
+  
+  const count=snackData.purchaseCount[id];
+  
+  if(count===1){
+    // First purchase: add to collection, show full story
+    snackData.collection.push({id:id,name:snack.name,firstBought:new Date().toLocaleDateString('zh-CN')});
+    saveApp();
+    closeSnackShop();
+    showStory(snack.name,snack.story);
+  }else{
+    // Repeat: show random line
+    if(snack.repeatLines&&snack.repeatLines.length>0){
+      const line=snack.repeatLines[Math.floor(Math.random()*snack.repeatLines.length)];
+      saveApp();
+      renderShop();
+      showRepeatLine(line);
+    }else{
+      saveApp();
+      renderShop();
+      showRepeatLine('谢谢你又给我买了这个！');
+    }
+  }
+}
+
+function showStory(name,text){
+  const bubble=document.getElementById('story-bubble');
+  bubble.classList.remove('visible');
+  bubble.innerHTML='<div class="story-snack-name">'+name+'</div>'+text.replace(/\n/g,'<br>');
+  document.getElementById('story-mask').classList.add('show');
+  setTimeout(()=>bubble.classList.add('visible'),100);
+}
+
+function closeStory(){
+  document.getElementById('story-mask').classList.remove('show');
+  document.getElementById('story-bubble').classList.remove('visible');
+}
+
+function showRepeatLine(text){
+  document.getElementById('repeat-line-bubble').textContent=text;
+  document.getElementById('repeat-line-mask').classList.add('show');
+  setTimeout(()=>closeRepeatLine(),2500);
+}
+
+function closeRepeatLine(){
+  document.getElementById('repeat-line-mask').classList.remove('show');
+}
+
+// Snack Book
+function openSnackBook(){
+  document.getElementById('overlay-snack-book').classList.add('show');
+  renderSnackBook();
+}
+function closeSnackBook(){
+  document.getElementById('overlay-snack-book').classList.remove('show');
+}
+
+function renderSnackBook(){
+  const el=document.getElementById('snack-book-content');
+  if(!snackData.collection||!snackData.collection.length){
+    el.innerHTML='<div class="snack-book-empty">还没有给阿贝贝买过零食<br>去小卖部看看吧</div>';
+    return;
+  }
+  const items=[...snackData.collection].reverse();
+  el.innerHTML='<div class="snack-book-list">'+items.map(c=>{
+    const count=snackData.purchaseCount[c.id]||1;
+    const isFav=count>=3;
+    return `<div class="snack-book-item" onclick="viewSnackStory('${c.id}')">
+      <div class="snack-book-thumb"></div>
+      <div class="snack-book-info">
+        <div class="snack-book-name">${c.name}${isFav?' <span style="color:#E85A8A;font-size:12px">♥ 阿贝贝的最爱</span>':''}</div>
+        <div class="snack-book-meta">首次购买：${c.firstBought}</div>
+        <div class="snack-book-count">×${count}</div>
+      </div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function viewSnackStory(id){
+  const snack=getAllSnacks().find(s=>s.id===id);
+  if(!snack||!snack.story) return;
+  closeSnackBook();
+  showStory(snack.name,snack.story);
+}
+
+// Integrate with saveApp / loadApp
+const origSaveApp=saveApp;
+saveApp=function(){
+  origSaveApp();
+  // Save snack data separately
+  try{localStorage.setItem('candyJarSnackData',JSON.stringify(snackData));}catch(e){}
+  supaUpsert('snack_data',snackData);
+};
+
+(async function loadSnackData(){
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    if(raw){
+      const d=JSON.parse(raw);
+      if(d.purchaseCount) snackData.purchaseCount=d.purchaseCount;
+      if(d.collection) snackData.collection=d.collection;
+      if(d.weeklySpent!==undefined) snackData.weeklySpent=d.weeklySpent;
+      if(d.weekStart) snackData.weekStart=d.weekStart;
+      if(d.customSnacks) snackData.customSnacks=d.customSnacks;
+    }
+  }catch(e){}
+  try{
+    const cloud=await supaGet('snack_data');
+    if(cloud){
+      if(cloud.purchaseCount) snackData.purchaseCount=cloud.purchaseCount;
+      if(cloud.collection) snackData.collection=cloud.collection;
+      if(cloud.weeklySpent!==undefined) snackData.weeklySpent=cloud.weeklySpent;
+      if(cloud.weekStart) snackData.weekStart=cloud.weekStart;
+      if(cloud.customSnacks) snackData.customSnacks=cloud.customSnacks;
+    }
+  }catch(e){}
+  // Check week reset
+  getSnackBalance();
+  renderCoinDisplay();
+})();
+
+// Update coin display when entering Abebe
+const _prevEnterAbebe=enterAbebe;
+enterAbebe=function(){
+  _prevEnterAbebe();
+  renderCoinDisplay();
+};
+
+// ===== ADD SNACK FORM =====
+let newSnackPrice=2;
+
+function showAddSnackForm(){
+  const form=document.getElementById('shop-add-form');
+  if(form.style.display==='none'){
+    form.style.display='block';
+    document.getElementById('new-snack-name').value='';
+    newSnackPrice=2;
+    document.querySelectorAll('.price-option').forEach(p=>{
+      p.classList.toggle('selected',parseInt(p.dataset.price)===2);
+    });
+  }else{
+    form.style.display='none';
+  }
+}
+
+function pickPrice(el,price){
+  newSnackPrice=price;
+  document.querySelectorAll('.price-option').forEach(p=>p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function submitNewSnack(){
+  const nameInput=document.getElementById('new-snack-name');
+  const name=nameInput.value.trim();
+  if(!name){
+    nameInput.focus();
+    return;
+  }
+  // Generate unique id
+  const id='custom_'+Date.now();
+  if(!snackData.customSnacks) snackData.customSnacks=[];
+  snackData.customSnacks.push({
+    id:id,
+    name:name,
+    price:newSnackPrice,
+    story:'',
+    repeatLines:[]
+  });
+  saveApp();
+  document.getElementById('shop-add-form').style.display='none';
+  renderShop();
+  showRepeatLine('新零食上架啦！等克克厨写好故事就能买了');
+}
+
 </script>
 </body>
 </html>
