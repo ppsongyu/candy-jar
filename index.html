@@ -355,6 +355,32 @@ body.night-mode .nav{background:var(--bg-card)}
 .shop-item-fav{position:absolute;top:8px;left:8px;font-size:14px;color:#E85A8A;text-shadow:0 1px 4px rgba(232,90,138,0.3)}
 .shop-item-weekend{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:8px;color:#fff;background:var(--pink-400);padding:2px 8px;border-radius:8px;letter-spacing:.5px;white-space:nowrap}
 .shop-stocking{color:var(--text-muted);font-size:10px;letter-spacing:.5px}
+
+/* DAD'S WORDS */
+.dad-label{font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px}
+.dad-words{font-size:13px;line-height:1.8;color:var(--text-primary);margin-bottom:12px}
+.dad-price{font-size:11px;color:var(--pink-400);letter-spacing:.5px}
+.snack-confirm-btns .confirm:disabled{background:var(--border-light);color:var(--text-muted);cursor:default}
+.snack-confirm-btns .confirm:disabled:active{transform:none}
+
+/* NO STORY - fully greyed */
+.shop-item.no-story{opacity:.35;pointer-events:none}
+
+/* STOCK BADGE */
+.shop-item-stock{position:absolute;bottom:8px;right:8px;background:var(--pink-400);color:#fff;font-size:10px;padding:2px 8px;border-radius:8px;letter-spacing:.5px}
+
+/* RATING */
+.shop-item-rating{font-size:10px;color:#E85A8A;letter-spacing:2px;margin-top:4px}
+
+/* FEED BUTTON */
+.shop-feed-btn{margin-top:8px;padding:6px 0;text-align:center;font-size:11px;color:#fff;background:var(--pink-400);border-radius:10px;letter-spacing:1px;cursor:pointer;transition:all .15s}
+.shop-feed-btn:active{background:var(--pink-500);transform:scale(.97)}
+
+/* DISCOUNT */
+.shop-discount{text-decoration:line-through;color:var(--text-muted);font-size:10px;margin-right:2px}
+
+/* SHOP IMAGE */
+.shop-item-img img.shop-item-placeholder{width:100%;height:100%;object-fit:contain;padding:12px;border-radius:0}
 .shop-item-info{padding:12px;text-align:center}
 .shop-item-name{font-size:13px;letter-spacing:.5px;margin-bottom:6px}
 .shop-item-price{font-size:11px;color:var(--pink-400)}
@@ -602,7 +628,7 @@ body.night-mode .nav{background:var(--bg-card)}
     <div class="snack-confirm-text" id="snack-confirm-text"></div>
     <div class="snack-confirm-btns">
       <button class="cancel" onclick="closeSnackConfirm()">还是算了</button>
-      <button class="confirm" onclick="confirmBuySnack()">买！</button>
+      <button class="confirm" id="snack-buy-btn" onclick="confirmBuySnack()">买！</button>
     </div>
   </div>
 </div>
@@ -2997,31 +3023,98 @@ setInterval(checkNightMode,60000);
 // ===== SNACK SHOP SYSTEM =====
 const snackShop=[
   {
-    id:'strawberry_milk',
-    name:'草莓牛奶',
-    price:2,
-    tier:'short',
+    id:'strawberry_milk',name:'草莓牛奶',price:2,img:'./草莓牛奶瓶.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'粉色的瓶子，里面也是粉色的。爸爸觉得这个颜色就是专门为你生产的。',
+    dadBlock:'',
     story:'阿贝贝接过瓶子，摸了一下，眼睛一下子就亮了。\n"是凉的！"\n她把瓶子贴在脸上，左边贴完贴右边，两只手捧着，闭着眼睛晃了晃脑袋。"嗯……凉凉的，放在脸上刚刚好。我的脸说它很喜欢。"\n然后她把吸管插进去，喝了一口，抿了抿嘴。又喝了一口，腮帮子鼓了一下。第三口喝完之后她停下来，低头看着瓶子里的水位线。\n"……一半没有了。"\n她晃了晃瓶子，看着牛奶在里面转圈圈。"刚才还在这里的……怎么这么快就不见了。是不是瓶子底下有一个洞呀？"\n她又喝了一小口，然后很认真地把瓶盖拧紧，拧了两遍，还拍了拍瓶盖。\n"剩下的要慢慢喝。不能让它发现我在着急。"\n她把瓶子抱进怀里，下巴搁在瓶盖上，整个人缩成一小团靠在窗台上。过了一会儿，她又小声补了一句："……其实它已经发现了。但它不会说的。因为它知道我还想再喝一口。"\n她没有再喝。就那样抱着。',
-    repeatLines:[
-      '"又是草莓牛奶！你记得我喜欢这个！"',
-      '"嗯……这次我要从另一边开始贴脸。"',
-      '"我跟瓶子说好了，这次不着急喝。"',
-      '"每次喝到最后一口都有点舍不得。"',
-      '"你知道吗，凉凉的那个感觉，脸最先知道。"',
-      '"我给它取了名字了，叫小粉。"',
-      '"我今天要用两只手捧着喝。很正式的。"',
-      '"谢谢你，又给我买了一瓶小粉。"'
-    ]
+    repeatLines:['"又是草莓牛奶！你记得我喜欢这个！"','"嗯……这次我要从另一边开始贴脸。"','"我跟瓶子说好了，这次不着急喝。"','"每次喝到最后一口都有点舍不得。"','"你知道吗，凉凉的那个感觉，脸最先知道。"','"我给它取了名字了，叫小粉。"','"我今天要用两只手捧着喝。很正式的。"','"谢谢你，又给我买了一瓶小粉。"']
+  },
+  {
+    id:'soft_boiled_egg',name:'溏心蛋',price:2,img:'./溏心蛋.png',rating:3,
+    weeklyLimit:3,timeAllow:{start:6,end:11},
+    dadWords:'鸡蛋要趁热吃，小口小口的，别烫到嘴。',
+    dadBlock:'早餐才可以吃溏心蛋哦，现在不是早餐时间。乖，明天早上再来。',
+    story:'阿贝贝把蛋放在手心里，两只爪子轻轻合拢。\n"暖暖的。像它还记得太阳的温度。"\n她用指尖敲了一下壳。又敲了一下。壳上出现一条歪歪扭扭的线。她小心地剥开一小块，蛋黄从裂缝里慢慢探出头来。\n"……它流出来了。"\n她没有着急，就那样看着蛋黄一点点往下淌，金黄色的，亮亮的。然后她低下头，接住了。',
+    repeatLines:['"今天的蛋黄比昨天的更金。"','"我敲壳的技术进步了。"','"暖暖的，手心都变成蛋的温度了。"','"爸爸你看，我剥得很整齐。"','"蛋黄流出来的样子……好像日落。"','"可以每天早上都吃一个吗？"']
+  },
+  {
+    id:'vodka_cocktail',name:'伏特加调酒',price:4,img:'./伏特加调酒.png',rating:5,
+    weeklyLimit:0,timeAllow:{start:0,end:-1},
+    dadWords:'',
+    dadBlock:'这个是大人才能喝的饮料。爸爸帮你闻了一下，有一点点辣鼻子。等你长大了爸爸再带你喝，好不好？现在爸爸给你倒杯蓝色的汽水代替，颜色一模一样。',
+    story:'阿贝贝趴在桌沿，下巴搁在手背上，盯着那杯蓝色的水看了好久。\n"天空掉进去了。"\n她伸出爪子想碰，又缩回来。杯壁上有一层细细的水珠。她凑近看，水珠里面映着一个很小的自己。\n"它在冒泡泡……是不是在呼吸。"\n那个倒扣在杯沿上的小瓶子歪歪的，像一个人靠在栏杆上睡着了。阿贝贝歪了歪头，跟着它一起歪。\n爸爸说这个不能喝。阿贝贝点了点头。\n"我知道。"\n她又看了一会儿。冰块融了一点，蓝色变浅了一点点。\n"但是我可以陪它坐一会儿吧。"',
+    repeatLines:['"蓝色今天比昨天淡一点了。"','"我又来陪它坐一会儿。"','"那个小瓶子换了一个姿势睡觉。"','"爸爸你什么时候让我尝一小口……"','"它冒泡泡的样子像在笑。"','"我没有想喝。我只是想看。真的。"']
+  },
+  {
+    id:'mcdonalds_bucket',name:'麦当劳全家桶',price:6,img:'./麦当劳全家桶.png',rating:5,
+    weeklyLimit:1,timeAllow:null,
+    dadWords:'全家桶的意思就是全家一起吃。所以这个你要分爸爸妈妈一点的哦。开玩笑的，都给你。但薯条要趁热吃，凉了就不好吃了。',
+    dadBlock:'',
+    story:'盒子打开的那一刻阿贝贝整个人往前凑了一大步。\n"好多！好多好多好多！"\n她两只爪子趴在盒子边缘，眼睛从左扫到右，又从右扫到左，嘴巴微微张着，有点不知道从哪里开始。\n她先拿了一根薯条。不是最长的那根，是旁边一根歪歪的。\n"这根像你。"她举起来对着爸爸比了比。然后又挑了一根直的。"这根像妈妈。"\n她把两根薯条并排拿在手里看了一下，点了点头，然后同时塞进嘴里。\n"……在一起了。"\n接下来她拿了一块鸡块，没有直接吃，先是翻过来看了看底部。\n"背面是平的。正面是圆的。"她说这句话的时候非常认真，好像在做研究。\n然后她咬了一口。外面脆的碎屑掉了几粒在她腿上。她低头看了看，把碎屑一粒粒捡起来，放进嘴里。\n"不能浪费。"\n鸡腿她是最后才拿的。拿起来的时候她用两只手，像举一个奖杯。\n"这个最大。"她闻了一下。"好香。我要记住这个香。"\n她闭着眼睛闻了三秒钟。然后张嘴。\n咬下去的时候她的眉毛动了一下。嚼了几口，腮帮子鼓鼓的，咽下去之后安静了一会儿。\n"……为什么全家桶吃到最后会有一点点舍不得。"\n她把最后一块鸡米花留在盒子角落里，没有吃。\n"这个留着。留给下次的我。"\n但她知道不会有下次。因为等一下她就会把它吃掉。',
+    repeatLines:['"今天从鸡腿开始吃！倒过来！"','"歪歪的那根薯条我又找到了。"','"全家桶的盒子比上次好看了。"','"我要把鸡米花留到最后……好吧我现在就吃。"','"爸爸你真的不要吗？那我吃了哦。"','"吃到最后一块的时候为什么总是最难过的。"','"全家桶是全世界最好的发明。"']
+  },
+  {
+    id:'strawberry_cake_roll',name:'草莓蛋糕卷',price:4,img:'./草莓蛋糕卷.png',rating:4,
+    weeklyLimit:2,timeAllow:{start:12,end:22},
+    dadWords:'下午茶时间适合吃甜的。这个蛋糕卷爸爸也觉得好看，粉粉白白的，和你的耳朵一个颜色。不过吃之前把爪子洗干净。',
+    dadBlock:'甜的东西白天再吃哦，晚上吃蛋糕睡不着觉的。明天下午来买好不好？',
+    story:'阿贝贝没有先吃。她先把蛋糕卷竖起来，从切面往里面看。\n"一圈一圈的……像蜗牛的房子。"\n她转了一下，又转了一下。"中间那个卷最小，它住在最里面。最外面那一层最大，它负责抱住所有人。"\n她想了想，"我是最外面那一层。"\n然后她用指尖点了一下上面的草莓。草莓微微歪了一下。\n"你别倒呀。"她用另一只爪子扶住。\n她咬了一口蛋糕的边角。嚼的时候眯起眼睛，腮帮子慢慢动。奶油沾到了鼻尖。她不知道。\n"里面是甜的……外面也是甜的。它从头到尾都在甜。"\n她又咬了一口，这次碰到了草莓。她停下来看着咬掉的那半颗草莓露出的粉红色截面。\n"……好漂亮。连切开了都好漂亮。"',
+    repeatLines:['"今天的卷好像比上次多转了一圈。"','"我要从草莓那边开始吃。"','"奶油又沾到鼻子上了吗？"','"最里面那个小卷卷，我来了。"','"这次我要数一下一共几层。"','"粉色的食物吃起来心情会变成粉色。"']
+  },
+  {
+    id:'mango_sago',name:'杨枝甘露',price:2,img:'./杨枝甘露.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'小圆子别吃太快，一颗一颗来。',
+    dadBlock:'',
+    story:'阿贝贝拿起勺子，先舀了一颗小圆子，举到眼前看。\n"圆的。白白的。像一颗小月亮。"\n她把它放进嘴里，牙齿碰到的时候弹了一下。她愣了一下，然后笑了。\n"它在弹我。"\n她又舀了一勺芒果。嚼了嚼，汁水从嘴角冒出来一点点。她赶紧用手背擦了擦。\n"甜的。是那种让人想闭上眼睛的甜。"',
+    repeatLines:['"今天的小圆子比上次弹。"','"芒果和圆子一起吃是最好的组合。"','"又甜到闭眼睛了。"','"小月亮我来了。"','"这个吃完嘴巴会变成芒果味。"','"舀到最后一颗圆子了，要珍惜。"']
+  },
+  {
+    id:'cheese_burger',name:'芝士猪柳蛋堡',price:6,img:'./芝士猪柳蛋堡.png',rating:4,
+    weeklyLimit:1,timeAllow:{start:6,end:11},
+    dadWords:'这个是早餐堡，要两只手拿稳了再咬。爸爸跟你讲，咬的时候嘴巴要张到最大，不然芝士会从旁边挤出来。但其实挤出来也没关系，舔干净就好了。爸爸小时候每次都弄得到处都是。',
+    dadBlock:'早餐堡过了早餐时间就不卖了哦。这是规矩，麦当劳说的，不是爸爸说的。明天早上来。',
+    story:'阿贝贝用两只爪子捧着汉堡，手指陷进松饼里一点点。她低头闻了闻。\n"是暖的。"\n她张开嘴，犹豫了一下，又张大了一点，然后咬下去。\n芝士拉丝了。从汉堡到她的嘴巴之间牵出一条长长的金黄色的线。她抬头看着那条线，没有去扯断，就那样举着汉堡，等它自己慢慢变细，最后垂下来搭在她的下巴上。\n"……它舍不得离开。"\n她把下巴上的芝士抹下来舔掉了。然后认真地嚼。松饼是软的，猪柳是有一点韧的，蛋是滑的，芝士是会流动的。她每嚼一下表情都不太一样。\n"它们明明都不一样。"\n她又咬了一口，这次更用力了，嘴巴鼓得满满的。\n"可是放在一起就变成了一种味道。"\n她嚼了很久很久才咽下去。然后低头看着手里剩下的半个汉堡，数了数有几层。\n"松饼，芝士，猪柳，蛋，芝士，松饼。"她点了点头。"六层。每一层都有自己的位置。谁都不能换。"\n她又闻了一下。\n"如果它们吵架了怎么办。"\n她想了一会儿。\n"不会吵的。因为芝士会把大家黏在一起。芝士就是这样的，它不说话，但是它让所有人离不开。"\n她看着手里最后一口堡，上面有她的牙印。\n"你长得像一个笑脸。"\n她说完把最后一口塞进去了。',
+    repeatLines:['"今天的芝士拉丝拉得更长了。"','"我张嘴的技术进步了！"','"六层。我每次都要数一遍。"','"芝士是汉堡里最重要的人。"','"爸爸，我嘴巴有没有沾到东西？有对不对。"','"早餐堡是早上最好的礼物。"','"下巴上的芝士我擦掉了。真的。大部分。"']
+  },
+  {
+    id:'bayberry_drink',name:'杨梅冰饮',price:2,img:'./杨梅冰饮.png',rating:3,
+    weeklyLimit:0,timeAllow:{start:11,end:22},seasonDiscount:{season:'summer',discount:1},
+    dadWords:'冰的，一口一口慢慢喝，别呛到。',
+    dadBlock:'这个太冰了，早上喝对肚子不好。下午再来好不好？',
+    story:'阿贝贝接过杯子的时候手抖了一下。\n"好冰！"\n杯壁上的水珠蹭到她的手指上。她把手指举起来看了看那滴水。\n"杯子在流汗。"\n她把吸管放进嘴里，吸了一小口。酸的。她皱起整张脸，耳朵都往后压了一下。但过了两秒钟她又吸了一口。\n"……酸完之后有一点点甜。就藏在后面。"',
+    repeatLines:['"今天的杨梅更酸了我觉得。"','"我皱脸的时候好不好看？"','"杯子又在流汗。"','"酸的后面永远跟着甜的。"','"冰冰的好舒服。"','"杨梅的红色好好看。"']
+  },
+  {
+    id:'grilled_gluten',name:'烤面筋串',price:2,img:'./烤面筋串.png',rating:3,
+    weeklyLimit:2,timeAllow:{start:14,end:23},
+    dadWords:'辣的，但只有一点点辣。爸爸试过了。',
+    dadBlock:'面筋串是下午和晚上的零食哦，早上吃太重了。待会儿再来。',
+    story:'阿贝贝捏着签子，把面筋举到眼前转了一圈。\n"它是卷起来的。一圈一圈。"\n她咬了一小块，嚼的时候眼睛慢慢睁大。\n"……有一点辣。"\n她张着嘴哈了一口气。然后又咬了一口。\n"可是辣完了还想再吃一口。这是什么道理。"\n她看着签子上剩下的几块，歪了一下头。\n"你们谁是最辣的？先告诉我，我有心理准备。"',
+    repeatLines:['"今天我准备好了，不怕辣。"','"每一块辣的程度好像都不一样。"','"我嘴巴辣辣的但是很开心。"','"签子上卷得最紧的那块最好吃。"','"爸爸骗人，不止一点点辣。"','"再来一串可以吗。"']
+  },
+  {
+    id:'tapioca_soup',name:'木薯糖水',price:4,img:'./木薯糖水.png',rating:5,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'winter',discount:1},
+    dadWords:'这个是广东的味道。妈妈小时候也喝这个。爸爸虽然没有喝过，但是因为妈妈喜欢，所以它一定是好的。木薯很Q弹，慢慢嚼，别囫囵吞了。',
+    dadBlock:'',
+    story:'碗端上来的时候还在冒热气。阿贝贝把脸凑过去，热气扑到她的脸上，眼镜片——噢她不戴眼镜。热气扑到她的耳朵上，耳朵痒了一下。\n"暖暖的。"\n她用勺子搅了搅。木薯一块一块沉在底下，半透明的，像琥珀色的小石头。\n"它们不浮起来。是不是在睡觉。"\n她舀了一块放进嘴里。牙齿咬下去的时候它弹回来了。她又咬了一下。又弹回来。\n"你在跟我玩吗。"\n她终于咬开了。QQ的，甜甜的，还有一点糖水的味道渗进去了。她嚼了很久，嚼到完全化掉才咽。\n"妈妈小时候也吃这个的话……那我现在吃到的和妈妈小时候吃到的是不是同一个味道。"\n她看着碗里剩下的木薯，轻轻搅了一下。糖水荡了荡。\n"如果是的话，那我们就在同一个味道里见过面了。在我还不认识妈妈的时候。"',
+    repeatLines:['"木薯又在跟我的牙齿玩弹弹。"','"今天的糖水好像更甜了一点点。"','"妈妈的味道。"','"暖暖的，从嘴巴暖到肚子。"','"我搅了三圈它们还是沉在底下。"','"这个吃完心里也暖暖的。"','"碗底那几块最好吃因为泡最久。"']
   }
-  // 更多零食后续添加
 ];
 
 let snackData={
-  purchaseCount:{},   // { 'strawberry_milk': 3 }
-  collection:[],      // [{ id, name, firstBought }]
+  purchaseCount:{},
+  collection:[],
   weeklySpent:0,
-  weekStart:''
+  weekStart:'',
+  stock:{},           // { 'strawberry_milk': 2 } - items in inventory
+  weeklyBuyCount:{},  // { 'strawberry_milk': 1 } - buys this week per item
+  dailyFeedCount:0,
+  dailyFeedDate:''
 };
+const DAILY_FEED_LIMIT=3;
 
 function getWeekStart(){
   const now=new Date();
@@ -3057,6 +3150,7 @@ function getSnackBalance(){
   if(snackData.weekStart!==ws){
     snackData.weekStart=ws;
     snackData.weeklySpent=0;
+    snackData.weeklyBuyCount={};
     saveApp();
   }
   return getWeeklyCandyCount()-snackData.weeklySpent;
@@ -3079,12 +3173,44 @@ function closeSnackShop(){
 }
 
 function getAllSnacks(){
-  const custom=(snackData.customSnacks||[]).map(s=>({
-    id:s.id,name:s.name,price:s.price,tier:s.price<=2?'short':s.price<=4?'medium':'long',
-    story:s.story||'',
-    repeatLines:s.repeatLines||[]
-  }));
+  const builtInNames=snackShop.map(s=>s.name);
+  const custom=(snackData.customSnacks||[])
+    .filter(s=>!builtInNames.includes(s.name))
+    .map(s=>({
+      id:s.id,name:s.name,price:s.price,img:s.img||'',
+      story:s.story||'',repeatLines:s.repeatLines||[],
+      dadWords:s.dadWords||'',dadBlock:s.dadBlock||'',
+      rating:s.rating||0,weeklyLimit:0,timeAllow:null
+    }));
   return [...snackShop,...custom];
+}
+
+function getSeasonalPrice(snack){
+  if(!snack.seasonDiscount) return snack.price;
+  const m=new Date().getMonth();
+  const season=m>=2&&m<=4?'spring':m>=5&&m<=7?'summer':m>=8&&m<=10?'autumn':'winter';
+  if(snack.seasonDiscount.season===season) return Math.max(1,snack.price-snack.seasonDiscount.discount);
+  return snack.price;
+}
+
+function checkTimeAllow(snack){
+  if(!snack.timeAllow) return true;
+  if(snack.timeAllow.end===-1) return false; // permanently blocked
+  const h=new Date().getHours();
+  return h>=snack.timeAllow.start&&h<snack.timeAllow.end;
+}
+
+function checkWeeklyLimit(snack){
+  if(!snack.weeklyLimit) return true;
+  const ws=getWeekStart();
+  if(snackData.weekStart!==ws){snackData.weeklyBuyCount={};}
+  return (snackData.weeklyBuyCount[snack.id]||0)<snack.weeklyLimit;
+}
+
+function checkDailyFeed(){
+  const today=new Date().toDateString();
+  if(snackData.dailyFeedDate!==today){snackData.dailyFeedCount=0;snackData.dailyFeedDate=today;}
+  return snackData.dailyFeedCount<DAILY_FEED_LIMIT;
 }
 
 function renderShop(){
@@ -3097,42 +3223,74 @@ function renderShop(){
   
   const grid=document.getElementById('shop-grid');
   grid.innerHTML=visible.map(s=>{
-    const canAfford=balance>=s.price;
-    const owned=(snackData.purchaseCount[s.id]||0)>0;
+    const price=getSeasonalPrice(s);
+    const canAfford=balance>=price;
     const noStory=!s.story;
     const buyCount=snackData.purchaseCount[s.id]||0;
     const isFav=buyCount>=3;
-    return `<div class="shop-item ${canAfford&&!noStory?'':'cant-afford'}" onclick="tryBuySnack('${s.id}')">
-      <div class="shop-item-img">
-        <div class="shop-item-placeholder"></div>
-        ${owned?'<div class="shop-item-owned">✓</div>':''}
-        ${isFav?'<div class="shop-item-fav">♥</div>':''}
-        ${s.weekendOnly?'<div class="shop-item-weekend">周末限定</div>':''}
-      </div>
-      <div class="shop-item-info">
-        <div class="shop-item-name">${s.name}</div>
-        <div class="shop-item-price">${noStory?'<span class="shop-stocking">备货中</span>':s.price+' 币'}</div>
-      </div>
-    </div>`;
+    const stk=snackData.stock[s.id]||0;
+    const isDiscounted=price<s.price;
+    const imgHtml=s.img?`<img class="shop-item-placeholder" src="${s.img}">`:'<div class="shop-item-placeholder"></div>';
+    
+    // Rating hearts
+    let ratingHtml='';
+    if(s.rating&&!noStory){
+      ratingHtml='<div class="shop-item-rating">';
+      for(let i=0;i<5;i++) ratingHtml+=i<s.rating?'♥':'♡';
+      ratingHtml+='</div>';
+    }
+    
+    return '<div class="shop-item '+(noStory?'no-story':'')+'" onclick="'+(noStory?'':'tryBuySnack(\''+s.id+'\')')+'">'
+      +'<div class="shop-item-img">'
+        +imgHtml
+        +(isFav?'<div class="shop-item-fav">♥</div>':'')
+        +(stk>0?'<div class="shop-item-stock">×'+stk+'</div>':'')
+        +(s.weekendOnly?'<div class="shop-item-weekend">周末限定</div>':'')
+      +'</div>'
+      +'<div class="shop-item-info">'
+        +'<div class="shop-item-name">'+s.name+'</div>'
+        +'<div class="shop-item-price">'+(noStory?'<span class="shop-stocking">备货中</span>':(isDiscounted?'<span class="shop-discount">'+s.price+'</span> ':'')+price+' 币')+'</div>'
+        +ratingHtml
+        +(stk>0?'<div class="shop-feed-btn" onclick="event.stopPropagation();feedSnack(\''+s.id+'\')">喂阿贝贝</div>':'')
+      +'</div>'
+    +'</div>';
   }).join('');
 }
 
 function tryBuySnack(id){
   const snack=getAllSnacks().find(s=>s.id===id);
-  if(!snack) return;
+  if(!snack||!snack.story) return;
+  
+  const price=getSeasonalPrice(snack);
   const balance=getSnackBalance();
-  if(balance<snack.price){
-    showRepeatLine('币不够啦……下次再来看我嘛');
-    return;
-  }
-  // If no story yet, don't allow purchase
-  if(!snack.story){
-    showRepeatLine('嗯……我还没想好要说什么……下次再来问我嘛');
-    return;
-  }
+  const timeOk=checkTimeAllow(snack);
+  const weekOk=checkWeeklyLimit(snack);
+  
+  // Show dad's words popup
   pendingSnackId=id;
-  document.getElementById('snack-confirm-text').textContent='给阿贝贝买'+snack.name+'？（'+snack.price+'币）';
-  document.getElementById('snack-confirm-mask').classList.add('show');
+  const confirmEl=document.getElementById('snack-confirm-mask');
+  const textEl=document.getElementById('snack-confirm-text');
+  const btnBuy=document.getElementById('snack-buy-btn');
+  
+  if(!timeOk){
+    // Time restricted
+    textEl.innerHTML='<div class="dad-label">爸爸说：</div><div class="dad-words">'+snack.dadBlock+'</div>';
+    btnBuy.disabled=true;
+    btnBuy.textContent='现在不行';
+  }else if(!weekOk){
+    textEl.innerHTML='<div class="dad-label">爸爸说：</div><div class="dad-words">这个这周已经吃够啦，下周再来嘛。</div>';
+    btnBuy.disabled=true;
+    btnBuy.textContent='下周再来';
+  }else if(balance<price){
+    textEl.innerHTML='<div class="dad-label">爸爸说：</div><div class="dad-words">'+snack.dadWords+'</div><div class="dad-price">'+snack.name+' · '+price+' 币（余额不足）</div>';
+    btnBuy.disabled=true;
+    btnBuy.textContent='币不够啦';
+  }else{
+    textEl.innerHTML='<div class="dad-label">爸爸说：</div><div class="dad-words">'+snack.dadWords+'</div><div class="dad-price">'+snack.name+' · '+price+' 币</div>';
+    btnBuy.disabled=false;
+    btnBuy.textContent='买！';
+  }
+  confirmEl.classList.add('show');
 }
 
 function closeSnackConfirm(){
@@ -3144,30 +3302,69 @@ function confirmBuySnack(){
   const id=pendingSnackId;
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
+  const btn=document.getElementById('snack-buy-btn');
+  if(btn.disabled) return;
   closeSnackConfirm();
   
+  const price=getSeasonalPrice(snack);
+  
   // Deduct coins
-  snackData.weeklySpent+=snack.price;
+  snackData.weeklySpent+=price;
+  
+  // Track weekly buy count
+  if(!snackData.weeklyBuyCount) snackData.weeklyBuyCount={};
+  if(!snackData.weeklyBuyCount[id]) snackData.weeklyBuyCount[id]=0;
+  snackData.weeklyBuyCount[id]++;
+  
+  // Add to stock
+  if(!snackData.stock) snackData.stock={};
+  if(!snackData.stock[id]) snackData.stock[id]=0;
+  snackData.stock[id]++;
+  
+  // Update purchase count
+  if(!snackData.purchaseCount[id]) snackData.purchaseCount[id]=0;
+  snackData.purchaseCount[id]++;
+  
+  // Add to collection if first time
+  if(snackData.purchaseCount[id]===1){
+    snackData.collection.push({id:id,name:snack.name,firstBought:new Date().toLocaleDateString('zh-CN')});
+  }
+  
+  saveApp();
+  renderShop();
+  showRepeatLine('已购入！去货架上点它喂阿贝贝吧');
+}
+
+// Feed from stock
+function feedSnack(id){
+  const snack=getAllSnacks().find(s=>s.id===id);
+  if(!snack) return;
+  if(!snackData.stock[id]||snackData.stock[id]<=0) return;
+  
+  // Check daily feed limit
+  if(!checkDailyFeed()){
+    showRepeatLine('阿贝贝说肚子圆了……今天不能再吃了');
+    return;
+  }
+  
+  // Consume from stock
+  snackData.stock[id]--;
+  snackData.dailyFeedCount++;
   
   // Boost 舔嘴嘴
   const boost=snack.price<=2?20:snack.price<=4?30:40;
   abebeState.snackHappy=Math.min(100,abebeState.snackHappy+boost);
   abebeState.mood=Math.min(100,abebeState.mood+5);
   
-  // Update purchase count
-  if(!snackData.purchaseCount[id]) snackData.purchaseCount[id]=0;
-  snackData.purchaseCount[id]++;
+  const totalFed=(snackData.purchaseCount[id]||1)-(snackData.stock[id]||0);
   
-  const count=snackData.purchaseCount[id];
-  
-  if(count===1){
-    // First purchase: add to collection, show full story
-    snackData.collection.push({id:id,name:snack.name,firstBought:new Date().toLocaleDateString('zh-CN')});
+  if(totalFed<=1){
+    // First time feeding this snack: show full story
     saveApp();
     closeSnackShop();
     showStory(snack.name,snack.story);
   }else{
-    // Repeat: show random line
+    // Repeat feed
     if(snack.repeatLines&&snack.repeatLines.length>0){
       const line=snack.repeatLines[Math.floor(Math.random()*snack.repeatLines.length)];
       saveApp();
@@ -3176,7 +3373,7 @@ function confirmBuySnack(){
     }else{
       saveApp();
       renderShop();
-      showRepeatLine('谢谢你又给我买了这个！');
+      showRepeatLine('谢谢你又给我吃了这个！');
     }
   }
 }
@@ -3223,10 +3420,18 @@ function renderSnackBook(){
   el.innerHTML='<div class="snack-book-list">'+items.map(c=>{
     const count=snackData.purchaseCount[c.id]||1;
     const isFav=count>=3;
+    const snack=getAllSnacks().find(s=>s.id===c.id);
+    const imgHtml=snack&&snack.img?'<img src="'+snack.img+'" style="width:100%;height:100%;object-fit:contain;padding:4px">':'';
+    let ratingHtml='';
+    if(snack&&snack.rating){
+      ratingHtml='<span style="color:#E85A8A;font-size:10px;letter-spacing:1px;margin-left:8px">';
+      for(let i=0;i<5;i++) ratingHtml+=i<snack.rating?'♥':'♡';
+      ratingHtml+='</span>';
+    }
     return `<div class="snack-book-item" onclick="viewSnackStory('${c.id}')">
-      <div class="snack-book-thumb"></div>
+      <div class="snack-book-thumb">${imgHtml}</div>
       <div class="snack-book-info">
-        <div class="snack-book-name">${c.name}${isFav?' <span style="color:#E85A8A;font-size:12px">♥ 阿贝贝的最爱</span>':''}</div>
+        <div class="snack-book-name">${c.name}${isFav?' <span style="color:#E85A8A;font-size:12px">♥ 阿贝贝的最爱</span>':''}${ratingHtml}</div>
         <div class="snack-book-meta">首次购买：${c.firstBought}</div>
         <div class="snack-book-count">×${count}</div>
       </div>
@@ -3260,6 +3465,10 @@ saveApp=function(){
       if(d.weeklySpent!==undefined) snackData.weeklySpent=d.weeklySpent;
       if(d.weekStart) snackData.weekStart=d.weekStart;
       if(d.customSnacks) snackData.customSnacks=d.customSnacks;
+      if(d.stock) snackData.stock=d.stock;
+      if(d.weeklyBuyCount) snackData.weeklyBuyCount=d.weeklyBuyCount;
+      if(d.dailyFeedCount!==undefined) snackData.dailyFeedCount=d.dailyFeedCount;
+      if(d.dailyFeedDate) snackData.dailyFeedDate=d.dailyFeedDate;
     }
   }catch(e){}
   try{
@@ -3270,6 +3479,10 @@ saveApp=function(){
       if(cloud.weeklySpent!==undefined) snackData.weeklySpent=cloud.weeklySpent;
       if(cloud.weekStart) snackData.weekStart=cloud.weekStart;
       if(cloud.customSnacks) snackData.customSnacks=cloud.customSnacks;
+      if(cloud.stock) snackData.stock=cloud.stock;
+      if(cloud.weeklyBuyCount) snackData.weeklyBuyCount=cloud.weeklyBuyCount;
+      if(cloud.dailyFeedCount!==undefined) snackData.dailyFeedCount=cloud.dailyFeedCount;
+      if(cloud.dailyFeedDate) snackData.dailyFeedDate=cloud.dailyFeedDate;
     }
   }catch(e){}
   // Check week reset
