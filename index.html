@@ -335,6 +335,76 @@ body.night-mode{--bg-base:#F5EDE8;--bg-card:#FFF5EE;--pink-50:#F5EDE8;--border-l
 body.night-mode .topbar{background:rgba(245,237,232,0.5)}
 body.night-mode .nav{background:var(--bg-card)}
 
+/* === THEMES === */
+body.theme-guava{
+  --bg-base:#FFF8F8;--bg-card:#FFFFFF;
+  --pink-50:#FFF4F4;--pink-100:#FFE8EC;--pink-200:#FFD0D8;
+  --pink-300:#FFB0BC;--pink-400:#FF90A0;--pink-500:#F07888;
+  --lavender-50:#F4FFF4;--lavender-100:#E4FFE8;
+  --text-primary:#4A5A4A;--text-secondary:#7A9A7A;--text-muted:#A8C8A8;
+  --border-light:#E8F0E8;--shadow-pink:rgba(255,160,180,0.12);
+  --accent:#FFB0BC;--accent2:#B8ECBE;
+}
+body.theme-guava .splash{background:linear-gradient(160deg,#FFF4F4,#FFE0E8 40%,#E8FFE8)!important}
+body.theme-guava .abebe-speech,body.theme-guava .chat-bubble{background:#FFB0BC}
+body.theme-guava .abebe-speech::after{background:#FFB0BC}
+body.theme-guava .abebe-status-track{background:linear-gradient(90deg,#FFE8EC,#FFD0D8,#FFB0BC,#B8ECBE,#90E0A0)}
+body.theme-guava .abebe-page-bg{background:linear-gradient(180deg,#FFF4F4 0%,#F4FFF4 50%,#FFF4F4 100%)}
+
+body.theme-egg{
+  --bg-base:#F8FCFF;--bg-card:#FFFFFF;
+  --pink-50:#F0F8FF;--pink-100:#E0F0FF;--pink-200:#C8E4FF;
+  --pink-300:#A0D0F8;--pink-400:#80C0F0;--pink-500:#60A8E0;
+  --lavender-50:#FFFCF0;--lavender-100:#FFF8D8;
+  --text-primary:#4A5060;--text-secondary:#7888A8;--text-muted:#A0B8D0;
+  --border-light:#D8ECFF;--shadow-pink:rgba(130,190,240,0.12);
+  --accent:#80C0F0;--accent2:#FFE890;
+}
+body.theme-egg .splash{background:linear-gradient(160deg,#F0F8FF,#D8ECFF 40%,#FFF8D8)!important}
+body.theme-egg .abebe-speech,body.theme-egg .chat-bubble{background:#A0D0F8}
+body.theme-egg .abebe-speech::after{background:#A0D0F8}
+body.theme-egg .abebe-status-track{background:linear-gradient(90deg,#E0F0FF,#B8D8F8,#80C0F0,#FFE890,#FFD860)}
+body.theme-egg .abebe-page-bg{background:linear-gradient(180deg,#F0F8FF 0%,#FFFCF0 50%,#F0F8FF 100%)}
+
+body.theme-taro{
+  --bg-base:#FDF8FF;--bg-card:#FFFFFF;
+  --pink-50:#FAF4FF;--pink-100:#F4ECFF;--pink-200:#E8D8F8;
+  --pink-300:#D4B8F0;--pink-400:#C0A0E8;--pink-500:#A880D8;
+  --lavender-50:#FFF8F4;--lavender-100:#FFF0E8;
+  --text-primary:#584868;--text-secondary:#9080A8;--text-muted:#B8A8D0;
+  --border-light:#EAD8F8;--shadow-pink:rgba(180,150,220,0.12);
+  --accent:#C0A0E8;--accent2:#FFF0E8;
+}
+body.theme-taro .splash{background:linear-gradient(160deg,#FFF4FF,#F0E0F8 40%,#FFF0E8)!important}
+body.theme-taro .abebe-speech,body.theme-taro .chat-bubble{background:#D0B0F0}
+body.theme-taro .abebe-speech::after{background:#D0B0F0}
+body.theme-taro .abebe-status-track{background:linear-gradient(90deg,#F4ECFF,#E0D0F8,#D0B0F0,#C0A0E8,#A880D8)}
+body.theme-taro .abebe-page-bg{background:linear-gradient(180deg,#FAF4FF 0%,#FFF8F4 50%,#FAF4FF 100%)}
+
+body.theme-stone{
+  --bg-base:#F8F8FA;--bg-card:#FFFFFF;
+  --pink-50:#F4F4F6;--pink-100:#EDEDF0;--pink-200:#E0E0E5;
+  --pink-300:#C0C0C8;--pink-400:#A8A8B4;--pink-500:#8888A0;
+  --lavender-50:#F6F6F8;--lavender-100:#F0F0F4;
+  --text-primary:#484858;--text-secondary:#78788A;--text-muted:#A8A8B8;
+  --border-light:#E4E4EC;--shadow-pink:rgba(120,120,150,0.08);
+  --accent:#A8A8B4;--accent2:#D8D8E0;
+}
+body.theme-stone .splash{background:linear-gradient(160deg,#F8F8FA,#EDEDF0 40%,#F4F4F6)!important}
+body.theme-stone .abebe-speech,body.theme-stone .chat-bubble{background:#B8B8C4}
+body.theme-stone .abebe-speech::after{background:#B8B8C4}
+body.theme-stone .abebe-status-track{background:linear-gradient(90deg,#EDEDF0,#D8D8E0,#C0C0C8,#A8A8B4,#9090A0)}
+body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6F6F8 50%,#F4F4F6 100%)}
+
+/* Theme picker */
+.theme-picker{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:8px 0}
+.theme-dot{width:44px;height:44px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center}
+.theme-dot:active{transform:scale(.9)}
+.theme-dot.active{border-color:var(--text-primary);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.theme-dot-inner{width:36px;height:36px;border-radius:50%;overflow:hidden}
+.theme-dot-half{width:50%;height:100%;float:left}
+.theme-dot-label{font-size:9px;color:var(--text-muted);text-align:center;margin-top:4px;letter-spacing:.5px}
+
 /* FORTUNE */
 /* CHAT SYSTEM */
 .chat-overlay{position:fixed;inset:0;z-index:80;background:rgba(255,248,250,0.97);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;max-width:430px;margin:0 auto}
@@ -462,6 +532,13 @@ body.night-mode .nav{background:var(--bg-card)}
 .price-option{flex:1;padding:10px;text-align:center;border-radius:12px;border:1.5px solid var(--border-light);font-family:'SGH',Georgia,serif;font-size:12px;color:var(--text-secondary);cursor:pointer;transition:all .15s;letter-spacing:.5px}
 .price-option:active{transform:scale(.95)}
 .price-option.selected{border-color:var(--pink-400);background:var(--pink-100);color:var(--pink-500)}
+.dream-btn{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.65);backdrop-filter:blur(6px);border-radius:20px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:var(--text-secondary);cursor:pointer;z-index:5;animation:dreamFloat 3s ease-in-out infinite;display:none}
+@keyframes dreamFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.dream-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(30,20,60,.75);z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease}
+.dream-card{background:linear-gradient(135deg,#E8F0FA 0%,#D8E8F8 40%,#E0ECF8 100%);border-radius:20px;padding:28px 24px;max-width:320px;width:85%;max-height:70vh;overflow-y:auto;position:relative;box-shadow:0 0 40px rgba(120,160,220,.2)}
+.dream-card-title{text-align:center;font-family:'SGH',Georgia,serif;font-size:13px;color:rgba(80,110,150,.5);letter-spacing:2px;margin-bottom:16px}
+.dream-card-body{font-size:13px;line-height:2;color:rgba(60,80,110,.8);font-family:'SGH',Georgia,serif}
+.dream-card-close{text-align:center;margin-top:20px;font-size:11px;color:rgba(80,110,150,.35);cursor:pointer;letter-spacing:1px}
 </style>
 </head>
 <body>
@@ -549,7 +626,8 @@ body.night-mode .nav{background:var(--bg-card)}
     </div>
 
     <div class="page" id="page-abebe">
-      <div class="abebe-page-bg">
+      <div class="abebe-page-bg" style="position:relative">
+        <div class="dream-btn" id="dream-btn" onclick="showDream()">ᶻ 𝗓 𝐙 𝗓 ᶻ</div>
         <div class="abebe-scene">
           <div class="abebe-img-wrap"><img class="abebe-img" src="./愉快阿贝贝.png" alt="阿贝贝"></div>
           <div class="abebe-speech" id="abebe-speech">阿贝贝在等你...</div>
@@ -615,6 +693,41 @@ body.night-mode .nav{background:var(--bg-card)}
           <label class="add-milestone-btn" style="flex:1;margin-top:0;cursor:pointer">导入数据<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
         </div>
         <div style="font-size:10px;color:var(--text-muted);text-align:center;padding:4px 0;line-height:1.6">建议每周导出一次，防止数据丢失</div>
+      </div>
+      <div class="card">
+        <div class="card-title">换个颜色</div>
+        <div class="theme-picker" id="theme-picker">
+          <div>
+            <div class="theme-dot active" onclick="setTheme('')" data-theme="">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FDE2EE"></div><div class="theme-dot-half" style="background:#F0E6F6"></div></div>
+            </div>
+            <div class="theme-dot-label">莓果糖</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-guava')" data-theme="theme-guava">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FFD0D8"></div><div class="theme-dot-half" style="background:#B8ECBE"></div></div>
+            </div>
+            <div class="theme-dot-label">芭乐冰</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-egg')" data-theme="theme-egg">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#C8E4FF"></div><div class="theme-dot-half" style="background:#FFE890"></div></div>
+            </div>
+            <div class="theme-dot-label">鸡蛋羹</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-taro')" data-theme="theme-taro">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FFF0E8"></div><div class="theme-dot-half" style="background:#E0D0F8"></div></div>
+            </div>
+            <div class="theme-dot-label">香芋奶</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-stone')" data-theme="theme-stone">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#E0E0E5"></div><div class="theme-dot-half" style="background:#B8B8C4"></div></div>
+            </div>
+            <div class="theme-dot-label">小石头</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -3543,6 +3656,110 @@ const snackShop=[
     dadBlock:'这个是白天的点心，晚上太晚了就不吃了哦。',
     story:'阿贝贝先看番茄酱。\n红色的酱在面包上画了一条弯弯曲曲的线，从这头到那头，像一条小路。上面还撒了黑芝麻，像路边的小石子。\n"这是一张地图。"\n她歪着头看。\n"从这里出发……经过这个弯……到这里结束。"\n她不想破坏这条路。但她饿了。\n她从面包的一头咬了一口。\n外面是面包，松松软软的，上面的蛋皮薄薄的有一点焦，被烤得金黄色。咬穿蛋皮之后碰到了里面的热狗——粉红色的，弹弹的，一咬就咔地断了。番茄酱、面包屑、蛋和热狗在嘴里混在一起。\n"四种东西同时到嘴巴开会了。"\n她又咬了一口。这次咬到了更多番茄酱。酸酸甜甜的，把面包的淡和热狗的咸都连在一起了。\n"番茄酱是翻译官。它把大家的语言翻译成了同一种。"\n她从另一头往这头吃。每一口都不太一样因为番茄酱画得不均匀。有的地方酱多，有的地方少，有的地方只有蛋和面包。\n"这条路不是直的。每一步的风景都不同。"\n吃到中间的时候她发现了一片绿色的菜叶和一片橙色的胡萝卜藏在里面。\n"你们躲在这里！"\n吃完她擦了擦嘴。嘴角有一点番茄酱。\n"地图吃完了。但路还在。"',
     repeatLines:['"今天的番茄酱画得更弯了。"','"翻译官你好，又见面了。"','"中间藏的菜叶我找到了！"','"这条路今天的风景不一样。"','"嘴角的番茄酱我——擦了。大部分。"','"四种东西又来开会了。"']
+  },
+  {
+    id:'dongpo_pork',name:'东坡肉',price:6,img:'./东坡肉.png',rating:5,
+    weeklyLimit:1,timeAllow:{start:11,end:22},
+    dadWords:'这块肉爸爸酱了很久。你看它身上绑着绳子，像一个小包裹。里面一层一层的，皮是皮，肥是肥，瘦是瘦，谁都不抢谁的位置。配米饭吃，汤汁拌饭是精华。',
+    dadBlock:'东坡肉是正餐呀，中午或晚上来吧。',
+    story:'阿贝贝先盯着那根绳子看了好久。\n"它被绑起来了。"\n她伸出爪子碰了一下绳结。十字形的，系得很紧，把整块肉箍成一个方方正正的形状。\n"像礼物。"\n她想解开绳子但指头太短了。爸爸帮她把绳子剪断了。绳子松开的瞬间，肉微微颤了一下，往旁边摊了一点点。\n"它松了一口气。"\n她用筷子戳了一下肉皮。弹的。筷子陷进去一点点又被推回来。她再戳。又弹回来。\n"你皮好厚。"\n她终于决定切开了。筷子从侧面一压——肉就裂开了。根本不需要切。一层层的，皮是琥珀色的半透明，下面是白色的脂肪，再下面是深红色的瘦肉，酱汁从每一层的缝隙里渗出来。\n"三层楼。"\n她先夹了最上面那层皮。放进嘴里。\n嚼不动。不对——根本不用嚼。它自己就化了。皮上面挂着的酱汁是咸甜咸甜的，胶质在牙齿间滑来滑去，黏黏的，暖暖的。\n"什么东西……它在我嘴巴里面跳舞……"\n她又夹了一块肥的。她平时不吃肥肉。但这块不一样。它不腻。它化得比皮还快。\n"消失了。"\n她看了看筷子，又看了看碗。好像刚才那块不存在过一样。\n然后她扒了一大口饭。碗底有酱汁。饭粒染成了深棕色，一粒一粒都亮晶晶的。\n"饭也好好吃！饭偷了肉的味道！"\n她开始大口大口吃了。一口肉一口饭，瘦的肥的皮的轮着来。汤汁顺着筷子淌到手上她也不管。\n吃到最后碗底只剩一汪酱汁。她用勺子舀了最后一口饭，在碗底转了一圈把酱汁全部沾起来。\n"一滴都不留。"\n她放下碗打了一个很响的嗝。\n"……它绑着绳子的时候看起来那么严肃。结果这么温柔。"',
+    repeatLines:['"今天的绳结比上次系得更紧。"','"三层楼我来了。先从屋顶开始。"','"肥肉化了。证据呢？没有证据。"','"饭又偷了肉的味道。"','"酱汁一滴不留是我的原则。"','"看着严肃吃着温柔，每次都是。"','"爸爸帮我解绳子——我自己来！好吧还是你来。"']
+  },
+  {
+    id:'fruit_sandwich',name:'水果三明治',price:3,img:'./水果三明治.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'你看切开之后里面多好看。每一片水果都不一样。面包是软的奶油是甜的水果是酸的，三个加在一起刚刚好。',
+    dadBlock:'',
+    story:'阿贝贝把三明治竖起来看。\n切面朝着她。草莓在最上面，红红的，切开之后露出白色的心。下面是一片橙子，再下面是猕猴桃的绿色截面，籽一粒一粒排成圈。\n"红灯、黄灯、绿灯。"\n她举着三明治当交通灯。\n"红灯停。"她停了一秒。\n"绿灯行。"她张嘴咬了一口。\n面包是那种很软的白吐司，牙齿一碰就凹进去。奶油在里面厚厚一层，凉凉的。她咬到了猕猴桃。酸的。籽在牙齿缝里咔吱咔吱响。\n"猕猴桃你在我嘴里放鞭炮。"\n她又咬了一口，这次碰到了草莓。草莓的汁水跑出来沾到了面包上，白色的面包多了一小块粉色。\n"草莓把面包染色了。"\n她把三明治转过来从另一边吃。这边先碰到橙子。橙子的味道和奶油混在一起变成了一种像冰淇淋又不是冰淇淋的东西。\n"你们三个人的味道都不一样但是都被奶油包住了。"\n她想了想。\n"奶油是被子。水果们在里面睡觉。我把被子吃掉了。"\n她看着手上最后一角三明治。面包被捏得有点扁了，里面隐约看到一点绿色。\n"最后一口是绿灯。"\n她塞进嘴里。\n"嗯——行。"',
+    repeatLines:['"红灯停绿灯行，今天又交通管制了。"','"奶油被子又裹好了。"','"猕猴桃的鞭炮今天更响了。"','"草莓又把面包染色了。到处留记号。"','"最后一口是什么颜色？赌一下。"','"三个水果开会了，奶油主持的。"']
+  },
+  {
+    id:'matcha_icecream',name:'抹茶冰淇淋',price:3,img:'./抹茶冰淇淋.png',rating:4,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'summer',discount:1},
+    dadWords:'两个甜筒！爸爸觉得一个就够了但是你说两个的话就两个吧。上面绿色的是抹茶，底下咖啡色那层是巧克力。脆筒别漏了，从上面开始舔。',
+    dadBlock:'',
+    story:'阿贝贝两只手各举一个。左手一个右手一个。她左看看右看看，表情很严肃。\n"这个胖一点。"她说的是左手的。\n"这个高一点。"她说的是右手的。\n"胖的先吃还是高的先吃。"\n她在原地转了一圈。然后决定从胖的开始。\n她伸出舌头舔了一口。抹茶的味道凉凉地铺在舌头上。有一点苦，但不是那种讨厌的苦，是像大人喝茶时候那种"嗯"了一下的苦。\n"冰淇淋你有心事吗。有一点苦苦的。"\n她又舔了一口右手的。一模一样的味道但她说：\n"这个高的更苦一点。"\n其实一模一样。\n抹茶化得很快。绿色的液体顺着脆筒边缘往下流。她赶紧低头去追，舔了一圈。手上还是沾到了。\n"你跑太快了！等我！"\n她舔到了抹茶下面的巧克力层。深咖啡色的，比抹茶更甜更浓。两种味道在交界的地方混在一起。\n"你们握手了。"\n脆筒越吃越小，冰淇淋越化越快，她整个人进入了一种"舔比化快就赢了"的战斗模式。舌头左右开弓，两边轮着舔。\n最后就剩两个空脆筒了。她咬了一口。嘎嘣碎了。\n"锥子底部有一点点化掉的抹茶水。"\n她倒过来把最后那几滴滴进嘴里。\n"赢了。一滴都没浪费。"',
+    repeatLines:['"今天胖的是右边！"','"冰淇淋你又跑了。等我。"','"抹茶和巧克力又握手了。"','"我舔的速度比上次快了。"','"脆筒底部那几滴是奖励。"','"两个刚刚好，一个太孤单了。"']
+  },
+  {
+    id:'xi_bing',name:'喜饼',price:6,img:'./喜饼.png',rating:5,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'',
+    dadBlock:'',
+    story:'这个盒子是木头做的。阿贝贝先不看饼，先摸盒子。手指顺着花边绕了一圈。木头上有纹路，一条一条的，像树记得的事情。\n"盒子上面有鱼。"\n她指着盖子上那条红色的鱼。旁边还有荷花，金色的云，和一个大大的红色的字。\n"这个字很复杂。"\n"囍。两个喜字并在一起。"\n"为什么要两个？"\n"因为一个人的开心只是喜。两个人一起开心才是囍。"\n阿贝贝看了看盒子里的两块饼。一块白色的，上面也有囍字和花纹，周围印着小桃子小石榴。另一块红色的，囍字凸出来，像一个小印章。\n她拿起白色那块。很轻。饼皮上的花纹细细的，摸上去有一点凹凸。\n"这个是妈妈的。"\n她又拿起红色那块。重一点。\n"这个是爸爸的。"\n"为什么这么分？"\n"因为红色比较重，爸爸力气大。"\n她咬了一小口白色的。皮是酥的，碎了一点掉在手心里。里面是绿豆沙，甜甜的，细细的，像什么都被磨碎了再重新变成一个东西。\n她嚼得很慢。\n"妈妈的味道是安静的。"\n她又咬了一小口红色的。这块的馅不一样。更甜，更浓，里面有桂花的香味。\n她含着那口饼没有马上咽。嘴巴里桂花香慢慢散开。\n"爸爸的味道是暖的。"\n她把两块饼并排放在盒子里，看了一会儿。一块缺了一个角，另一块也缺了一个角。\n"你们两个缺的角加起来是一个圆。"\n她把手心里掉的饼碎捡起来放进嘴里。\n"谁都不能掉。"',
+    repeatLines:['"白色的是妈妈红色的是爸爸。每次都是。"','"两个喜在一起才是囍。"','"掉的饼碎我捡起来了。"','"盒子上的鱼今天在往左边游。"','"妈妈的安静和爸爸的暖今天都在。"','"缺的角加起来还是圆的。"']
+  },
+  {
+    id:'pineapple_cake',name:'凤梨酥',price:3,img:'./凤梨酥.png',rating:4,
+    weeklyLimit:0,timeAllow:{start:14,end:18},
+    dadWords:'下午茶来一块凤梨酥。外面酥酥的里面是凤梨馅，酸酸甜甜。你看它做成菠萝的形状了，连叶子都有。',
+    dadBlock:'凤梨酥是下午茶的点心哦，下午两点到六点来吧。',
+    story:'阿贝贝拿到的时候先把它举高。\n"菠萝！"\n然后她翻过来看背面。背面是平的。\n"假菠萝。"\n她闻了一下。黄油的味道和一种酸酸的果香混在一起，暖暖的。\n"假菠萝但是真的香。"\n上面的格子纹路一格一格的，她用指尖数了一下。"一、二、三、四……十六格。"\n她从角上掰了一小块。酥皮碎了，掉了好多渣在手上。里面露出来金黄色的馅。\n"它的心是黄色的。"\n她把那小块放进嘴里。\n酥的。碎了以后在舌头上散开，黄油的味道化掉了。然后凤梨馅追上来——酸的，甜的，还有一丝丝拉得出纤维的嚼劲。\n"外面碎掉但里面还黏着。"\n她又掰了一块。这次掰大了，馅漏出来了，她赶紧用另一只爪子接住。\n"出来了出来了——你回去——"\n回不去了。她把漏出来的馅舔掉了。\n"你自由了。"\n上面那个小菠萝叶子她最后才吃。绿色的酥皮，味道和下面一样但她觉得不一样。\n"叶子比较勇敢。因为它在最上面。"',
+    repeatLines:['"十六格。我又数了一遍。"','"假菠萝你好，今天也很香。"','"馅又跑出来了——又自由了。"','"叶子最勇敢。"','"掉的渣我全都捡起来了。"','"酥皮碎掉的声音好好听。"']
+  },
+  {
+    id:'jasmine_seeds',name:'茉莉瓜子',price:2,img:'./茉莉瓜子.png',rating:3,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'嗑瓜子是一门手艺。门牙卡住，轻轻一磕，壳分两半，仁就出来了。你慢慢练。壳吐在小碟子里，不要吐得到处都是。',
+    dadBlock:'',
+    story:'阿贝贝打开袋子，先把鼻子整个伸进去。\n"花——！有花的味道——！"\n她抓了一把出来摊在手心里。瓜子壳黑黑的，缝里有一条白线。她挑了一颗最大的，学爸爸说的那样用门牙卡住。\n咔。\n壳没开。瓜子飞出去了。\n"……"\n她捡回来再试。这次咬住了——太用力——整颗碎了，壳和仁混在一起分不清了。\n"哇——"\n她把碎的全吐出来。\n第三颗。她小心翼翼地卡住。轻轻一使劲。\n咔哒。\n壳裂开了一条缝。她用指甲掰开。里面一颗完整的仁，白白嫩嫩的。\n"出来了！！！"\n她把仁放进嘴里。嚼了一下。香的。还有一点点茉莉花的味道从壳上留下来的余韵，淡淡的，像花经过但没有停下来。\n"好吃。"\n然后她开始上瘾了。\n咔哒。剥。吃。咔哒。剥。吃。咔哒咔哒咔哒。速度越来越快。壳堆成一座小山。嘴巴一直在动。\n"停不下来。"\n她知道停不下来。但她没有打算停。\n"再嗑最后一颗。"\n她嗑了。\n"再最后一颗。"\n又嗑了。\n二十分钟后手心那把瓜子嗑完了。她看着那座壳山，又看看空空的手。\n"……没了。"\n她舔了一下手指。手指上有盐味和花香。\n"手指还有味道。手指是最后的瓜子。"',
+    repeatLines:['"今天第一颗就成功了！进步！"','"咔哒咔哒咔哒——又停不下来了。"','"壳山今天比上次高。"','"再最后一颗——我说过了。"','"手指又变成最后的瓜子了。"','"花经过的味道又来了。"']
+  },
+  {
+    id:'chuyan_strawberry',name:'初颜草莓',price:4,img:'./初颜草莓.png',rating:5,
+    weeklyLimit:2,timeAllow:null,
+    dadWords:'这个草莓不是红色的。爸爸第一次见到的时候也愣了一下。它是粉白色的，像还没决定要不要变红的样子。但它其实已经熟了。味道和红色的不一样，自己尝尝看。',
+    dadBlock:'',
+    story:'阿贝贝看着碗里一动不动。\n碗是透明的玻璃碗。草莓在里面堆成一座小山。粉白色的，每一颗上面的小点点是浅粉色的而不是深红色的。叶子倒是绿的，正常的绿，和不正常的粉白放在一起显得特别鲜亮。\n"它们脸好白。"\n她拿起一颗。比红草莓要轻一点。表面不像红草莓那样光滑，有一种雾蒙蒙的质感，像蒙了一层纱。\n"你害羞吗。"\n她闻了一下。味道比红草莓淡。但有一种不一样的香——不是酸甜的果香，是一种接近花的，很干净的味道。\n"你闻起来像刚洗完澡。"\n她咬了一口。\n汁水没有红草莓那么多，但是有的。甜度也不一样。红草莓的甜是直接冲过来"我很甜！"，这个的甜是慢慢走过来的，到了嘴里才轻轻说一声"我在。"\n"……哦。"\n阿贝贝含着那半颗没有嚼。让它在嘴里化了一会儿。\n"你的甜不着急。"\n她把碗里最小的那颗留到最后吃。不知道为什么。可能因为最小的那颗最白。\n吃完她看着空碗。碗底有一点点粉色的汁水。\n"你们走了以后还留了颜色。"\n她把碗端起来把那点汁水喝掉了。\n"现在没有了。都在我肚子里了。那就是最安全的地方。"',
+    repeatLines:['"今天最白的那颗我又留到最后了。"','"害羞的草莓你好。"','"它的甜又慢慢走过来了。"','"闻起来像洗完澡。每次都这样说因为每次都是。"','"碗底的粉色汁水我喝了。"','"红草莓喊我很甜，你说我在。"']
+  },
+  {
+    id:'sweet_potato_fries',name:'红薯条',price:2,img:'./红薯条.png',rating:3,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'杯子上面那个笑脸的小土豆是品牌的标志。薯条是烤过的不是炸的，稍微健康一点。表面脆的里面软的，趁热吃最好。',
+    dadBlock:'',
+    story:'阿贝贝先看杯子。杯子上面有一个圆圆的小土豆，棕色的皮上面画着两个点和一条弯弯的线。\n"它在笑。"\n她对着小土豆笑了一下。然后往杯子里看。\n薯条竖在里面，高高低低的，金黄色。有的直有的弯，有的粗有的细，像一排个子不一样高的小朋友在排队。\n她抽出最高的那根。\n"你是班长。"\n咬了一口。外面有一层薄薄的脆壳，牙齿穿过去之后里面是软的热的橙黄色的红薯肉。甜的。不用加任何东西就是甜的。\n"你不需要番茄酱。你自己就够了。"\n她又抽了一根弯的。这根弯成了一个C的形状。\n"你在做体操吗。"\n弯的和直的味道一样。但她觉得弯的更有趣。\n吃到第五根的时候她开始一根一根往嘴里塞，像在喂一个很小的机器。塞一根嚼嚼嚼，再塞一根嚼嚼嚼。\n"工厂开工了。"\n杯子见底了。最后剩了一些碎的小段段和渣。她把杯子倒过来倒进嘴里。\n"下班了。全勤。"',
+    repeatLines:['"小土豆你好今天也在笑。"','"班长今天是哪根？"','"弯的那根又在做体操。"','"工厂开工——嚼嚼嚼。"','"全勤。一根不剩。"','"不需要番茄酱你自己就够了。"']
+  },
+  {
+    id:'pineapple_fruit',name:'菠萝',price:3,img:'./菠萝.png',rating:4,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'summer',discount:1},
+    dadWords:'爸爸已经帮你削好了。这种削法叫旋切，看到没有，皮一圈一圈转着削掉的，上面的小叶子也给你留着了。旁边那片是切下来的一圈，可以先吃那个。',
+    dadBlock:'',
+    story:'阿贝贝先拿起旁边那片切好的菠萝圈。圆圆的，中间有一个洞。她把手指穿过去。\n"戒指。"\n她举着菠萝戒指转了一下。汁水沿着手指往下淌。她赶紧舔了一口手指。\n"甜的戒指。"\n然后她开始啃那圈菠萝。果肉是脆的那种，不是软趴趴的那种。咬下去咔嚓一声，汁水在嘴里炸开。酸甜酸甜的，舌头被扎了一下。\n"它咬我！"\n菠萝就是这样的。你在吃它，它也在吃你。舌头有一点点麻。但她没有停。\n"我不怕你。"\n她啃完那圈之后看向那整颗削好的菠萝。旋切的纹路一道一道绕着果肉转，像一条螺旋楼梯。绿色的叶子在顶上支棱着。\n"你像一棵小树。"\n她从最底下咬了一口。\n底部最甜。因为糖分都沉到下面去了。她甜到眯起眼睛。\n"下面比上面甜——因为甜会沉底吗？"\n她转着吃。顺着那个螺旋纹路一口一口往上啃。每转一圈吃到的味道都不完全一样，有的地方酸一点有的地方甜一点。\n吃到顶上了。叶子还在。她把叶子拔下来。\n"你当我的帽子吧。"\n她把叶子顶在头上。掉了。\n"好吧你当不了帽子。那你当扇子。"\n她用菠萝叶子扇了两下。\n"嗯。有菠萝味的风。"',
+    repeatLines:['"菠萝戒指我又戴了。"','"它又咬我舌头了。但我赢了。"','"下面还是比上面甜。"','"叶子今天能当帽子吗？——不能。"','"菠萝味的风又来了。"','"螺旋楼梯我又爬了一圈。"']
+  },
+  {
+    id:'mosquito_coil',name:'蚊香',price:1,img:'./蚊香.png',rating:3,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'summer',discount:0},
+    dadWords:'这个不是吃的！！阿贝贝这个不能放嘴里！！这是蚊香，点着以后蚊子就不敢来了。你在旁边看就好，不要碰火柴，爸爸来点。',
+    dadBlock:'',
+    story:'蚊香是绿色的。转了一圈又一圈，从外面转到里面，越转越小。阿贝贝蹲在旁边看爸爸把它掰开，分成两片，一片放在小铁盘上。\n爸爸点了火。\n火苗碰到蚊香的头。头红了一下。然后火灭了，但蚊香没灭。一个小小的红点在那里亮着，像一只很小的眼睛。\n烟升上来了。\n细细的白色的烟，从红点那里飘出来。不是直着上去的。它先是直的，然后扭了一下，弯了一下，散开了。\n阿贝贝蹲在那里看烟。\n"它在写字。"\n烟在空中转了一个圈。\n"写了一个O。"\n烟又扭了一下散掉了。\n"写错了。重写。"\n她就那样蹲着看。蚊香烧得很慢，红点一点一点往前走，沿着那个螺旋的路往里面爬。走过的地方变成灰白色的灰，但还保持着形状，没有散。\n"走过的路还在。"\n屋子里有一种味道。不好闻也不难闻。就是夏天的味道。\n蚊子确实不来了。\n阿贝贝的眼皮开始重了。烟一圈一圈地绕，红点一点一点地走。她的下巴搁在膝盖上，眼睛半闭半开。\n"它走到哪里了……"\n"刚过第三圈。"\n"……替我看着它……别让它迷路了……"\n她就那样靠着墙角睡着了。蚊香还在烧。烟还在写写不完的字。',
+    repeatLines:['"红点走到第几圈了？"','"今天它写了什么字？我猜是C。"','"夏天的味道又来了。"','"我没有睡着。我在闭着眼睛看。"','"走过的路变成灰了但还在。"','"替我看着它。"']
+  },
+  {
+    id:'corn_bag',name:'玉米',price:2,img:'./玉米.png',rating:3,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'真空包装的甜玉米棒。爸爸帮你撕开了，小心烫，刚热过的。一排一排啃，别乱啃，不然到处都是。',
+    dadBlock:'',
+    story:'袋子撕开的时候有蒸汽冒出来。阿贝贝把脸凑过去，蒸汽扑到脸上，暖暖的，带着一股甜甜的粮食味。\n"下雨了。热的雨。"\n她把玉米从袋子里倒出来。黄澄澄的，一粒一粒整整齐齐排成行。每一排都是直的。\n"好守规矩。"\n她从第一排开始啃。门牙卡进两粒之间的缝隙，一使劲，一整排下来了。牙齿上沾着玉米粒，她用舌头把它们卷进嘴里。\n甜的。很简单的甜。没有任何花里胡哨的味道。就是玉米本身的甜。\n"这种甜不需要名字。"\n她啃第二排。第三排。第四排。\n啃到中间她停下来看了看玉米棒。被啃过的地方露出白色的玉米芯，没啃的地方还是金黄金黄的。\n"你像一个没画完的画。"\n她转着啃。尽量啃得整齐，但有几粒没啃干净，孤零零地留在芯上。她用牙齿回去把它们一颗颗咬下来。\n"不留一个。"\n啃完了。玉米芯光溜溜白白净净的。她举起来看了看。\n"你是我的望远镜。"\n她用一只眼睛对着玉米芯的洞往里看。\n"看到了。"\n"看到什么了？"\n"看到了——对面的墙。"',
+    repeatLines:['"热的雨又来了。"','"这种甜又不需要名字了。"','"今天争取一粒不剩。"','"没画完的画又开始画了。"','"望远镜——今天看到了天花板。"','"一排一排守规矩地啃。"']
+  },
+  {
+    id:'qingtuan_lao',name:'青团酪',price:4,img:'./青团酪.png',rating:5,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'spring',discount:1},
+    dadWords:'春天的点心。绿色的是青团，上面浇的白色的是酪，就是那种奶做的甜甜的汁。旁边那个小壶里还有多的，可以自己加。上面撒了桂花。',
+    dadBlock:'',
+    story:'阿贝贝先看旁边那个小壶。白色的瓷壶，胖胖的，只有她半个拳头大。她拿起来往里面看。\n"牛奶？"\n"酪。比牛奶浓。"\n"浓牛奶。"\n她放下小壶，看碗里。\n三个绿色的团子趴在碗底。绿得很正，是那种新长出来的叶子的绿。上面铺了一层白色的酪，浓浓地盖在上面。酪的表面撒了几粒桂花，黄色的，小小的，像星星掉进了雪地。\n"星星和雪和绿色的山。"\n她舀了一颗团子。团子在勺子里晃了一下差点滚出去。圆圆的，滑滑的，身上还裹着酪。\n她咬了一口。\n皮是糯的。牙齿陷进去被粘住了一下。嚼了几下，青草的味道出来了——不是那种除草机经过的青草味，是春天下过雨以后踩在湿草地上的那种。\n"春天在里面。"\n她把酪和团子一起含着。酪是凉的甜的奶的，团子是糯的暖的草的。两种温度两种味道一起在嘴里。\n她嚼了很久。\n"凉的和暖的在一起没有吵架。"\n她拿起小壶，往碗里又加了一点酪。白色的液体慢慢流到团子上面。\n"再下一场雪。"\n她舀起碗底混了桂花的酪喝了一口。\n"这场雪是甜的。"',
+    repeatLines:['"星星又掉进雪地了。"','"春天又在里面了。"','"再下一场雪——我自己倒。"','"小壶今天比上次胖。才怪。"','"凉的和暖的又和好了。"','"桂花是最小的但最香。"']
+  },
+  {
+    id:'watermelon_drink',name:'西瓜冰饮',price:3,img:'./西瓜冰饮.png',rating:4,
+    weeklyLimit:0,timeAllow:{start:11,end:22},seasonDiscount:{season:'summer',discount:1},
+    dadWords:'半个西瓜挖空了当碗。里面放了西瓜球和冰块还有一根吸管。这个吃法是不是很酷。爸爸也觉得很酷。',
+    dadBlock:'冰的东西太早喝对肚子不好哦，中午以后再来。',
+    story:'阿贝贝整个人呆住了。\n"碗是西瓜做的。"\n她绕着那半颗西瓜转了一圈。绿色的皮上面深深浅浅的条纹，像穿了一件条纹睡衣。里面挖空了，红色的果肉变成了一颗一颗圆圆的球。冰块在球和球之间挤着，表面冒着冷气。正中间插了一根白色的弯吸管，顶上一片绿叶子。\n"这不是饮料这是一个游泳池！！"\n她趴到桌边上看。西瓜球浮在红色的汁水里面，冰块慢慢化，水面上有几颗小气泡。\n"它们在泡澡。"\n她先不用吸管。她用勺子捞了一颗西瓜球。圆圆的，红红的，勺子里还带了一点汁水和碎冰。\n放进嘴里。\n冰的。甜的。西瓜的味道充满了整个嘴巴。但比直接啃西瓜更干净，更清爽，因为是汁水泡过的。\n"西瓜在西瓜里面游完泳以后变得更像西瓜了。"\n她又捞了一颗。这颗旁边粘了一块冰。一起放进去。冰在嘴里碎了，和西瓜混在一起。\n"加了冰的夏天。"\n然后她终于用吸管了。吸了一大口。\n"呜——！！！"\n冰到太阳穴了。她捂着头。\n"大脑死机了。"\n但她缓了三秒又吸了一口。\n"重启了。"\n她就这样捞一颗球吸一口汁地吃完了整个半西瓜。最后瓜瓤里面白白净净的，只剩一点粉红色的水渍。\n"游泳池关门了。大家回家了。"\n她拍了拍西瓜壳。\n"明天还开吗。"',
+    repeatLines:['"游泳池又开门了！"','"西瓜球今天在泡温泉。"','"大脑又死机了——重启——好了。"','"碗就是最大的那块西瓜。"','"加了冰的夏天又来了。"','"明天还开吗？"']
   }
 ];
 
@@ -4027,6 +4244,94 @@ function importData(event){
   reader.readAsText(file);
   event.target.value='';
 }
+
+// ===== THEME SYSTEM =====
+function setTheme(theme){
+  const themes=['theme-guava','theme-egg','theme-taro','theme-stone'];
+  themes.forEach(t=>document.body.classList.remove(t));
+  if(theme)document.body.classList.add(theme);
+  localStorage.setItem('candyJarTheme',theme);
+  document.querySelectorAll('.theme-dot').forEach(d=>{
+    d.classList.toggle('active',d.dataset.theme===theme);
+  });
+}
+(function loadTheme(){
+  const t=localStorage.getItem('candyJarTheme');
+  if(t){
+    document.body.classList.add(t);
+    setTimeout(()=>{
+      document.querySelectorAll('.theme-dot').forEach(d=>{
+        d.classList.toggle('active',d.dataset.theme===t);
+      });
+    },100);
+  }
+})();
+
+// ===== DREAM SYSTEM =====
+const abebeDreams=[
+'阿贝贝梦到自己变成了一颗草莓牛奶瓶。\n她站在冰箱里面，两边是别的瓶子。她低头看了看自己，粉粉的，凉凉的。\n"我变好看了。"\n有人打开了冰箱门。一道光照进来。阿贝贝紧张地屏住呼吸。\n那只手拿了旁边那瓶。\n"……你选错了。我比较好喝的。"',
+'阿贝贝梦到玉米粒排着队跟她鞠躬。\n一排一排的，黄色的小脑袋一起低下去再一起抬起来。\n"你们在做早操吗。"\n它们又鞠了一下。\n"谢谢。但我还是会吃你们的。"',
+'阿贝贝梦到自己骑在菠萝叶子上飞。\n风很大，叶子在抖，她两只爪子紧紧抓着叶子边缘。底下是云。云是草莓味的。\n"如果掉下去的话……会掉进草莓云里面……好像也不错。"\n她松了一只手。\n没掉。\n"我好勇敢。"',
+'阿贝贝梦到蚊香变成了一条路。\n她走在螺旋的路上，从外面往里面走。路越来越窄。两边冒着烟。\n走到最里面的时候有一个红色的小点。\n"你就是终点吗。"\n红点亮了一下。\n阿贝贝坐下来。\n"那我到了。"',
+'阿贝贝梦到麦当劳全家桶变成了一栋房子。\n鸡腿是烟囱，薯条是篱笆，鸡块铺在地上当地砖。\n她推开鸡米花做的门走进去。里面很暖和。到处都是炸鸡的味道。\n"我要住在这里。"\n她在鸡翅做的沙发上坐下来。\n"租金多少？"\n没人回答。\n"免费的话我就不走了。"',
+'阿贝贝梦到自己在和一颗汤圆赛跑。\n汤圆是圆的所以它在滚。滚得很快。阿贝贝跑不过它。\n"你等等我！你作弊！你有轮子！"\n汤圆没理她继续滚。\n阿贝贝追了半天追到一个碗边上。汤圆滚进碗里了。碗里有粉色的汤。\n"你是自己跑来泡澡的啊。"',
+'阿贝贝梦到月亮掉进了杯子里。\n杯子是她喝牛奶的那个。月亮浮在牛奶上面，白白的圆圆的，比杯口小一点点刚好放得下。\n"你怎么掉下来的。"\n月亮不说话。\n阿贝贝喝了一口牛奶。月亮跟着牛奶晃了晃。\n"你是月亮味的牛奶还是牛奶味的月亮。"',
+'阿贝贝梦到爸爸变成了一颗很大的棉花糖。\n白色的，软软的，她戳了一下，手指陷进去了。\n"爸爸你变胖了。"\n棉花糖没说话但好像缩了一下。\n"不要紧的。胖一点的爸爸更好抱。"\n她整个人扑上去。陷进了棉花糖里面。\n"好甜。爸爸你是甜的。"',
+'阿贝贝梦到自己在水果三明治里面。\n她躺在奶油层上面。上面是面包做的天花板，下面是猕猴桃做的地板。旁边住着一颗橙子。\n"你好。我是新来的。"\n橙子说："这里很舒服的。就是有点黏。"\n阿贝贝动了动。确实黏。\n"没关系。黏一点比较安全。"',
+'阿贝贝梦到所有的筷子在开会。\n它们站成一圈。有的高有的矮有的胖有的瘦。议题是：谁被咬的次数最多。\n一根最旧的筷子上面全是牙印。\n"是我。"\n所有筷子给它鼓掌。\n阿贝贝在旁边看着。\n"……对不起。"',
+'阿贝贝梦到自己的影子离家出走了。\n她走路的时候低头一看——地上没有影子了。\n"你去哪里了。"\n她到处找。沙发底下没有。床底下没有。冰箱后面没有。\n最后在阳台上找到了。影子在晒太阳。\n"你在偷懒。"\n影子没动。\n"……好吧你辛苦了。晒完再回来。"',
+'阿贝贝梦到一朵云从窗户飘进来了。\n云停在房间中间。阿贝贝站在云底下。\n突然下了一点雨。很小很小的雨。只淋到阿贝贝一个人。\n"你在给我浇水吗。"\n雨停了。云飘走了。\n阿贝贝摸了摸头上的水。\n"……我又没有要开花。"',
+'阿贝贝梦到枕头会说话。\n"你今天翻了十七次身。"\n"你数了？"\n"当然数了。每次你翻身我都会被压一下。"\n"对不起。"\n"没关系。你睡着的时候嘴巴会嘟起来。"\n"……你看什么看。"\n"你的口水沾到我了。"\n"这是信任的证据。"\n枕头叹了口气。',
+'阿贝贝梦到爸爸妈妈一起坐在月亮上。\n月亮是弯的那种，像一把椅子。妈妈坐左边爸爸坐右边。\n阿贝贝站在地上抬头看。\n"我也要上去！"\n"太高了够不到哦。"\n"那你们下来。"\n"下不来了月亮没有楼梯。"\n阿贝贝想了想。跑去搬了一摞书。一本一本叠高。踩上去。\n还是够不到。\n"那我明天再长高一点再来。"',
+'阿贝贝梦到冰箱里面有一个小世界。\n蔬菜住一层，水果住一层，饮料住一层。它们互相串门。\n西兰花去了水果层。苹果说："你不是水果。"\n西兰花说："我绿色的。"\n苹果说："绿色不代表是水果。"\n西兰花低下头走了。\n阿贝贝打开冰箱门看到了一棵难过的西兰花。\n"你可以住在我的房间。不需要是水果。"',
+'阿贝贝梦到天上下了一场糖果雨。\n各种颜色的糖从天上掉下来。红的黄的蓝的绿的。她张大嘴巴抬头等。一颗掉到嘴里了。草莓味。\n又一颗。柠檬味。\n又一颗。打到鼻子了。\n"疼！"\n她揉着鼻子。但又张嘴了。\n"再来！"',
+'阿贝贝梦到自己变得很小很小。\n小到可以站在一颗瓜子上面。\n她低头看。瓜子壳上面的纹路像一座山的等高线。\n"我在爬山。"\n她从瓜子的尖头走到圆头。走了好久好久。\n到了圆头她坐下来看风景。\n风景就是桌面。但从瓜子上面看，桌面像一片沙漠。\n"世界好大。"',
+'阿贝贝梦到她的耳朵会飞。\n两只耳朵像蝴蝶翅膀一样扇了扇，然后她整个人飞起来了。\n"啊——！"\n她飞过了屋顶。飞过了树。飞过了隔壁阿姨晒的被子。\n"我的被子比阿姨的好看！"\n她飞了一圈回来了。落在阳台上。耳朵停了。\n"下次我要飞远一点。"',
+'阿贝贝梦到她在和星星下棋。\n棋盘是夜空。星星是棋子。\n她走了一步。一颗星星从左边移到右边。\n星星也走了一步。另一颗星星闪了两下。\n阿贝贝看不懂规则。\n"你赢了。"\n星星闪了闪。好像在笑。\n"明天我再来。先让我学一下规则。"',
+'阿贝贝梦到被子变成了大海。\n她翻了个身掉进去了。蓝色的被子变成蓝色的水。她在水里漂着。枕头变成了一个小岛。\n她游到枕头岛上坐好。\n"救命。"\n但其实她不害怕。水是暖的。\n"算了。不救也行。这里挺舒服的。"',
+'阿贝贝梦到一只蜗牛跟她赛跑。\n蜗牛说："我们比慢的。谁最后到终点谁赢。"\n阿贝贝觉得这个规则很好。她坐下来。\n蜗牛也停下来了。\n她们互相看着。谁都不动。\n过了很久。\n"我觉得我们都赢了。"',
+'阿贝贝梦到雨是倒着下的。\n水滴从地上飞到天上去。地上的水洼越来越小。\n她伸手接但接不到，因为水滴在往上跑。\n"你们要去哪里。"\n水滴没理她继续往上飞。\n阿贝贝蹲下来看最后一个水洼。水洼越来越小越来越小。最后一滴水飞走了。\n"……那地上就干了呀。"\n她有一点点失落。\n"我比较喜欢正着下的雨。"',
+'阿贝贝梦到妈妈的声音变成了一条丝带。\n粉色的，长长的，从妈妈嘴巴里飘出来。飘到阿贝贝身边绕了一圈。\n阿贝贝伸手抓住了。\n丝带暖暖的。\n"你说的每句话我都拿在手里了。"',
+'阿贝贝梦到自己在面条里面。\n不是吃面条，是在面条里面。她被面条缠住了。到处都是面条。白色的软软的滑滑的。\n她扭了扭。越扭越紧。\n"救命！面条绑架我了！"\n面条说："我没有绑架你。是你自己滚进来的。"\n"……哦。那对不起。但你能松开吗。"\n面条松开了一点。阿贝贝爬出来。身上全是汤。\n"我变成一个肉馅了。"',
+'阿贝贝梦到柜子里住着一个小精灵。\n小精灵每天晚上会出来整理阿贝贝的玩具。\n"你为什么帮我整理。"\n"因为你睡着了以后玩具会打架。"\n"打架？"\n"小熊总是要坐在最前面。积木不同意。"\n阿贝贝看了看柜子上的小熊和积木。\n"明天我让它们道歉。"',
+'阿贝贝梦到太阳打了一个喷嚏。\n然后所有的光都抖了一下。树的影子晃了晃。鸟飞歪了一点。\n阿贝贝站在窗边看到了。\n"太阳你感冒了吗。"\n太阳又打了一个喷嚏。天空变亮了一秒钟又变回来了。\n"你要不要吃药。"\n太阳没说话。\n"那多喝热水。"',
+'阿贝贝梦到她种了一颗糖。\n把糖埋在花盆里面浇了水。\n第二天早上长出来一棵小苗。叶子是粉色的。\n第三天开了一朵花。花是糖果形状的。\n第四天花上面结了一颗糖。\n她摘下来尝了一下。\n"草莓味的。"\n她又种了一颗。这次浇的是草莓牛奶。\n"不知道会不会长出草莓牛奶树。"',
+'阿贝贝梦到时钟的指针掉下来了。\n时针先掉的。掉在地上当了一根棍子。分针也掉了。秒针最后掉的，它转了三圈才肯掉。\n钟面上光秃秃的。\n"现在几点了。"\n时钟说："不知道了。"\n阿贝贝看了看窗外。天是橙色的。\n"那就是橙色的时候。"',
+'阿贝贝梦到鞋子在晚上会出去散步。\n她早上起来发现鞋子不在门口。\n等了一会儿，鞋子从门缝溜回来了。上面沾着露水。\n"你们去哪里了。"\n鞋子没说话。\n她穿上。脚底有一片湿的。\n"……你踩到水坑了吧。"',
+'阿贝贝梦到她变成了一本书。\n有人翻开了她。一页一页翻。每一页上面都写着她的一天。\n翻到有一页写着"今天吃了全家桶"。那个人笑了。\n翻到有一页写着"今天想爸爸妈妈了"。那个人停了一下。\n翻到最后一页是空白的。\n"这是明天的。还没写呢。"',
+'阿贝贝梦到一只鱼在天上游。\n尾巴摆来摆去的。在云和云之间穿梭。\n阿贝贝仰着头看。\n"你不回水里吗。"\n鱼说："天上也可以游的。"\n"但天上没有水。"\n"有风啊。风和水差不多。只是看不见而已。"\n阿贝贝想了想。伸出手。风吹过她的指缝。\n"……好像确实差不多。"'
+];
+
+function getDreamIndex(){
+  const d=new Date();
+  const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  return seed%abebeDreams.length;
+}
+
+function checkDreamBtn(){
+  const h=new Date().getHours();
+  const btn=document.getElementById('dream-btn');
+  if(btn) btn.style.display=(h>=22||h<6)?'block':'none';
+}
+
+function showDream(){
+  const dream=abebeDreams[getDreamIndex()];
+  const overlay=document.createElement('div');
+  overlay.className='dream-overlay';
+  overlay.onclick=function(e){if(e.target===overlay)overlay.remove()};
+  overlay.innerHTML='<div class="dream-card"><div class="dream-card-title">阿贝贝的梦</div><div class="dream-card-body">'+dream.replace(/\n/g,'<br>')+'</div><div class="dream-card-close" onclick="this.closest(\'.dream-overlay\').remove()">轻触回到现实</div></div>';
+  document.body.appendChild(overlay);
+}
+
+// hook into enterAbebe to check dream btn
+const origEnterAbebe2=typeof enterAbebe==='function'?enterAbebe:null;
+enterAbebe=function(){
+  if(origEnterAbebe2)origEnterAbebe2();
+  checkDreamBtn();
+};
+
+// also check on interval
+setInterval(checkDreamBtn,60000);
 
 </script>
 </body>
