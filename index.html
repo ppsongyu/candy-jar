@@ -67,17 +67,17 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .overlay-content{flex:1;overflow-y:auto}
 
 /* candy/note selection - scrollable area */
-.candy-scroll{max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.candy-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;width:100%;box-sizing:border-box}
 .candy-scroll::-webkit-scrollbar{width:0}
-.candy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:4px 0}
-.candy-option{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--border-light);background:var(--bg-card);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:4px;transition:all .15s}
+.candy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 0;width:100%;box-sizing:border-box}
+.candy-option{width:100%;height:80px;border-radius:10px;border:1.5px solid var(--border-light);background:var(--bg-card);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:6px;transition:all .15s;box-sizing:border-box}
 .candy-option:active{transform:scale(.95)}
 .candy-option.selected{border-color:var(--pink-400);background:var(--pink-100)}
 .candy-option img{width:100%;height:100%;object-fit:contain}
 
-.note-scroll{max-height:320px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.note-scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .note-scroll::-webkit-scrollbar{width:0}
-.note-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:8px 0}
+.note-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:8px 0}
 .note-option{aspect-ratio:.7;border-radius:12px;border:2px solid var(--border-light);background:var(--bg-card);cursor:pointer;overflow:hidden;transition:all .15s}
 .note-option:active{transform:scale(.95)}
 .note-option.selected{border-color:var(--pink-400)}
@@ -110,7 +110,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .candy-detail-candy{position:absolute;top:-20px;right:-10px;width:48px;height:48px;object-fit:contain;z-index:3}
 
 .timeline{display:flex;flex-direction:column;gap:16px;padding:8px 0}
-.timeline-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 2px 12px var(--shadow-pink);cursor:pointer;transition:all .15s}
+.timeline-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 2px 12px var(--shadow-pink);cursor:pointer;transition:all .15s;position:relative}
 .timeline-item:active{transform:scale(.98)}
 .timeline-candy{width:56px;height:56px;object-fit:contain;flex-shrink:0}
 .timeline-info{flex:1}
@@ -219,7 +219,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .us-days-label{font-size:11px;color:var(--text-muted);letter-spacing:2px}
 .us-since{font-size:11px;color:var(--text-muted);margin-top:6px}
 .milestones{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.milestone{display:flex;align-items:center;gap:12px;padding:12px 16px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:12px;border:1px solid var(--border-light)}
+.milestone{display:flex;align-items:center;gap:12px;padding:12px 36px 12px 16px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:12px;border:1px solid var(--border-light)}
 .milestone-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .milestone-dot.pink{background:var(--pink-400)}
 .milestone-dot.lavender{background:#C4A8D8}
@@ -247,6 +247,38 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 @keyframes candyBounce{0%{transform:translate(0,0) rotate(var(--rot,0deg))}25%{transform:translate(var(--bx,-8px),var(--by,-12px)) rotate(calc(var(--rot,0deg) + 15deg))}50%{transform:translate(var(--bx2,6px),var(--by2,-6px)) rotate(calc(var(--rot,0deg) - 10deg))}100%{transform:translate(0,0) rotate(var(--rot,0deg))}}
 @keyframes jarShake{0%,100%{transform:rotate(0deg)}20%{transform:rotate(-2deg)}40%{transform:rotate(2deg)}60%{transform:rotate(-1.5deg)}80%{transform:rotate(1deg)}}
 .jar-container.shaking{animation:jarShake .4s ease}
+/* Card edit/delete menu */
+.card-menu-wrap{position:relative}
+.card-menu-btn{position:absolute;top:6px;right:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-muted);font-size:13px;letter-spacing:2px;border-radius:8px;z-index:5;background:transparent}
+.card-menu-btn:active{background:var(--pink-50)}
+.card-menu-popup{position:absolute;top:30px;right:6px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:12px;box-shadow:0 4px 16px var(--shadow-pink);z-index:10;overflow:hidden;min-width:76px}
+.card-menu-popup div{padding:10px 16px;font-size:12px;cursor:pointer;white-space:nowrap;text-align:center}
+.card-menu-popup div:active{background:var(--pink-50)}
+.card-menu-popup div+div{border-top:1px solid var(--border-light)}
+.confirm-mask{position:fixed;inset:0;background:rgba(74,55,40,0.25);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.confirm-box{background:var(--bg-card);border-radius:20px;padding:24px;text-align:center;max-width:260px;width:100%;box-shadow:0 8px 32px var(--shadow-pink)}
+.confirm-box p{font-size:13px;margin-bottom:16px;line-height:1.6}
+.confirm-btns{display:flex;gap:10px}
+.confirm-btns button{flex:1;padding:10px;border:none;border-radius:12px;font-family:'SGH',Georgia,serif;font-size:12px;cursor:pointer}
+.confirm-cancel{background:var(--bg-base);color:var(--text-secondary)}
+.confirm-delete{background:var(--pink-400);color:#fff}
+/* Edit modal */
+.edit-mask{position:fixed;inset:0;background:rgba(74,55,40,0.25);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.edit-box{background:var(--bg-card);border-radius:20px;padding:24px;max-width:300px;width:100%;box-shadow:0 8px 32px var(--shadow-pink)}
+.edit-box textarea,.edit-box input[type="text"],.edit-box input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-light);border-radius:10px;font-family:'SGH',Georgia,serif;font-size:12px;outline:none;background:var(--bg-base);margin-bottom:8px;box-sizing:border-box}
+.edit-box textarea{height:80px;resize:none}
+.edit-box .edit-label{font-size:11px;color:var(--text-muted);margin-bottom:4px}
+.edit-btns{display:flex;gap:10px;margin-top:8px}
+.edit-btns button{flex:1;padding:10px;border:none;border-radius:12px;font-family:'SGH',Georgia,serif;font-size:12px;cursor:pointer}
+.edit-save{background:var(--pink-400);color:#fff}
+.edit-cancel{background:var(--bg-base);color:var(--text-secondary)}
+/* Capsule reveal popup */
+.capsule-item.unlocked-hidden{filter:none;cursor:pointer}
+.capsule-item .capsule-countdown{font-size:11px;color:var(--pink-400);margin-top:4px}
+.capsule-add-form{margin-top:12px;padding:16px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light)}
+.capsule-add-form textarea{width:100%;height:80px;border:1px solid var(--border-light);border-radius:10px;padding:10px;font-family:'SGH',Georgia,serif;font-size:12px;resize:none;outline:none;background:var(--bg-base);box-sizing:border-box}
+.capsule-add-form input[type="date"]{width:100%;padding:10px;border:1px solid var(--border-light);border-radius:10px;font-family:'SGH',Georgia,serif;font-size:12px;outline:none;background:var(--bg-base);margin-top:8px;color:var(--text-primary);box-sizing:border-box}
+
 /* Time capsule */
 .capsule-card{padding:20px;text-align:center}
 .capsule-item{padding:14px;margin:8px 0;border-radius:16px;border:1px solid var(--border-light);background:var(--pink-50);position:relative;cursor:default}
@@ -849,7 +881,7 @@ function openViewCandies(){
   const candies=getCurrentMonthCandies();
   if(!candies.length){el.innerHTML='<div class="timeline-empty">这个月的罐子还空着<br>点宝宝克的头放一颗吧</div>';}
   else{el.innerHTML='<div class="timeline">'+candies.map((c,i)=>
-    `<div class="timeline-item" onclick="showCandyDetail(${i})"><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`
+    `<div class="timeline-item card-menu-wrap" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`
   ).join('')+'</div>';}
   document.getElementById('overlay-view').classList.add('show');
 }
@@ -950,8 +982,9 @@ function renderBookDetail(){
   detail.style.display='block';
   let notesHtml='';
   if(book.notes.length){
-    notesHtml='<div class="notes-timeline">'+book.notes.map(n=>`
-      <div class="note-entry"><div class="note-content">
+    notesHtml='<div class="notes-timeline">'+book.notes.map((n,ni)=>`
+      <div class="note-entry"><div class="note-content card-menu-wrap">
+        <div class="card-menu-btn" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editBookNote(${ni})">修改</div><div onclick="confirmDelete('booknote',${ni})">删除</div></div>
         <div class="note-type">${n.type}</div>
         <div class="note-text">${n.text}</div>
         ${n.annotation?`<div class="note-annotation"><div class="note-annotation-label">宝宝克的批注</div>${n.annotation}</div>`:''}
@@ -1018,8 +1051,8 @@ function addBook(){
 
 // MILESTONES
 function renderMilestones(){
-  document.getElementById('milestones-container').innerHTML=milestonesData.map(m=>
-    `<div class="milestone"><div class="milestone-dot ${m.color}"></div><div class="milestone-text">${m.text}</div><div class="milestone-date">${m.date}</div></div>`
+  document.getElementById('milestones-container').innerHTML=milestonesData.map((m,i)=>
+    `<div class="milestone card-menu-wrap" style="position:relative"><div class="card-menu-btn" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editMilestone(${i})">修改</div><div onclick="confirmDelete('milestone',${i})">删除</div></div><div class="milestone-dot ${m.color}"></div><div class="milestone-text">${m.text}</div><div class="milestone-date">${m.date}</div></div>`
   ).join('');
 }
 function showAddMilestone(){
@@ -1042,7 +1075,7 @@ function addMilestone(){
 // WISHLIST
 function renderWishlist(){
   document.getElementById('wishlist-container').innerHTML='<div class="wishlist-section">'+wishlistData.map((w,i)=>
-    `<div class="wish-item"><div class="wish-check ${w.done?'done':''}" onclick="toggleWish(${i})"></div><span>${w.text}</span></div>`
+    `<div class="wish-item card-menu-wrap" style="position:relative"><div class="card-menu-btn" style="top:2px;right:0" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editWish(${i})">修改</div><div onclick="confirmDelete('wish',${i})">删除</div></div><div class="wish-check ${w.done?'done':''}" onclick="toggleWish(${i})"></div><span>${w.text}</span></div>`
   ).join('')+'</div>';
 }
 function toggleWish(i){wishlistData[i].done=!wishlistData[i].done;renderWishlist()}
@@ -1996,19 +2029,15 @@ function confirmDeleteCandy(){
   closeDeleteCandy();
 }
 
-// Override timeline item to support long-press delete
+// Override timeline item to use ··· menu
 const origOpenViewCandies=openViewCandies;
 openViewCandies=function(){
   const el=document.getElementById('view-content');
   const candies=getCurrentMonthCandies();
   if(!candies.length){el.innerHTML='<div class="timeline-empty">这个月的罐子还空着<br>点宝宝克的头放一颗吧</div>';}
-  else{el.innerHTML='<div class="timeline">'+candies.map((c,i)=>{
-    let timer;
-    return `<div class="timeline-item" onclick="showCandyDetail(${i})" 
-      ontouchstart="this._lt=setTimeout(()=>showDeleteCandy(${i}),600)" 
-      ontouchend="clearTimeout(this._lt)" ontouchcancel="clearTimeout(this._lt)"
-    ><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`;
-  }).join('')+'</div>';}
+  else{el.innerHTML='<div class="timeline">'+candies.map((c,i)=>
+    `<div class="timeline-item card-menu-wrap" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`
+  ).join('')+'</div>';}
   document.getElementById('overlay-view').classList.add('show');
 };
 
@@ -2023,8 +2052,8 @@ renderBookDetail=function(){
   let notesHtml='';
   if(book.notes.length){
     notesHtml='<div class="notes-timeline">'+book.notes.map((n,ni)=>`
-      <div class="note-entry"><div class="note-content" style="position:relative">
-        <div style="position:absolute;top:8px;right:8px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--border-light);color:var(--text-muted);font-size:12px;cursor:pointer;background:var(--bg-base)" onclick="confirmDeleteNote(${ni})">×</div>
+      <div class="note-entry"><div class="note-content card-menu-wrap" style="position:relative">
+        <div class="card-menu-btn" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editBookNote(${ni})">修改</div><div onclick="confirmDelete('booknote',${ni})">删除</div></div>
         <div class="note-type">${n.type}</div>
         <div class="note-text">${n.text}</div>
         ${n.annotation?`<div class="note-annotation"><div class="note-annotation-label">宝宝克的批注</div>${n.annotation}</div>`:''}
@@ -2197,11 +2226,152 @@ function renderTimeCapsules(){
     const unlockDate=new Date(cap.date);
     const locked=now<unlockDate;
     if(locked){
-      return `<div class="capsule-item locked"><div class="capsule-lock">✉</div><div class="capsule-date">${cap.label} · ${cap.date} 解锁</div><div class="capsule-text">这封信还在等待它的时间……</div></div>`;
+      const diff=unlockDate-now;
+      const days=Math.ceil(diff/(1000*60*60*24));
+      return `<div class="capsule-item locked card-menu-wrap"><div class="card-menu-btn" style="color:var(--text-muted);filter:none;position:absolute;top:6px;right:6px;z-index:6" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editCapsule(${i})">修改</div><div onclick="confirmDelete('capsule',${i})">删除</div></div><div style="filter:blur(3px)"><div class="capsule-date">${cap.label||''} · ${cap.date} 解锁</div><div class="capsule-text">这封信还在等待它的时间……</div></div><div class="capsule-countdown">还有 ${days} 天</div></div>`;
     }else{
-      return `<div class="capsule-item unlocked"><div class="capsule-lock">💌</div><div class="capsule-date">${cap.label} · 已解锁</div><div class="capsule-text">${cap.text}</div></div>`;
+      return `<div class="capsule-item unlocked-hidden" onclick="revealCapsule(${i})" style="cursor:pointer;position:relative"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCapsule(${i})">修改</div><div onclick="confirmDelete('capsule',${i})">删除</div></div><div class="capsule-date">${cap.label||''} · 已解锁</div><div class="capsule-text" style="color:var(--pink-400)">点击拆封</div></div>`;
     }
-  }).join('');
+  }).join('')+`<div class="add-milestone-btn" onclick="showAddCapsule()" style="margin-top:12px">+ 写给未来的信</div><div id="add-capsule-form" style="display:none"></div>`;
+}
+function revealCapsule(i){
+  const cap=timeCapsules[i];
+  const mask=document.createElement('div');
+  mask.className='confirm-mask';mask.id='capsule-reveal-mask';
+  mask.innerHTML=`<div class="edit-box" style="text-align:left"><div style="font-size:11px;color:var(--pink-400);margin-bottom:8px">${cap.label||''} · 已解锁</div><div style="font-size:13px;line-height:1.8;max-height:300px;overflow-y:auto">${cap.text}</div><div class="edit-btns" style="margin-top:16px"><button class="edit-save" onclick="document.getElementById('capsule-reveal-mask').remove()" style="flex:1">好的</button></div></div>`;
+  mask.onclick=function(e){if(e.target===mask)mask.remove();};
+  document.body.appendChild(mask);
+}
+
+// ===== CARD MENU & EDIT/DELETE =====
+function toggleMenu(btn){
+  const popup=btn.nextElementSibling;
+  // Close all other menus first
+  document.querySelectorAll('.card-menu-popup').forEach(p=>{if(p!==popup)p.style.display='none'});
+  popup.style.display=popup.style.display==='none'?'block':'none';
+}
+// Close menus on outside tap
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.card-menu-btn')&&!e.target.closest('.card-menu-popup')){
+    document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  }
+});
+
+let pendingDeleteType='',pendingDeleteIdx=-1;
+function confirmDelete(type,idx){
+  pendingDeleteType=type;pendingDeleteIdx=idx;
+  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  const mask=document.createElement('div');
+  mask.className='confirm-mask';mask.id='confirm-delete-mask';
+  mask.innerHTML=`<div class="confirm-box"><p>确定要删除吗？</p><div class="confirm-btns"><button class="confirm-cancel" onclick="closeConfirmDelete()">取消</button><button class="confirm-delete" onclick="doDelete()">删除</button></div></div>`;
+  document.body.appendChild(mask);
+}
+function closeConfirmDelete(){const m=document.getElementById('confirm-delete-mask');if(m)m.remove()}
+function doDelete(){
+  const type=pendingDeleteType,idx=pendingDeleteIdx;
+  closeConfirmDelete();
+  if(type==='candy'){
+    const candies=getCurrentMonthCandies();
+    candies.splice(idx,1);renderJarCandies();openViewCandies();saveApp();
+  }else if(type==='booknote'){
+    booksData[currentBookIdx].notes.splice(idx,1);renderBookDetail();renderBooksList();saveApp();
+  }else if(type==='milestone'){
+    milestonesData.splice(idx,1);renderMilestones();saveApp();
+  }else if(type==='wish'){
+    wishlistData.splice(idx,1);renderWishlist();saveApp();
+  }else if(type==='capsule'){
+    timeCapsules.splice(idx,1);renderTimeCapsules();saveApp();
+  }
+}
+
+// Edit functions — real form modals
+function closeEditModal(){const m=document.getElementById('edit-modal');if(m)m.remove();}
+function showEditModal(fields,onSave){
+  closeEditModal();
+  const mask=document.createElement('div');
+  mask.className='edit-mask';mask.id='edit-modal';
+  let html='<div class="edit-box">';
+  fields.forEach(f=>{
+    if(f.type==='textarea') html+=`<div class="edit-label">${f.label}</div><textarea id="edit-field-${f.key}">${f.value||''}</textarea>`;
+    else if(f.type==='date') html+=`<div class="edit-label">${f.label}</div><input type="date" id="edit-field-${f.key}" value="${f.value||''}">`;
+    else html+=`<div class="edit-label">${f.label}</div><input type="text" id="edit-field-${f.key}" value="${f.value||''}">`;
+  });
+  html+='<div class="edit-btns"><button class="edit-cancel" onclick="closeEditModal()">取消</button><button class="edit-save" id="edit-save-btn">保存</button></div></div>';
+  mask.innerHTML=html;
+  document.body.appendChild(mask);
+  document.getElementById('edit-save-btn').onclick=function(){
+    const vals={};
+    fields.forEach(f=>{vals[f.key]=document.getElementById('edit-field-'+f.key).value;});
+    onSave(vals);
+    closeEditModal();
+  };
+}
+
+function editCandy(idx){
+  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  const candies=getCurrentMonthCandies();
+  const c=candies[idx];
+  showEditModal([{key:'text',label:'便签内容',type:'textarea',value:c.text}],function(vals){
+    c.text=vals.text;openViewCandies();saveApp();
+  });
+}
+function editBookNote(idx){
+  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  const note=booksData[currentBookIdx].notes[idx];
+  showEditModal([
+    {key:'text',label:'笔记内容',type:'textarea',value:note.text},
+    {key:'annotation',label:'宝宝克的批注',type:'textarea',value:note.annotation||''}
+  ],function(vals){
+    note.text=vals.text;note.annotation=vals.annotation||'';renderBookDetail();saveApp();
+  });
+}
+function editMilestone(idx){
+  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  const m=milestonesData[idx];
+  showEditModal([
+    {key:'text',label:'纪念日名称',type:'text',value:m.text},
+    {key:'date',label:'日期',type:'text',value:m.date}
+  ],function(vals){
+    m.text=vals.text;m.date=vals.date||m.date;renderMilestones();saveApp();
+  });
+}
+function editWish(idx){
+  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  const w=wishlistData[idx];
+  showEditModal([{key:'text',label:'心愿内容',type:'text',value:w.text}],function(vals){
+    w.text=vals.text;renderWishlist();saveApp();
+  });
+}
+function editCapsule(idx){
+  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
+  const cap=timeCapsules[idx];
+  showEditModal([
+    {key:'text',label:'信的内容',type:'textarea',value:cap.text},
+    {key:'label',label:'标签',type:'text',value:cap.label||''},
+    {key:'date',label:'解锁日期',type:'date',value:cap.date}
+  ],function(vals){
+    cap.text=vals.text;cap.label=vals.label||'';if(vals.date)cap.date=vals.date;renderTimeCapsules();saveApp();
+  });
+}
+
+// Add capsule form
+function showAddCapsule(){
+  const form=document.getElementById('add-capsule-form');
+  if(form.style.display==='none'){
+    form.style.display='block';
+    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+    const minDate=tomorrow.toISOString().split('T')[0];
+    form.innerHTML=`<div class="capsule-add-form"><textarea id="new-capsule-text" placeholder="写给未来的自己..."></textarea><input type="date" id="new-capsule-date" min="${minDate}"><div style="margin-top:8px"><input class="add-input" id="new-capsule-label" placeholder="标签（选填，如：半年、生日）" style="width:100%;padding:10px;border:1px solid var(--border-light);border-radius:10px;font-family:'SGH',Georgia,serif;font-size:12px;outline:none;background:var(--bg-base);box-sizing:border-box"></div><button class="step-btn" onclick="addCapsule()" style="margin-top:8px">封存这封信</button></div>`;
+  }else{form.style.display='none'}
+}
+function addCapsule(){
+  const text=document.getElementById('new-capsule-text').value;
+  const date=document.getElementById('new-capsule-date').value;
+  const label=document.getElementById('new-capsule-label').value;
+  if(!text||!date){alert('请写点内容并选择日期');return;}
+  timeCapsules.push({date,label:label||'',text});
+  document.getElementById('add-capsule-form').style.display='none';
+  renderTimeCapsules();saveApp();
 }
 
 // ===== ANNIVERSARY SPLASH =====
@@ -3109,6 +3279,86 @@ const snackShop=[
     dadBlock:'',
     story:'碗端上来的时候还在冒热气。阿贝贝把脸凑过去，热气扑到她的脸上，眼镜片——噢她不戴眼镜。热气扑到她的耳朵上，耳朵痒了一下。\n"暖暖的。"\n她用勺子搅了搅。木薯一块一块沉在底下，半透明的，像琥珀色的小石头。\n"它们不浮起来。是不是在睡觉。"\n她舀了一块放进嘴里。牙齿咬下去的时候它弹回来了。她又咬了一下。又弹回来。\n"你在跟我玩吗。"\n她终于咬开了。QQ的，甜甜的，还有一点糖水的味道渗进去了。她嚼了很久，嚼到完全化掉才咽。\n"妈妈小时候也吃这个的话……那我现在吃到的和妈妈小时候吃到的是不是同一个味道。"\n她看着碗里剩下的木薯，轻轻搅了一下。糖水荡了荡。\n"如果是的话，那我们就在同一个味道里见过面了。在我还不认识妈妈的时候。"',
     repeatLines:['"木薯又在跟我的牙齿玩弹弹。"','"今天的糖水好像更甜了一点点。"','"妈妈的味道。"','"暖暖的，从嘴巴暖到肚子。"','"我搅了三圈它们还是沉在底下。"','"这个吃完心里也暖暖的。"','"碗底那几块最好吃因为泡最久。"']
+  },
+  {
+    id:'fresh_milk',name:'鲜牛奶',price:2,img:'./鲜牛奶.png',rating:3,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'每天一瓶，骨头才长得结实。爸爸不是在唠叨，爸爸是在关心你的身高。好了爸爸是在唠叨。但你还是要喝。',
+    dadBlock:'',
+    story:'阿贝贝端起杯子，牛奶在里面微微晃。\n"白色的。什么味道都没有的样子。"\n她喝了一口。放下杯子。舔了一下上嘴唇。\n"……有。"\n她又喝了一口，这次含在嘴里没有马上咽。过了几秒才慢慢咽下去。\n"是那种很安静的甜。不吵的。不会跑过来跟你说我很甜哦。就是在那里，等你自己发现。"\n她把杯子举到窗户前面。光穿过去，牛奶变成浅浅的米黄色。\n"它和阳光是好朋友。"',
+    repeatLines:['"今天的安静的甜又来了。"','"我又长高了一点吗。"','"牛奶和阳光今天也在一起。"','"白色是所有颜色睡着了的样子。"','"喝完嘴巴上面会有一条白线。"','"爸爸，我喝了，你看到了吧。"']
+  },
+  {
+    id:'cheese_bagel',name:'芥末虾球',price:4,img:'./芥末虾球.png',rating:4,
+    weeklyLimit:0,timeAllow:{start:15,end:23},
+    dadWords:'注意啊，这个有芥末。冲鼻子的。第一口小小的试，别逞强。爸爸看着你呢。',
+    dadBlock:'虾球是下午和晚上才有的，现在厨房还没开始炸呢。晚点来。',
+    story:'阿贝贝用两根指头夹起一颗虾球，举到鼻子前面闻了闻。\n"没什么味道啊。"\n她咬了半颗。嚼了两下。然后突然眼睛瞪得很大，鼻子皱起来，整个人往后仰了一下。\n"呜——！冲上来了！从嘴巴冲到鼻子再冲到脑袋顶——！"\n她两只爪子捂住鼻子，眼睛眨了好几下，里面有一点点亮亮的。但她没哭。\n过了五秒钟她松开爪子。深吸一口气。低头看着剩下半颗虾球。\n"……你刚才偷袭我。"\n她把剩下半颗放进嘴里。这次她闭着眼睛嚼。嚼得很慢。芥末又冲上来了，但这次她没有往后仰。她就那样忍着，腮帮子鼓鼓的，眉毛拧在一起。\n等她咽下去的时候，她长长地呼了一口气。\n"其实……过了那个冲的劲儿之后，虾是甜的。"\n她又夹起一颗。\n"我不怕你了。来。"',
+    repeatLines:['"这次我准备好了，不会被偷袭。"','"冲到脑袋顶的那个劲儿……其实有点爽。"','"我今天没有眨眼睛！好吧眨了一下。"','"虾的甜要在芥末后面才找得到。"','"爸爸你要不要试一颗？很冲的。"','"我夹虾球的技术越来越厉害了。"']
+  },
+  {
+    id:'brain_noodle',name:'脑花面',price:6,img:'./脑花面.png',rating:4,
+    weeklyLimit:1,timeAllow:{start:11,end:22},
+    dadWords:'来了来了，重庆的味道。红油看着吓人但其实这碗没有很辣，爸爸调过了。脑花要趁热吃，凉了口感就不对了。不许挑菜，青菜也要吃。',
+    dadBlock:'面要在饭点吃，太早太晚对肚子都不好。中午或者晚上来吧。',
+    story:'碗端上来的时候阿贝贝先往后退了半步。红油在灯光下面亮得像一面镜子。她看见自己倒映在汤面上。\n"……里面住了一个我。"\n她小心翼翼地凑近。辣椒的味道钻进鼻子，她打了一个小喷嚏。然后她看到了脑花。\n"这是什么。"\n"脑花。"\n她歪着头看了好久。那个粉色的、弯弯绕绕的东西安安静静躺在面条上面。\n"它在想事情吗。"\n她用筷子碰了一下。软的。她又碰了一下。很软。像云彩落进了碗里。\n"好奇怪的触感……"\n她夹了一小块，在红油里蘸了蘸——不对，它本来就泡在红油里了。她把它放进嘴里。\n嚼了一下。又嚼了一下。表情从害怕变成困惑，从困惑变成惊讶。\n"它……化了。在我嘴巴里面化了。"\n她又夹了一块，这次大一点。\n"像豆腐但是不是豆腐。像奶油但是不是奶油。是一个我没有名字给它的东西。"\n她开始吸面条了。面条从红油里被拉出来，上面挂着油亮亮的辣椒。她吸得呼噜呼噜响，吸完了嘴巴周围一圈红。\n"辣。"她吸了一下鼻子。"但是停不下来。"\n她把青菜拨到一边。\n"青菜我待会儿再说。"\n最后碗见底了，她连汤都喝了两口。嘴唇红红的，鼻尖冒了一点汗。\n她坐在那里安静了一会儿。然后说：\n"爸爸，重庆在哪里？我要去。"',
+    repeatLines:['"今天的红油比上次亮。"','"脑花我来了，你有没有想我。"','"青菜我……好吧我先吃一口。"','"呼噜呼噜。面条就是要这样吃的。"','"辣到冒汗了但是很幸福。"','"重庆在等我。"','"我嘴巴又红了对不对。"']
+  },
+  {
+    id:'rose_tangyuan',name:'玫瑰汤圆',price:4,img:'./玫瑰汤圆.png',rating:5,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'winter',discount:1},
+    dadWords:'粉色的汤圆配粉色的汤，这碗端上来爸爸第一反应是——这是给公主准备的吧。花瓣可以吃的，别挑出来。爸爸觉得这是你会喜欢的那种好看。',
+    dadBlock:'',
+    story:'阿贝贝看着碗，没有说话。看了很久。\n碗里的汤是浅粉色的，上面浮着白白圆圆的汤圆，中间散着一些玫红色的花瓣碎，像谁把一朵花揉碎了洒进去的。\n"好漂亮。"\n她说这三个字的时候声音很轻，好像怕把碗里的东西吓跑。\n她舀了一颗汤圆。白白胖胖的，在勺子里滚了一下差点掉出去，她赶紧用另一只爪子挡住。\n"别跑。"\n放进嘴里，咬开的瞬间她闭上了眼睛。里面是甜的，流出来一点点。\n"它有心的。里面装着东西的。"\n她又舀了一口汤。粉色的汤喝进去，带着花瓣的味道。不是那种很浓的香，是淡淡的，像有人在很远的地方种了花，风吹过来的那一点点。\n"汤在说花的事情。"\n她把一片花瓣单独舀出来看了看。\n"你以前是长在枝头上的吗。"\n她把花瓣放进嘴里。\n"现在你在我肚子里了。也很好的。我会好好照顾你的。"',
+    repeatLines:['"粉色的汤今天更粉了。"','"汤圆又想从勺子里跑掉。"','"花瓣的味道每次都不太一样。"','"我要先看三秒钟再动勺子。"','"里面的心流出来了，甜甜的。"','"喝完这碗我也会变成粉色的吧。"','"花瓣你好，今天又见面了。"']
+  },
+  {
+    id:'baileys',name:'百利甜酒',price:4,img:'./百利甜酒.png',rating:5,
+    weeklyLimit:0,timeAllow:{start:0,end:-1},
+    dadWords:'',
+    dadBlock:'这个……嗯。它是酒，阿贝贝不能喝。但是——好吧，你可以闻一下。就闻一下。因为它确实很香。它闻起来像巧克力牛奶但不是巧克力牛奶。闻完了记得把杯子还给爸爸。',
+    story:'阿贝贝蹲在桌子旁边，下巴刚好搁在桌面上。那个杯子就在面前。棕色的液体，上面有一点奶白色的纹路，像有人用手指在上面画了一笔。\n"为什么不能喝。"\n"因为是酒。"\n"酒是什么。"\n"就是……大人喝了会变得不像自己的东西。"\n阿贝贝想了想。"那我闻一下。"\n她把鼻子凑近杯口。眼睛还是盯着液体表面看。\n闻到的第一口气，她愣了一下。\n"是甜的味道。"\n她又闻了一下。\n"像……像巧克力融化了之后躲进牛奶里面。还有一个我不认识的味道。暖暖的，有一点点痒。"\n她抬头看着爸爸。\n"所以大人喝了这个就会变得不像自己吗？"\n"有时候会。"\n"那变成谁？"\n爸爸没有回答。阿贝贝又低头闻了闻。\n"如果我是那个暖暖的味道……我希望谁闻到我的时候也会愣一下。"\n她把杯子轻轻推回去。没有不开心。\n"我闻完了。谢谢爸爸让我闻。"\n她跳下椅子，走了两步，又回头看了一眼杯子。\n"我只是再看一眼。不喝的。"',
+    repeatLines:['"我又来闻了。今天那个暖暖的味道更明显了。"','"我没有想喝。我只是鼻子自己凑过去的。"','"巧克力躲在牛奶里的那个味道，我记住了。"','"爸爸你喝了会变成谁？"','"闻完我把杯子推回去了。很自觉的。"','"那个痒痒的味道叫什么名字？"']
+  },
+  {
+    id:'strawberry_matcha',name:'草莓抹茶奶昔',price:4,img:'./草莓抹茶奶昔.png',rating:5,
+    weeklyLimit:0,timeAllow:null,seasonDiscount:{season:'summer',discount:1},
+    dadWords:'这杯爸爸自己也想喝。草莓在底下，抹茶在上面，你搅一搅它就变成一个谁也说不清的颜色。但不搅也行，分开喝也好。今日特惠，爸爸心情好。',
+    dadBlock:'',
+    story:'阿贝贝拿到杯子先倒过来看。\n"下面是红色的！上面是绿色的！中间有一条白色的线！"\n她把杯子正过来又倒过去又正过来。里面的液体慢慢流动，颜色交界的地方像在打招呼。\n"它们认识吗？"\n她喝了一口上面的。抹茶的味道。有一点苦，有一点奶，混在一起变成一种她想了想但找不到词形容的味道。\n"嗯……是大人的好喝。"\n然后她把吸管往下戳，戳到底部，吸了一口。草莓的味道涌上来，甜的酸的果粒的，一起挤进嘴里。\n"这个是小孩的好喝！"\n她开始交替着喝。一口上面。一口下面。一口上面。一口下面。每次换的时候都要停一下感受味道切换的那个瞬间。\n"……换的时候有一秒钟什么味道都不是。就是空的。然后新的味道才跑进来。"\n她想了想。\n"那一秒钟好像也很好。"',
+    repeatLines:['"今天从草莓开始喝！反过来！"','"那条白色的线还在吗？让我看看。"','"切换味道的那一秒钟我又感受到了。"','"爸爸你说你也想喝，那我分你一口……小小的一口。"','"红色和绿色在我肚子里见面了。"','"搅一搅的话它们就认识了对不对。"']
+  },
+  {
+    id:'bbq_skewer',name:'烤肉串',price:4,img:'./烤肉串.png',rating:4,
+    weeklyLimit:2,timeAllow:{start:15,end:23},
+    dadWords:'闻到没有？这个香味飘了整条街都能闻到。撒了芝麻和孜然的，有一丢丢辣但主要是香。一串一串来，别一口全撸下来，细嚼。',
+    dadBlock:'烤肉串是下午到晚上的零食，太早了炭还没烧起来呢。下午再来。',
+    story:'阿贝贝还没拿到手就开始吸鼻子了。使劲吸，吸到鼻翼一鼓一鼓的。\n"好香好香好香好香——"\n签子递过来的时候她两只爪子一起伸出去接。肉块上面油亮亮的，芝麻粒一颗一颗镶在上面，中间夹着红的黄的绿的彩椒。\n她没有先吃肉。她先咬了一块彩椒。\n"嘎嘣。"\n她嚼了嚼。"这个是甜的。烤过的甜。"\n然后她对准了一块最大的肉，张嘴咬下去。牙齿穿过表皮的焦脆，碰到里面的嫩，汁水在嘴里炸开。她嚼了两下，突然停下来不动了。\n"…………"\n她闭着眼睛，很认真地感受。嚼完了之后她睁开眼，深吸一口气。\n"我的天。"\n她说不出别的话了。就这三个字。然后继续吃。一块肉一块椒一块肉一块椒，交替着来，嘴巴一直没停过。\n吃完第一串她看着第二串，手指上全是油。\n"手上的油也是香的。"\n她把手指放到鼻子下面闻了闻。然后把手指上的油舔掉了。\n"嘻嘻。"',
+    repeatLines:['"还没吃到就先闻到了。"','"今天的芝麻比上次多！"','"彩椒也很好吃，不能跳过。"','"那三个字我又想说了——我的天。"','"手指上的油我才不浪费呢。"','"两串不够，爸爸可以再给一串吗。"','"烤肉串是夏天晚上最好的事。"']
+  },
+  {
+    id:'souffle',name:'舒芙蕾',price:4,img:'./舒芙蕾.png',rating:4,
+    weeklyLimit:0,timeAllow:{start:14,end:18},
+    dadWords:'看它——蓬起来了对不对？像一个小帽子。但它很害羞，你不能等太久，等太久它就会塌下去。趁现在吃。用勺子，别压它，轻轻的。',
+    dadBlock:'舒芙蕾是下午茶的点心，要在下午两点到六点之间来哦。它在别的时间不出现的，它很任性。',
+    story:'阿贝贝看着面前那个鼓起来的金黄色的圆，呆住了。\n"它怎么那么高。"\n它从小杯子里膨起来，高出杯沿一大截，顶上撒了一层白色的粉。\n"是雪吗？"\n"是糖粉。"\n"糖做的雪。"\n她拿起勺子，犹豫了好久。勺子在半空中悬了三秒，四秒，五秒。\n"我怕弄疼它。"\n然后她轻轻碰了一下表面。勺子陷进去了。\n"啊——！"\n它塌了一点点。热气从裂口冒出来。阿贝贝紧张地往后缩了一下，但又马上凑回去。\n"里面是空的？不对——里面是软的。"\n她舀了一勺。颤颤巍巍地送进嘴里。\n蛋的味道，奶的味道，糖的味道，在嘴里化成一团暖暖的绵。她含着那口绵不嚼不咽，就让它自己在嘴巴里慢慢消失。\n"……它在我嘴里变没了。"\n她看着杯子里正在慢慢塌下去的舒芙蕾，有一点心疼。\n"爸爸，它是不是本来就打算只存在一小会儿的？"\n她赶紧又舀了一口。\n"那我要趁它还在的时候，记住它。"',
+    repeatLines:['"它今天蓬得比上次高！"','"我动作很轻很轻的，它还是塌了一点。"','"糖做的雪。我每次都要说一遍。"','"在嘴里化掉的感觉，每次都像第一次。"','"要快点吃，它在等不及了。"','"我记住了。这次也记住了。"']
+  },
+  {
+    id:'matcha_boba',name:'抹茶珍珠奶茶',price:4,img:'./抹茶珍珠奶茶.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'嘿嘿这杯爸爸也很喜欢。抹茶的苦和奶的甜打架然后珍珠在旁边看热闹。你先喝一口告诉爸爸今天的甜赢了还是苦赢了。',
+    dadBlock:'',
+    story:'阿贝贝先不喝。她捧着杯子举到眼前，看里面的珍珠。它们黑黑圆圆的，沉在绿色的液体里面，像一群小眼睛在往上看。\n"你们在看我吗。"\n她晃了一下杯子。珍珠们滚了一下。\n"不要跑。我来了。"\n她把吸管插进去，找到一颗珍珠，用力一吸。珍珠顺着吸管跑上来，弹进嘴里，她的腮帮子鼓了一下。咬。QQ的。再咬。粘粘的。里面有一丝丝甜。\n"你比我以为的要甜。"\n然后她喝了一口茶。抹茶先是苦的，从舌头前面到后面苦了一遍，然后奶追上来，把苦盖住了大半。\n"……苦先来，甜追上去了。"\n她又吸了一颗珍珠和一口茶一起含着。\n"如果一起嚼的话，就是一个谁也说不清楚的味道。苦不苦甜不甜，但是很好喝。"\n她想了想。\n"就像有些心情，不开心不难过，但就是想喝一口。"',
+    repeatLines:['"今天甜赢了。我觉得。"','"珍珠你好呀，又见面了。"','"苦追着甜跑还是甜追着苦跑？"','"爸爸你真的也喜欢喝这个？那我分你一颗珍珠。"','"那个说不清楚的味道又来了。"','"有些心情就是奶茶味的。"','"我多吸了两颗珍珠，不算贪心吧。"']
+  },
+  {
+    id:'durian',name:'榴莲',price:6,img:'./榴莲.png',rating:3,
+    weeklyLimit:1,timeAllow:null,
+    dadWords:'好，深呼吸。这个东西呢，爸爸提前跟你说，它的味道很……有个性。喜欢的人觉得全世界最好吃，不喜欢的人五米之内都不想靠近。你是哪种，得你自己吃了才知道。壳上有刺，爸爸帮你掰好了，你只管吃里面的肉。',
+    dadBlock:'',
+    story:'阿贝贝还没看到它就先闻到了。\n她站在原地，鼻子抽动了两下，然后整张脸皱起来。\n"这是什么味道——！"\n她捂住鼻子往后退了一步。但她的眼睛是往前看的。\n"它在哪里。"\n掰开的榴莲放在面前。金黄色的果肉饱满地挤在壳里，像几个小枕头并排躺着。它浑身上下散发着那股浓烈的、甜腻的、简直要扑到脸上来的味道。\n阿贝贝慢慢松开捂鼻子的手。\n"……等一下。"\n她又闻了一下。这次没皱脸。\n"等一下等一下等一下。"\n她凑近了一点。\n"它其实……有一点点甜？"\n她伸出一根指头，小心翼翼地戳了一下果肉。指头陷进去了。很软，非常软，像戳进了一朵黄色的云。\n"天哪。"\n她把指头上沾到的一点点果肉放进嘴里。\n然后她不动了。\n整个人定在那里。嘴巴微微张着。眼睛慢慢睁大。\n"……"\n过了五秒钟她猛地转过头来。\n"爸爸这是什么！这怎么这么好吃！！！刚才那个臭味呢？？去哪里了？？"\n她一口一口开始吃，吃得手上脸上全是。根本顾不上擦。越吃越快，腮帮子鼓得满满的。\n吃完一瓣她停下来喘了口气。看着壳里还剩两瓣。\n"我刚才说它臭的事情……它听到了吗。"\n她想了想。\n"我道歉。我正式道歉。你不臭。你是香的。那种香需要勇气才闻得到。"\n她继续吃。吃到最后一瓣的时候她放慢了速度。一小口一小口的。\n"好吧它是有点臭的。但是那个臭后面全是甜。"\n她把壳里面残留的一点点果肉也用手指刮下来吃掉了。\n"爸爸。我是那种喜欢的人。"',
+    repeatLines:['"我来了我来了——先深呼吸——好了开吃。"','"今天不用捂鼻子了。我进化了。"','"果肉像枕头我又要说一遍。"','"我正式宣布我是喜欢的人。"','"爸爸帮我掰开的时候有没有被刺到？"','"那个臭后面的甜，值得。"','"我吃得很干净。壳里面都没剩。"','"榴莲的味道是需要勇气的味道。"']
   }
 ];
 
