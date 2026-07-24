@@ -4591,12 +4591,14 @@ function gameLoop(){
     if(c.y>gameAreaH+10){
       c.el.remove();
       gameCandies.splice(i,1);
-      gameLives--;
-      renderGameLives();
-      updateGameFace();
-      if(gameLives<=0){
-        endGame();
-        return;
+      if(!c.isBomb){
+        gameLives--;
+        renderGameLives();
+        updateGameFace();
+        if(gameLives<=0){
+          endGame();
+          return;
+        }
       }
     }
   }
