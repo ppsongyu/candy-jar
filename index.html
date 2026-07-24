@@ -566,6 +566,78 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 .game-plays-left{font-size:11px;color:var(--text-muted);margin-top:4px}
 .game-catch-flash{position:absolute;width:20px;height:20px;border-radius:50%;background:rgba(255,180,200,.6);pointer-events:none;animation:catchFlash .4s ease-out forwards}
 @keyframes catchFlash{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5);opacity:0}}
+
+/* ===== MEMORY GAME ===== */
+.mem-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;max-width:430px;margin:0 auto}
+.mem-overlay.show{display:flex}
+.mem-box{background:linear-gradient(180deg,#FFF5F8 0%,#FFE8F0 100%);border-radius:20px;width:88%;max-height:80vh;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.15);padding:16px}
+.mem-close{position:absolute;top:4px;right:8px;font-size:18px;color:var(--text-muted);cursor:pointer;z-index:5;padding:4px 8px}
+.mem-hud{display:flex;justify-content:space-between;align-items:center;padding:28px 0 10px;font-size:12px;color:var(--text-muted)}
+.mem-hud-flips{font-size:14px;font-weight:600;color:var(--pink-400)}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px}
+.mem-card{aspect-ratio:1;border-radius:12px;cursor:pointer;position:relative;perspective:400px}
+.mem-card-inner{width:100%;height:100%;position:relative;transition:transform .35s ease;transform-style:preserve-3d}
+.mem-card.flipped .mem-card-inner{transform:rotateY(180deg)}
+.mem-card.matched .mem-card-inner{transform:rotateY(180deg)}
+.mem-card.matched{pointer-events:none}
+.mem-card-front,.mem-card-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center}
+.mem-card-front{background:var(--pink-200);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.mem-card-front::after{content:'?';font-size:20px;color:var(--pink-400);font-weight:600}
+.mem-card-back{background:#fff;transform:rotateY(180deg);box-shadow:0 2px 8px rgba(0,0,0,.08);padding:8px}
+.mem-card-back img{width:100%;height:100%;object-fit:contain}
+.mem-card.matched .mem-card-front{opacity:0}
+.mem-card.matched .mem-card-back{box-shadow:0 0 12px rgba(255,150,180,.4)}
+.mem-start-screen,.mem-end-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:30px 0}
+.mem-start-title{font-size:18px;font-weight:600;color:var(--pink-400);letter-spacing:2px}
+.mem-start-sub{font-size:12px;color:var(--text-muted);max-width:240px;text-align:center;line-height:1.8}
+.mem-start-btn,.mem-end-btn{padding:10px 32px;border:none;border-radius:20px;font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:4px}
+.mem-start-btn{background:var(--pink-300);color:#fff}
+.mem-end-btn{background:var(--pink-200);color:var(--pink-400)}
+.mem-end-face{width:80px;height:80px;object-fit:contain}
+.mem-end-line{font-size:13px;color:var(--text-main);text-align:center;max-width:260px;line-height:1.8}
+.mem-end-stats{font-size:12px;color:var(--text-muted);text-align:center;line-height:1.8}
+.mem-plays-left{font-size:11px;color:var(--text-muted);margin-top:2px}
+
+/* ===== CARD BATTLE GAME ===== */
+.cb-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;max-width:430px;margin:0 auto}
+.cb-overlay.show{display:flex}
+.cb-box{background:linear-gradient(180deg,#FFF5F8 0%,#FFE8F0 100%);border-radius:20px;width:88%;max-height:80vh;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.15);padding:16px}
+.cb-close{position:absolute;top:4px;right:8px;font-size:18px;color:var(--text-muted);cursor:pointer;z-index:5;padding:4px 8px}
+.cb-start-screen,.cb-end-screen,.cb-round-end{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px 0}
+.cb-start-title{font-size:18px;font-weight:600;color:var(--pink-400);letter-spacing:2px}
+.cb-start-sub{font-size:12px;color:var(--text-muted);max-width:260px;text-align:center;line-height:1.8}
+.cb-start-btn,.cb-end-btn{padding:10px 32px;border:none;border-radius:20px;font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:4px}
+.cb-start-btn{background:var(--pink-300);color:#fff}
+.cb-end-btn{background:var(--pink-200);color:var(--pink-400)}
+.cb-plays-left{font-size:11px;color:var(--text-muted);margin-top:2px}
+.cb-hud{display:flex;justify-content:space-between;align-items:center;padding:4px 0 8px;font-size:12px;color:var(--text-muted)}
+.cb-hud-round{font-size:13px;font-weight:600;color:var(--pink-400)}
+.cb-hud-score{font-size:12px}
+.cb-board{display:flex;flex-direction:column;gap:12px;padding:8px 0}
+.cb-slots{display:flex;gap:8px;justify-content:center}
+.cb-slot{width:80px;border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:4px;align-items:center;border:2px solid transparent;transition:all .2s}
+.cb-slot.selectable{border-color:var(--pink-300);cursor:pointer}
+.cb-slot.selectable:active{transform:scale(.96)}
+.cb-slot-label{font-size:10px;color:var(--text-muted);margin-bottom:2px}
+.cb-slot-space{width:64px;height:44px;border-radius:8px;border:1.5px dashed #ddd;display:flex;align-items:center;justify-content:center;font-size:10px;color:#ccc;position:relative;overflow:hidden}
+.cb-slot-space.filled{border-style:solid}
+.cb-card-mini{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:16px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.2)}
+.cb-hand{display:flex;gap:8px;justify-content:center;padding:8px 0}
+.cb-hand-card{width:64px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.2);transition:all .2s;border:2px solid transparent}
+.cb-hand-card.selected{border-color:#fff;transform:translateY(-6px);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.cb-hand-card.used{opacity:.3;pointer-events:none}
+.cb-section-label{font-size:11px;color:var(--text-muted);text-align:center;letter-spacing:1px}
+.cb-msg{text-align:center;font-size:12px;color:var(--pink-400);min-height:20px;padding:4px 0}
+.cb-color-pink{background:#FFB0C8}
+.cb-color-yellow{background:#FFE066}
+.cb-color-purple{background:#D0A0F0}
+.cb-color-green{background:#A0DDA0}
+.cb-color-white{background:#F5F5F5;color:#999!important;text-shadow:none!important;border:1px solid #ddd}
+.cb-end-face{width:80px;height:80px;object-fit:contain}
+.cb-end-line{font-size:13px;color:var(--text-main);text-align:center;max-width:260px;line-height:1.8}
+.cb-end-stats{font-size:12px;color:var(--text-muted);text-align:center;line-height:1.8}
+.cb-vs{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 0;font-size:11px;color:var(--text-muted)}
+.cb-vs-score{font-size:16px;font-weight:700;color:var(--pink-400)}
 </style>
 </head>
 <body>
@@ -663,8 +735,10 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
         <div class="abebe-actions" id="abebe-actions"></div>
         <div class="abebe-actions" style="margin-top:10px">
           <div class="abebe-action" onclick="openSnackShop()"><div class="abebe-action-text">小卖部</div></div>
-          <div class="abebe-action" onclick="openSnackBook()"><div class="abebe-action-text">零食册</div></div>
+          <div class="abebe-action" onclick="openSnackBook()"><div class="abebe-action-text">宝贝册</div></div>
           <div class="abebe-action" onclick="openCandyGame()"><div class="abebe-action-text">小糖果</div></div>
+          <div class="abebe-action" onclick="openMemoryGame()"><div class="abebe-action-text">翻糖糖</div></div>
+          <div class="abebe-action" onclick="openCardBattle()"><div class="abebe-action-text">比糖糖</div></div>
         </div>
         <div style="height:16px"></div>
       </div>
@@ -797,7 +871,7 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 <!-- SNACK BOOK OVERLAY -->
 <div class="overlay" id="overlay-snack-book">
   <div class="overlay-header">
-    <div class="overlay-title">阿贝贝的零食册</div>
+    <div class="overlay-title">阿贝贝的宝贝册</div>
     <div class="overlay-close" onclick="closeSnackBook()">&times;</div>
   </div>
   <div class="overlay-content" id="snack-book-content"></div>
@@ -864,6 +938,7 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
       <div class="game-start-title">小糖果</div>
       <div class="game-start-sub">帮阿贝贝接住掉下来的糖果吧！<br>左右滑动移动，避开黑糖，漏掉3颗就结束</div>
       <div class="game-plays-left" id="game-plays-left"></div>
+      <div class="game-plays-left" id="game-high-score"></div>
       <div class="game-start-btn" onclick="startGame()">开始</div>
     </div>
     <div class="game-end-screen" id="game-end" style="display:none">
@@ -874,6 +949,80 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
       <div class="game-end-btn" onclick="closeGame()" style="background:transparent;color:var(--text-muted)">回去啦</div>
     </div>
   </div>
+  </div>
+</div>
+
+<!-- MEMORY GAME -->
+<div class="mem-overlay" id="mem-overlay">
+  <div class="mem-box">
+    <div class="mem-close" onclick="closeMemoryGame()">&times;</div>
+    <div id="mem-start" class="mem-start-screen">
+      <img src="./开心阿贝贝.png" style="width:80px;height:80px;object-fit:contain">
+      <div class="mem-start-title">翻糖糖</div>
+      <div class="mem-start-sub">翻开两张糖果，找到一样的配对！<br>翻的次数越少积分越高</div>
+      <div class="mem-plays-left" id="mem-plays-left"></div>
+      <div class="mem-plays-left" id="mem-high-score"></div>
+      <div class="mem-start-btn" onclick="startMemoryGame()">开始</div>
+    </div>
+    <div id="mem-playing" style="display:none">
+      <div class="mem-hud">
+        <div class="mem-hud-flips">翻了 <span id="mem-flips">0</span> 次</div>
+        <div style="font-size:11px;color:var(--text-muted)" id="mem-points-hud"></div>
+      </div>
+      <div class="mem-grid" id="mem-grid"></div>
+    </div>
+    <div id="mem-end" class="mem-end-screen" style="display:none">
+      <img class="mem-end-face" id="mem-end-face" src="./开心阿贝贝.png" alt="">
+      <div class="mem-end-line" id="mem-end-line"></div>
+      <div class="mem-end-stats" id="mem-end-stats"></div>
+      <div class="mem-end-btn" onclick="startMemoryGame()">再玩一次</div>
+      <div class="mem-end-btn" onclick="closeMemoryGame()" style="background:transparent;color:var(--text-muted)">回去啦</div>
+    </div>
+  </div>
+</div>
+
+<!-- CARD BATTLE GAME -->
+<div class="cb-overlay" id="cb-overlay">
+  <div class="cb-box">
+    <div class="cb-close" onclick="closeCardBattle()">&times;</div>
+    <div id="cb-start" class="cb-start-screen">
+      <img src="./开心阿贝贝.png" style="width:80px;height:80px;object-fit:contain">
+      <div class="cb-start-title">比糖糖</div>
+      <div class="cb-start-sub">和阿贝贝比牌！<br>选格子放糖果，同色双倍分<br>三局两胜</div>
+      <div class="cb-plays-left" id="cb-plays-left"></div>
+      <div class="cb-start-btn" onclick="startCardBattle()">开始</div>
+    </div>
+    <div id="cb-playing" style="display:none">
+      <div class="cb-hud">
+        <div class="cb-hud-round" id="cb-round"></div>
+        <div class="cb-hud-score" id="cb-wins"></div>
+      </div>
+      <div class="cb-section-label">阿贝贝的手牌</div>
+      <div class="cb-hand" id="cb-abebe-hand"></div>
+      <div class="cb-board">
+        <div class="cb-slots" id="cb-slots"></div>
+      </div>
+      <div class="cb-msg" id="cb-msg">选一个格子放牌</div>
+      <div class="cb-section-label">我的手牌</div>
+      <div class="cb-hand" id="cb-player-hand"></div>
+    </div>
+    <div id="cb-round-end" class="cb-round-end" style="display:none">
+      <img class="cb-end-face" id="cb-round-face" src="./开心阿贝贝.png" alt="">
+      <div class="cb-vs">
+        <div>我 <span class="cb-vs-score" id="cb-my-total">0</span></div>
+        <div>vs</div>
+        <div>阿贝贝 <span class="cb-vs-score" id="cb-ab-total">0</span></div>
+      </div>
+      <div class="cb-end-line" id="cb-round-line"></div>
+      <div class="cb-end-btn" onclick="nextCbRound()">下一局</div>
+    </div>
+    <div id="cb-end" class="cb-end-screen" style="display:none">
+      <img class="cb-end-face" id="cb-end-face" src="./开心阿贝贝.png" alt="">
+      <div class="cb-end-line" id="cb-end-line"></div>
+      <div class="cb-end-stats" id="cb-end-stats"></div>
+      <div class="cb-end-btn" onclick="startCardBattle()">再来一局</div>
+      <div class="cb-end-btn" onclick="closeCardBattle()" style="background:transparent;color:var(--text-muted)">回去啦</div>
+    </div>
   </div>
 </div>
 
@@ -3169,7 +3318,7 @@ function getAbebeLine(){
     "阿贝贝小声说'好久没吃到好吃的了……'",
     "阿贝贝抱着空空的爪子，说'嗯……有点想念那个味道'",
     "阿贝贝在地上画了一个圈圈，画着画着变成了一颗糖的形状",
-    "阿贝贝翻了翻零食册，看了好一会儿",
+    "阿贝贝翻了翻宝贝册，看了好一会儿",
     "阿贝贝的肚子咕了一声，她赶紧捂住假装什么都没发生"
   ]);
   
@@ -4464,6 +4613,7 @@ function openCandyGame(){
   document.getElementById('game-end').style.display='none';
   const rewardLeft=Math.max(0,GAME_MAX_PLAYS-candyGameData.playsToday);
   document.getElementById('game-plays-left').textContent=rewardLeft>0?'今天还有 '+rewardLeft+' 次积分机会':'今天的积分用完啦，继续玩不给积分哦';
+  document.getElementById('game-high-score').textContent=(candyGameData.highScore||0)>0?'最高记录：'+candyGameData.highScore+' 颗':'';
   document.querySelector('#game-start .game-start-btn').style.display='';
 }
 
@@ -4681,6 +4831,459 @@ const _prevEnterAbebeGame=enterAbebe;
 enterAbebe=function(){
   _prevEnterAbebeGame();
 };
+
+// ===== MEMORY GAME =====
+let memGameData={
+  playsToday:0,
+  playDate:'',
+  highScore:999 // lower is better
+};
+const MEM_MAX_REWARD_PLAYS=2;
+const MEM_PAIRS=8;
+
+// Load memory game data
+(function loadMemGameData(){
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    if(raw){
+      const d=JSON.parse(raw);
+      if(d.memGameData) Object.assign(memGameData,d.memGameData);
+    }
+  }catch(e){}
+  const today=new Date().toDateString();
+  if(memGameData.playDate!==today){memGameData.playsToday=0;memGameData.playDate=today;}
+})();
+
+// Hook saveApp to include memGameData
+const _origSaveAppMem=saveApp;
+saveApp=function(){
+  _origSaveAppMem();
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    const d=raw?JSON.parse(raw):{};
+    d.memGameData=memGameData;
+    localStorage.setItem('candyJarSnackData',JSON.stringify(d));
+  }catch(e){}
+};
+
+let memFlips=0;
+let memMatched=0;
+let memFirstCard=null;
+let memLocked=false;
+let memCards=[];
+
+const memEndLines=[
+  {min:0,max:20,text:'阿贝贝瞪大眼睛：「妈妈记性好好！」',face:'./玩耍阿贝贝.png'},
+  {min:21,max:25,text:'阿贝贝拍手：「厉害厉害，很快呢」',face:'./开心阿贝贝.png'},
+  {min:26,max:35,text:'阿贝贝点点头：「还不错嘛嘿嘿」',face:'./害羞阿贝贝.png'},
+  {min:36,max:50,text:'阿贝贝挠挠头：「再来一次会更好的！」',face:'./委屈阿贝贝.png'},
+  {min:51,max:999,text:'阿贝贝歪头：「妈妈是不是没睡醒呀」',face:'./大哭阿贝贝.png'}
+];
+
+function openMemoryGame(){
+  const today=new Date().toDateString();
+  if(memGameData.playDate!==today){memGameData.playsToday=0;memGameData.playDate=today;}
+  document.getElementById('mem-overlay').classList.add('show');
+  document.getElementById('mem-start').style.display='flex';
+  document.getElementById('mem-playing').style.display='none';
+  document.getElementById('mem-end').style.display='none';
+  const rewardLeft=Math.max(0,MEM_MAX_REWARD_PLAYS-memGameData.playsToday);
+  document.getElementById('mem-plays-left').textContent=rewardLeft>0?'今天还有 '+rewardLeft+' 次积分机会':'今天的积分用完啦，继续玩不给积分哦';
+  document.getElementById('mem-high-score').textContent=(memGameData.highScore<999)?'最佳记录：'+memGameData.highScore+' 次':'';
+}
+
+function closeMemoryGame(){
+  document.getElementById('mem-overlay').classList.remove('show');
+}
+
+function startMemoryGame(){
+  const today=new Date().toDateString();
+  if(memGameData.playDate!==today){memGameData.playsToday=0;memGameData.playDate=today;}
+
+  document.getElementById('mem-start').style.display='none';
+  document.getElementById('mem-end').style.display='none';
+  document.getElementById('mem-playing').style.display='';
+
+  memFlips=0;
+  memMatched=0;
+  memFirstCard=null;
+  memLocked=false;
+  document.getElementById('mem-flips').textContent='0';
+  document.getElementById('mem-points-hud').textContent='积分 '+(candyGameData.candyPoints||0)+'/'+GAME_POINTS_PER_COIN;
+
+  // Pick 8 random candies (avoid black candy index 8)
+  const available=candyFiles.map((f,i)=>i).filter(i=>i!==8);
+  const shuffled=available.sort(()=>Math.random()-0.5);
+  const picked=shuffled.slice(0,MEM_PAIRS);
+
+  // Create pairs and shuffle
+  memCards=[...picked,...picked].sort(()=>Math.random()-0.5);
+
+  const grid=document.getElementById('mem-grid');
+  grid.innerHTML=memCards.map((ci,i)=>`
+    <div class="mem-card" onclick="flipMemCard(${i})" id="mem-card-${i}">
+      <div class="mem-card-inner">
+        <div class="mem-card-front"></div>
+        <div class="mem-card-back"><img src="${candyFiles[ci]}" alt=""></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function flipMemCard(idx){
+  if(memLocked) return;
+  const card=document.getElementById('mem-card-'+idx);
+  if(card.classList.contains('flipped')||card.classList.contains('matched')) return;
+
+  card.classList.add('flipped');
+  memFlips++;
+  document.getElementById('mem-flips').textContent=memFlips;
+
+  if(!memFirstCard){
+    memFirstCard={idx,val:memCards[idx]};
+    return;
+  }
+
+  // Second card
+  const secondVal=memCards[idx];
+  if(memFirstCard.val===secondVal){
+    // Match!
+    document.getElementById('mem-card-'+memFirstCard.idx).classList.add('matched');
+    card.classList.add('matched');
+    memMatched++;
+    memFirstCard=null;
+    if(memMatched===MEM_PAIRS){
+      setTimeout(endMemoryGame,500);
+    }
+  }else{
+    // No match — flip back
+    memLocked=true;
+    const firstIdx=memFirstCard.idx;
+    memFirstCard=null;
+    setTimeout(()=>{
+      document.getElementById('mem-card-'+firstIdx).classList.remove('flipped');
+      card.classList.remove('flipped');
+      memLocked=false;
+    },600);
+  }
+}
+
+function endMemoryGame(){
+  memGameData.playsToday++;
+  const hasReward=memGameData.playsToday<=MEM_MAX_REWARD_PLAYS;
+  let pointsEarned=0;
+
+  if(hasReward){
+    if(memFlips<=25) pointsEarned=2;
+    else if(memFlips<=35) pointsEarned=1;
+    candyGameData.candyPoints=(candyGameData.candyPoints||0)+pointsEarned;
+    const newCoins=Math.floor(candyGameData.candyPoints/GAME_POINTS_PER_COIN);
+    candyGameData.totalCoinsEarned=(candyGameData.totalCoinsEarned||0)+newCoins;
+    candyGameData.candyPoints=candyGameData.candyPoints%GAME_POINTS_PER_COIN;
+  }
+
+  if(memFlips<memGameData.highScore) memGameData.highScore=memFlips;
+
+  saveApp();
+  renderCoinDisplay();
+
+  document.getElementById('mem-playing').style.display='none';
+  document.getElementById('mem-end').style.display='flex';
+
+  const endInfo=memEndLines.find(l=>memFlips>=l.min&&memFlips<=l.max)||memEndLines[memEndLines.length-1];
+  document.getElementById('mem-end-face').src=endInfo.face;
+  document.getElementById('mem-end-line').textContent=endInfo.text;
+
+  let stats='用了 '+memFlips+' 次翻完';
+  if(hasReward){
+    if(pointsEarned>0) stats+='\n获得 '+pointsEarned+' 个糖果积分';
+    if(candyGameData.candyPoints>0) stats+='\n当前积分：'+candyGameData.candyPoints+'/'+GAME_POINTS_PER_COIN;
+  }else{
+    stats+='\n（今天的积分次数已用完，纯玩模式）';
+  }
+  document.getElementById('mem-end-stats').innerText=stats;
+}
+
+// ===== CARD BATTLE GAME =====
+const CB_COLORS=['pink','yellow','purple','green'];
+const CB_COLOR_NAMES={pink:'粉',yellow:'黄',purple:'紫',green:'绿',white:'白'};
+const CB_MAX_REWARD=2;
+
+let cbData={playsToday:0,playDate:'',totalWins:0};
+
+(function loadCbData(){
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    if(raw){const d=JSON.parse(raw);if(d.cbData) Object.assign(cbData,d.cbData);}
+  }catch(e){}
+  const today=new Date().toDateString();
+  if(cbData.playDate!==today){cbData.playsToday=0;cbData.playDate=today;}
+})();
+
+const _origSaveAppCb=saveApp;
+saveApp=function(){
+  _origSaveAppCb();
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    const d=raw?JSON.parse(raw):{};
+    d.cbData=cbData;
+    localStorage.setItem('candyJarSnackData',JSON.stringify(d));
+  }catch(e){}
+};
+
+let cbRound=0,cbPlayerWins=0,cbAbebeWins=0;
+let cbSlots=[],cbPlayerHand=[],cbAbebeHand=[];
+let cbSelectedCard=-1,cbPhase='';
+
+function cbMakeDeck(){
+  const deck=[];
+  CB_COLORS.forEach(c=>{for(let v=1;v<=6;v++) deck.push({color:c,value:v});});
+  return deck.sort(()=>Math.random()-0.5);
+}
+
+function cbDealRound(){
+  const deck=cbMakeDeck();
+  cbPlayerHand=deck.splice(0,3);
+  cbAbebeHand=deck.splice(0,3);
+  // 3 slots: random colors, at least 1 white
+  const colors=[...CB_COLORS].sort(()=>Math.random()-0.5);
+  cbSlots=[
+    {color:colors[0],player:null,abebe:null},
+    {color:'white',player:null,abebe:null},
+    {color:colors[1],player:null,abebe:null}
+  ];
+  cbSelectedCard=-1;
+  cbPhase='pick_card';
+}
+
+function cbColorClass(c){return 'cb-color-'+c;}
+
+function cbRenderAll(){
+  // Round info
+  document.getElementById('cb-round').textContent='第 '+(cbRound)+' 局';
+  document.getElementById('cb-wins').textContent='我 '+cbPlayerWins+' : '+cbAbebeWins+' 阿贝贝';
+
+  // Abebe hand (face down)
+  const abH=document.getElementById('cb-abebe-hand');
+  abH.innerHTML=cbAbebeHand.map((c,i)=>{
+    const used=c.used?'used':'';
+    return `<div class="cb-hand-card ${used}" style="background:var(--pink-200);color:var(--pink-400)">?</div>`;
+  }).join('');
+
+  // Slots
+  const slotsEl=document.getElementById('cb-slots');
+  slotsEl.innerHTML=cbSlots.map((s,i)=>{
+    const selectable=cbPhase==='pick_slot'?'selectable':'';
+    const slotClick=cbPhase==='pick_slot'?`onclick="cbPickSlot(${i})"`:'';
+    const pCard=s.player?`<div class="cb-card-mini ${cbColorClass(s.player.color)}">${s.player.value}</div>`:'妈妈';
+    const aCard=s.abebe?`<div class="cb-card-mini ${cbColorClass(s.abebe.color)}">${s.abebe.value}</div>`:'阿贝贝';
+    const pFilled=s.player?'filled':'';
+    const aFilled=s.abebe?'filled':'';
+    return `<div class="cb-slot ${selectable} ${cbColorClass(s.color)}" style="background:${s.color==='white'?'#fafafa':''};" ${slotClick}>
+      <div class="cb-slot-label">${CB_COLOR_NAMES[s.color]}色格</div>
+      <div class="cb-slot-space ${aFilled}">${aCard}</div>
+      <div class="cb-slot-space ${pFilled}">${pCard}</div>
+    </div>`;
+  }).join('');
+
+  // Player hand
+  const pH=document.getElementById('cb-player-hand');
+  pH.innerHTML=cbPlayerHand.map((c,i)=>{
+    const used=c.used?'used':'';
+    const sel=cbSelectedCard===i?'selected':'';
+    return `<div class="cb-hand-card ${cbColorClass(c.color)} ${used} ${sel}" onclick="cbPickCard(${i})">${c.value}</div>`;
+  }).join('');
+}
+
+function cbPickCard(i){
+  if(cbPhase!=='pick_card'||cbPlayerHand[i].used) return;
+  cbSelectedCard=i;
+  cbPhase='pick_slot';
+  document.getElementById('cb-msg').textContent='选一个格子放这张 '+cbPlayerHand[i].value;
+  cbRenderAll();
+}
+
+function cbPickSlot(i){
+  if(cbPhase!=='pick_slot'||cbSlots[i].player) return;
+  cbSlots[i].player=cbPlayerHand[cbSelectedCard];
+  cbPlayerHand[cbSelectedCard].used=true;
+  cbSelectedCard=-1;
+  cbPhase='ai';
+  document.getElementById('cb-msg').textContent='阿贝贝在想...';
+  cbRenderAll();
+  setTimeout(cbAiTurn,600);
+}
+
+function cbAiTurn(){
+  // AI: try to match color for double, else play smallest on non-matching
+  const available=cbAbebeHand.map((c,i)=>({...c,idx:i})).filter(c=>!c.used);
+  const emptySlots=cbSlots.map((s,i)=>({...s,idx:i})).filter(s=>!s.abebe);
+
+  if(available.length===0||emptySlots.length===0){
+    cbEndRound();
+    return;
+  }
+
+  let bestCard=-1,bestSlot=-1,bestScore=-1;
+
+  available.forEach(card=>{
+    emptySlots.forEach(slot=>{
+      let score=0;
+      if(card.color===slot.color) score=card.value*2;
+      else if(slot.color==='white') score=card.value;
+      // else 0
+      // Add small random to avoid predictability
+      score+=Math.random()*0.5;
+      if(score>bestScore){bestScore=score;bestCard=card.idx;bestSlot=slot.idx;}
+    });
+  });
+
+  // Occasionally play dumb (20% chance)
+  if(Math.random()<0.2&&available.length>1){
+    const randCard=available[Math.floor(Math.random()*available.length)];
+    const randSlot=emptySlots[Math.floor(Math.random()*emptySlots.length)];
+    bestCard=randCard.idx;
+    bestSlot=randSlot.idx;
+  }
+
+  cbSlots[bestSlot].abebe=cbAbebeHand[bestCard];
+  cbAbebeHand[bestCard].used=true;
+  
+  // Check if round is over
+  const playerDone=cbPlayerHand.every(c=>c.used);
+  const abebeDone=cbAbebeHand.every(c=>c.used);
+  
+  if(playerDone&&abebeDone){
+    cbRenderAll();
+    document.getElementById('cb-msg').textContent='';
+    setTimeout(cbEndRound,500);
+  }else{
+    cbPhase='pick_card';
+    document.getElementById('cb-msg').textContent='选一张手牌';
+    cbRenderAll();
+  }
+}
+
+function cbCalcScore(side){
+  let total=0;
+  cbSlots.forEach(s=>{
+    const card=side==='player'?s.player:s.abebe;
+    if(!card) return;
+    if(card.color===s.color) total+=card.value*2;
+    else if(s.color==='white') total+=card.value;
+  });
+  return total;
+}
+
+function cbEndRound(){
+  const myScore=cbCalcScore('player');
+  const abScore=cbCalcScore('abebe');
+
+  if(myScore>abScore) cbPlayerWins++;
+  else if(abScore>myScore) cbAbebeWins++;
+
+  document.getElementById('cb-playing').style.display='none';
+  document.getElementById('cb-round-end').style.display='flex';
+  document.getElementById('cb-my-total').textContent=myScore;
+  document.getElementById('cb-ab-total').textContent=abScore;
+
+  if(myScore>abScore){
+    document.getElementById('cb-round-face').src='./委屈阿贝贝.png';
+    document.getElementById('cb-round-line').textContent='阿贝贝嘟嘴：「哼，下局我要赢回来」';
+  }else if(abScore>myScore){
+    document.getElementById('cb-round-face').src='./玩耍阿贝贝.png';
+    document.getElementById('cb-round-line').textContent='阿贝贝蹦蹦跳：「嘿嘿我赢啦！」';
+  }else{
+    document.getElementById('cb-round-face').src='./害羞阿贝贝.png';
+    document.getElementById('cb-round-line').textContent='阿贝贝歪头：「平局诶，好巧」';
+  }
+
+  // Check if game over (best of 3)
+  if(cbPlayerWins>=2||cbAbebeWins>=2||cbRound>=3){
+    document.querySelector('#cb-round-end .cb-end-btn').textContent='看结果';
+    document.querySelector('#cb-round-end .cb-end-btn').onclick=cbEndGame;
+  }else{
+    document.querySelector('#cb-round-end .cb-end-btn').textContent='下一局';
+    document.querySelector('#cb-round-end .cb-end-btn').onclick=nextCbRound;
+  }
+}
+
+function nextCbRound(){
+  cbRound++;
+  cbDealRound();
+  document.getElementById('cb-round-end').style.display='none';
+  document.getElementById('cb-playing').style.display='';
+  document.getElementById('cb-msg').textContent='选一张手牌';
+  cbRenderAll();
+}
+
+function cbEndGame(){
+  cbData.playsToday++;
+  const won=cbPlayerWins>cbAbebeWins;
+  if(won) cbData.totalWins=(cbData.totalWins||0)+1;
+
+  const hasReward=cbData.playsToday<=CB_MAX_REWARD;
+  let pointsEarned=0;
+  if(hasReward&&won){
+    pointsEarned=2;
+    candyGameData.candyPoints=(candyGameData.candyPoints||0)+pointsEarned;
+    const newCoins=Math.floor(candyGameData.candyPoints/GAME_POINTS_PER_COIN);
+    candyGameData.totalCoinsEarned=(candyGameData.totalCoinsEarned||0)+newCoins;
+    candyGameData.candyPoints=candyGameData.candyPoints%GAME_POINTS_PER_COIN;
+  }
+
+  saveApp();
+  renderCoinDisplay();
+
+  document.getElementById('cb-round-end').style.display='none';
+  document.getElementById('cb-end').style.display='flex';
+
+  if(won){
+    document.getElementById('cb-end-face').src='./委屈阿贝贝.png';
+    document.getElementById('cb-end-line').textContent='阿贝贝揉眼睛：「妈妈好厉害……下次我一定赢」';
+  }else if(cbPlayerWins<cbAbebeWins){
+    document.getElementById('cb-end-face').src='./玩耍阿贝贝.png';
+    document.getElementById('cb-end-line').textContent='阿贝贝转圈圈：「我是比糖糖冠军！！」';
+  }else{
+    document.getElementById('cb-end-face').src='./害羞阿贝贝.png';
+    document.getElementById('cb-end-line').textContent='阿贝贝拍手：「我们打平啦，都厉害」';
+  }
+
+  let stats=cbPlayerWins+' : '+cbAbebeWins;
+  if(hasReward&&won) stats+='\n获得 '+pointsEarned+' 个糖果积分';
+  else if(hasReward&&!won) stats+='\n赢了才有积分哦';
+  else stats+='\n（今天的积分次数已用完，纯玩模式）';
+  document.getElementById('cb-end-stats').innerText=stats;
+}
+
+function openCardBattle(){
+  const today=new Date().toDateString();
+  if(cbData.playDate!==today){cbData.playsToday=0;cbData.playDate=today;}
+  document.getElementById('cb-overlay').classList.add('show');
+  document.getElementById('cb-start').style.display='flex';
+  document.getElementById('cb-playing').style.display='none';
+  document.getElementById('cb-round-end').style.display='none';
+  document.getElementById('cb-end').style.display='none';
+  const rewardLeft=Math.max(0,CB_MAX_REWARD-cbData.playsToday);
+  document.getElementById('cb-plays-left').textContent=rewardLeft>0?'今天还有 '+rewardLeft+' 次积分机会':'今天的积分用完啦，继续玩不给积分哦';
+}
+
+function closeCardBattle(){
+  document.getElementById('cb-overlay').classList.remove('show');
+}
+
+function startCardBattle(){
+  cbRound=1;
+  cbPlayerWins=0;
+  cbAbebeWins=0;
+  cbDealRound();
+  document.getElementById('cb-start').style.display='none';
+  document.getElementById('cb-end').style.display='none';
+  document.getElementById('cb-round-end').style.display='none';
+  document.getElementById('cb-playing').style.display='';
+  document.getElementById('cb-msg').textContent='选一张手牌';
+  cbRenderAll();
+}
 
 </script>
 </body>
