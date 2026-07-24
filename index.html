@@ -539,6 +539,33 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 .dream-card-title{text-align:center;font-family:'SGH',Georgia,serif;font-size:13px;color:rgba(80,110,150,.5);letter-spacing:2px;margin-bottom:16px}
 .dream-card-body{font-size:13px;line-height:2;color:rgba(60,80,110,.8);font-family:'SGH',Georgia,serif}
 .dream-card-close{text-align:center;margin-top:20px;font-size:11px;color:rgba(80,110,150,.35);cursor:pointer;letter-spacing:1px}
+
+/* ===== CANDY CATCH GAME ===== */
+.game-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;max-width:430px;margin:0 auto}
+.game-overlay.show{display:flex}
+.game-box{background:linear-gradient(180deg,#FFF5F8 0%,#FFE8F0 100%);border-radius:20px;width:88%;height:75vh;max-height:560px;position:relative;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.15)}
+.game-hud{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font-size:12px;color:var(--text-muted);letter-spacing:.5px}
+.game-hud-score{font-size:14px;font-weight:600;color:var(--pink-400)}
+.game-lives{display:flex;gap:4px;align-items:center}
+.game-life-dot{width:10px;height:10px;border-radius:50%;background:var(--pink-300);transition:all .3s}
+.game-life-dot.lost{background:#ddd;transform:scale(.7)}
+.game-area{flex:1;position:relative;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
+.game-candy{position:absolute;width:36px;height:36px;object-fit:contain;pointer-events:none;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.1))}
+.game-abebe{position:absolute;bottom:8px;width:72px;height:72px;object-fit:contain;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.1))}
+.game-abebe-face{position:absolute;top:12px;right:16px;width:48px;height:48px;object-fit:contain;transition:opacity .3s}
+.game-start-screen,.game-end-screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(255,245,248,.95);z-index:2}
+.game-start-title{font-size:18px;font-weight:600;color:var(--pink-400);letter-spacing:2px}
+.game-start-sub{font-size:12px;color:var(--text-muted);max-width:240px;text-align:center;line-height:1.8}
+.game-start-btn,.game-end-btn{padding:10px 32px;border:none;border-radius:20px;font-size:13px;letter-spacing:1px;cursor:pointer;margin-top:8px}
+.game-start-btn{background:var(--pink-300);color:#fff}
+.game-end-btn{background:var(--pink-200);color:var(--pink-400)}
+.game-end-face{width:100px;height:100px;object-fit:contain}
+.game-end-line{font-size:13px;color:var(--text-main);text-align:center;max-width:260px;line-height:1.8}
+.game-end-stats{font-size:12px;color:var(--text-muted);text-align:center;line-height:1.8}
+.game-close{position:absolute;top:12px;right:16px;font-size:18px;color:var(--text-muted);cursor:pointer;z-index:5;padding:4px 8px}
+.game-plays-left{font-size:11px;color:var(--text-muted);margin-top:4px}
+.game-catch-flash{position:absolute;width:20px;height:20px;border-radius:50%;background:rgba(255,180,200,.6);pointer-events:none;animation:catchFlash .4s ease-out forwards}
+@keyframes catchFlash{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5);opacity:0}}
 </style>
 </head>
 <body>
@@ -637,6 +664,7 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
         <div class="abebe-actions" style="margin-top:10px">
           <div class="abebe-action" onclick="openSnackShop()"><div class="abebe-action-text">小卖部</div></div>
           <div class="abebe-action" onclick="openSnackBook()"><div class="abebe-action-text">零食册</div></div>
+          <div class="abebe-action" onclick="openCandyGame()"><div class="abebe-action-text">小糖果</div></div>
         </div>
         <div style="height:16px"></div>
       </div>
@@ -817,6 +845,36 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 
 <div class="candy-detail-mask" id="candy-detail-mask" onclick="closeCandyDetail()">
   <div class="candy-detail" onclick="event.stopPropagation()" id="candy-detail-inner"></div>
+</div>
+
+<!-- CANDY CATCH GAME -->
+<div class="game-overlay" id="game-overlay">
+  <div class="game-box">
+  <div class="game-close" onclick="closeGame()">&times;</div>
+  <div class="game-hud">
+    <div class="game-hud-score" id="game-score">0</div>
+    <div class="game-hud-points" id="game-points" style="font-size:11px;color:var(--text-muted)"></div>
+    <div class="game-lives" id="game-lives"></div>
+  </div>
+  <div class="game-area" id="game-area">
+    <img class="game-abebe" id="game-abebe" src="./玩耍阿贝贝.png" alt="">
+    <img class="game-abebe-face" id="game-face" src="./开心阿贝贝.png" alt="">
+    <div class="game-start-screen" id="game-start">
+      <img src="./开心阿贝贝.png" style="width:80px;height:80px;object-fit:contain">
+      <div class="game-start-title">小糖果</div>
+      <div class="game-start-sub">帮阿贝贝接住掉下来的糖果吧！<br>左右滑动移动，避开黑糖，漏掉3颗就结束</div>
+      <div class="game-plays-left" id="game-plays-left"></div>
+      <div class="game-start-btn" onclick="startGame()">开始</div>
+    </div>
+    <div class="game-end-screen" id="game-end" style="display:none">
+      <img class="game-end-face" id="game-end-face" src="./大哭阿贝贝.png" alt="">
+      <div class="game-end-line" id="game-end-line"></div>
+      <div class="game-end-stats" id="game-end-stats"></div>
+      <div class="game-end-btn" onclick="startGame()">再玩一次</div>
+      <div class="game-end-btn" onclick="closeGame()" style="background:transparent;color:var(--text-muted)">回去啦</div>
+    </div>
+  </div>
+  </div>
 </div>
 
 <script>
@@ -4332,6 +4390,295 @@ enterAbebe=function(){
 
 // also check on interval
 setInterval(checkDreamBtn,60000);
+
+// ===== CANDY CATCH GAME =====
+let candyGameData={
+  candyPoints:0,        // 糖果积分
+  totalCoinsEarned:0,   // 游戏总共赚的币
+  playsToday:0,
+  playDate:'',
+  highScore:0
+};
+const GAME_MAX_PLAYS=2;
+const GAME_POINTS_PER_COIN=5;     // 5积分=1币
+const GAME_CATCH_PER_POINT=20;    // 20颗=1积分
+
+// Load game data from snackData
+(function loadGameData(){
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    if(raw){
+      const d=JSON.parse(raw);
+      if(d.candyGameData) Object.assign(candyGameData,d.candyGameData);
+    }
+  }catch(e){}
+  const today=new Date().toDateString();
+  if(candyGameData.playDate!==today){candyGameData.playsToday=0;candyGameData.playDate=today;}
+})();
+
+// Hook into saveApp to save game data
+const _origSaveAppGame=saveApp;
+saveApp=function(){
+  _origSaveAppGame();
+  // Also update snackData in localStorage with game data
+  try{
+    const raw=localStorage.getItem('candyJarSnackData');
+    const d=raw?JSON.parse(raw):{};
+    d.candyGameData=candyGameData;
+    localStorage.setItem('candyJarSnackData',JSON.stringify(d));
+    supaUpsert('snack_data',Object.assign({},snackData,{candyGameData}));
+  }catch(e){}
+};
+
+// Hook into getSnackBalance to include game-earned coins
+const _origGetSnackBalance=getSnackBalance;
+getSnackBalance=function(){
+  return _origGetSnackBalance()+(candyGameData.totalCoinsEarned||0);
+};
+
+// Game state
+let gameActive=false;
+let gameScore=0;
+let gameLives=3;
+let gameFallInterval=null;
+let gameAnimFrame=null;
+let gameCandies=[];
+let gameAbebeX=0.5; // 0-1 position ratio
+let gameAreaW=0;
+let gameAreaH=0;
+let gameSpeed=1.5;
+
+const gameEndLines=[
+  {min:0,max:5,text:'阿贝贝歪歪头：「没关系，糖果会再来的」',face:'./大哭阿贝贝.png'},
+  {min:6,max:15,text:'阿贝贝舔舔嘴：「嗯……刚好尝了个味道」',face:'./委屈阿贝贝.png'},
+  {min:16,max:30,text:'阿贝贝拍拍肚子：「今天份的甜够啦」',face:'./害羞阿贝贝.png'},
+  {min:31,max:50,text:'阿贝贝眯着眼睛笑：「嘿嘿，好多糖呀」',face:'./开心阿贝贝.png'},
+  {min:51,max:999,text:'阿贝贝转圈圈：「最幸福的小兔叽就是我！！」',face:'./玩耍阿贝贝.png'}
+];
+
+function openCandyGame(){
+  const today=new Date().toDateString();
+  if(candyGameData.playDate!==today){candyGameData.playsToday=0;candyGameData.playDate=today;}
+  document.getElementById('game-overlay').classList.add('show');
+  document.getElementById('game-start').style.display='flex';
+  document.getElementById('game-end').style.display='none';
+  const rewardLeft=Math.max(0,GAME_MAX_PLAYS-candyGameData.playsToday);
+  document.getElementById('game-plays-left').textContent=rewardLeft>0?'今天还有 '+rewardLeft+' 次积分机会':'今天的积分用完啦，继续玩不给积分哦';
+  document.querySelector('#game-start .game-start-btn').style.display='';
+}
+
+function closeGame(){
+  if(gameActive) stopGame();
+  document.getElementById('game-overlay').classList.remove('show');
+}
+
+function startGame(){
+  const today=new Date().toDateString();
+  if(candyGameData.playDate!==today){candyGameData.playsToday=0;candyGameData.playDate=today;}
+
+  document.getElementById('game-start').style.display='none';
+  document.getElementById('game-end').style.display='none';
+
+  const area=document.getElementById('game-area');
+  gameAreaW=area.clientWidth;
+  gameAreaH=area.clientHeight;
+  gameScore=0;
+  gameLives=3;
+  gameSpeed=2.2;
+  gameCandies=[];
+  gameActive=true;
+  gameAbebeX=0.5;
+
+  document.getElementById('game-score').textContent='0';
+  document.getElementById('game-points').textContent='积分 '+(candyGameData.candyPoints||0)+'/'+GAME_POINTS_PER_COIN;
+  renderGameLives();
+
+  const abebe=document.getElementById('game-abebe');
+  abebe.style.left=(gameAbebeX*gameAreaW-36)+'px';
+  abebe.style.display='';
+  const face=document.getElementById('game-face');
+  face.src='./开心阿贝贝.png';
+  face.style.display='';
+
+  // Clear old candies
+  area.querySelectorAll('.game-candy,.game-catch-flash').forEach(el=>el.remove());
+
+  // Touch controls — finger follow
+  area.ontouchstart=handleGameTouch;
+  area.ontouchmove=handleGameTouch;
+
+  // Spawn candies
+  spawnGameCandy();
+  gameFallInterval=setInterval(()=>{
+    if(gameActive) spawnGameCandy();
+  },Math.max(400,900-gameScore*8));
+
+  // Animation loop
+  gameLoop();
+}
+
+function handleGameTouch(e){
+  if(!gameActive) return;
+  e.preventDefault();
+  const t=e.touches[0];
+  const area=document.getElementById('game-area');
+  const rect=area.getBoundingClientRect();
+  gameAbebeX=Math.max(0.08,Math.min(0.92,(t.clientX-rect.left)/rect.width));
+  document.getElementById('game-abebe').style.left=(gameAbebeX*gameAreaW-36)+'px';
+}
+
+function spawnGameCandy(){
+  const area=document.getElementById('game-area');
+  const img=document.createElement('img');
+  img.className='game-candy';
+  const idx=Math.random()<0.15?8:Math.floor(Math.random()*candyFiles.length);
+  img.src=candyFiles[idx];
+  const isBomb=(idx===8); // 9.png is index 8
+  const x=Math.random()*(gameAreaW-40)+4;
+  img.style.left=x+'px';
+  img.style.top='-40px';
+  area.appendChild(img);
+  gameCandies.push({el:img,x:x,y:-40,speed:gameSpeed+(Math.random()*0.5),isBomb});
+}
+
+function gameLoop(){
+  if(!gameActive) return;
+  const area=document.getElementById('game-area');
+  const abebeLeft=gameAbebeX*gameAreaW-36;
+  const abebeRight=abebeLeft+72;
+  const abebeTop=gameAreaH-80;
+
+  for(let i=gameCandies.length-1;i>=0;i--){
+    const c=gameCandies[i];
+    c.y+=c.speed;
+    c.el.style.top=c.y+'px';
+
+    // Check catch
+    const cx=c.x+18;
+    const cy=c.y+36;
+    if(cy>=abebeTop&&cy<=gameAreaH&&cx>=abebeLeft&&cx<=abebeRight){
+      // Black candy = bomb!
+      if(c.isBomb){
+        gameLives--;
+        renderGameLives();
+        updateGameFace();
+        c.el.remove();
+        gameCandies.splice(i,1);
+        if(gameLives<=0){endGame();return;}
+        continue;
+      }
+      // Caught!
+      gameScore++;
+      document.getElementById('game-score').textContent=gameScore;
+      // Flash effect
+      const flash=document.createElement('div');
+      flash.className='game-catch-flash';
+      flash.style.left=(cx-10)+'px';
+      flash.style.top=(cy-10)+'px';
+      area.appendChild(flash);
+      setTimeout(()=>flash.remove(),400);
+      c.el.remove();
+      gameCandies.splice(i,1);
+      // Speed up gradually
+      if(gameScore%10===0) gameSpeed+=0.3;
+      // Adjust spawn rate
+      clearInterval(gameFallInterval);
+      gameFallInterval=setInterval(()=>{if(gameActive)spawnGameCandy();},Math.max(350,900-gameScore*10));
+      continue;
+    }
+
+    // Check miss (fell below screen)
+    if(c.y>gameAreaH+10){
+      c.el.remove();
+      gameCandies.splice(i,1);
+      gameLives--;
+      renderGameLives();
+      updateGameFace();
+      if(gameLives<=0){
+        endGame();
+        return;
+      }
+    }
+  }
+  gameAnimFrame=requestAnimationFrame(gameLoop);
+}
+
+function renderGameLives(){
+  let html='';
+  for(let i=0;i<3;i++){
+    html+='<div class="game-life-dot'+(i>=gameLives?' lost':'')+'"></div>';
+  }
+  document.getElementById('game-lives').innerHTML=html;
+}
+
+function updateGameFace(){
+  const face=document.getElementById('game-face');
+  if(gameLives===3) face.src='./开心阿贝贝.png';
+  else if(gameLives===2) face.src='./害羞阿贝贝.png';
+  else if(gameLives===1) face.src='./委屈阿贝贝.png';
+  else face.src='./大哭阿贝贝.png';
+}
+
+function stopGame(){
+  gameActive=false;
+  clearInterval(gameFallInterval);
+  cancelAnimationFrame(gameAnimFrame);
+  const area=document.getElementById('game-area');
+  area.ontouchstart=null;
+  area.ontouchmove=null;
+}
+
+function endGame(){
+  stopGame();
+  candyGameData.playsToday++;
+
+  // Only reward for first N plays
+  const hasReward=candyGameData.playsToday<=GAME_MAX_PLAYS;
+  let pointsEarned=0;
+  let newCoins=0;
+
+  if(hasReward){
+    pointsEarned=Math.floor(gameScore/GAME_CATCH_PER_POINT);
+    candyGameData.candyPoints=(candyGameData.candyPoints||0)+pointsEarned;
+    newCoins=Math.floor(candyGameData.candyPoints/GAME_POINTS_PER_COIN);
+    candyGameData.totalCoinsEarned=(candyGameData.totalCoinsEarned||0)+newCoins;
+    candyGameData.candyPoints=candyGameData.candyPoints%GAME_POINTS_PER_COIN;
+  }
+
+  if(gameScore>(candyGameData.highScore||0)) candyGameData.highScore=gameScore;
+
+  saveApp();
+  renderCoinDisplay();
+
+  // Show end screen
+  const endInfo=gameEndLines.find(l=>gameScore>=l.min&&gameScore<=l.max)||gameEndLines[0];
+  document.getElementById('game-end-face').src=endInfo.face;
+  document.getElementById('game-end-line').textContent=endInfo.text;
+
+  let stats='接到 '+gameScore+' 颗糖';
+  if(hasReward){
+    if(pointsEarned>0) stats+='\n获得 '+pointsEarned+' 个糖果积分';
+    if(newCoins>0) stats+='\n兑换了 '+newCoins+' 个阿贝贝币！';
+    if(candyGameData.candyPoints>0) stats+='\n当前积分：'+candyGameData.candyPoints+'/'+GAME_POINTS_PER_COIN;
+  }else{
+    stats+='\n（今天的积分次数已用完，纯玩模式）';
+  }
+  document.getElementById('game-end-stats').innerText=stats;
+
+  const retryBtn=document.querySelector('#game-end .game-end-btn');
+  retryBtn.textContent='再玩一次';
+  retryBtn.onclick=startGame;
+
+  document.getElementById('game-end').style.display='flex';
+  document.getElementById('game-abebe').style.display='none';
+  document.getElementById('game-face').style.display='none';
+}
+
+// Refresh on enter
+const _prevEnterAbebeGame=enterAbebe;
+enterAbebe=function(){
+  _prevEnterAbebeGame();
+};
 
 </script>
 </body>
