@@ -4549,18 +4549,20 @@ function exportData(){
   URL.revokeObjectURL(url);
 }
 
-function importData(event){
+async function importData(event){
   const file=event.target.files[0];
   if(!file) return;
   const reader=new FileReader();
-  reader.onload=function(e){
+  reader.onload=async function(e){
     try{
       const data=JSON.parse(e.target.result);
       if(data.appData){
         localStorage.setItem('candyJarData',JSON.stringify(data.appData));
+        await supaUpsert('app_data',data.appData);
       }
       if(data.snackData){
         localStorage.setItem('candyJarSnackData',JSON.stringify(data.snackData));
+        await supaUpsert('snack_data',data.snackData);
       }
       alert('数据恢复成功！页面将刷新');
       location.reload();
