@@ -39,7 +39,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .nav-dot{width:3px;height:3px;border-radius:50%;background:transparent;transition:background .2s}
 .nav-item.active .nav-dot{background:var(--pink-400)}
 
-.card{background:var(--bg-card);border-radius:20px;padding:24px;margin-bottom:16px;border:1px solid var(--border-light);box-shadow:0 2px 16px var(--shadow-pink)}
+.card{background:var(--bg-card);border-radius:20px;padding:28px;margin-bottom:20px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08)}
 .card-title{font-size:13px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:16px}
 
 /* SWEETS */
@@ -111,7 +111,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .candy-detail-candy{position:absolute;top:-20px;right:-10px;width:48px;height:48px;object-fit:contain;z-index:3}
 
 .timeline{display:flex;flex-direction:column;gap:16px;padding:8px 0}
-.timeline-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 2px 12px var(--shadow-pink);cursor:pointer;transition:all .15s;position:relative}
+.timeline-item{display:flex;align-items:center;gap:16px;padding:18px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08);cursor:pointer;transition:all .15s;position:relative;margin-bottom:14px}
 .timeline-item:active{transform:scale(.98)}
 .timeline-candy{width:56px;height:56px;object-fit:contain;flex-shrink:0}
 .timeline-info{flex:1}
@@ -147,7 +147,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .legend-item{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text-muted)}
 .legend-dot{width:8px;height:8px;border-radius:3px}
 
-.mood-section{margin-top:20px;padding:20px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:16px;border:1px solid var(--border-light)}
+.mood-section{margin-top:24px;padding:24px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08)}
 .mood-title{font-size:12px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:14px}
 .mood-person{font-size:12px;color:var(--pink-500);margin-bottom:10px}
 .mood-row{display:flex;justify-content:space-between;margin-bottom:6px}
@@ -158,7 +158,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .mood-divider{height:1px;background:var(--border-light);margin:14px 0}
 
 /* Reading check */
-.reading-section{margin-top:16px;padding:16px;background:linear-gradient(135deg,var(--lavender-50),var(--pink-50));border-radius:16px;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between}
+.reading-section{margin-top:18px;padding:18px;background:linear-gradient(135deg,var(--lavender-50),var(--pink-50));border-radius:16px;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08)}
 .reading-label{font-size:12px;color:var(--text-secondary);letter-spacing:.5px}
 .reading-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--pink-300);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
 .reading-check.checked{background:var(--pink-400);border-color:var(--pink-400);color:#fff}
@@ -179,7 +179,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 
 /* BOOKS */
 .bookshelf{display:flex;flex-direction:column;gap:12px}
-.book-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 2px 12px var(--shadow-pink);cursor:pointer;transition:all .15s}
+.book-item{display:flex;align-items:center;gap:16px;padding:18px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08);cursor:pointer;transition:all .15s;margin-bottom:14px}
 .book-item:active{transform:scale(.98)}
 .book-cover{width:48px;height:66px;border-radius:4px 8px 8px 4px;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);flex-shrink:0}
 .book-cover-1{background:linear-gradient(135deg,#F5E6D0,#F0D8C0)}
@@ -219,8 +219,8 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .us-days{font-size:36px;font-weight:300;margin:8px 0;letter-spacing:2px}
 .us-days-label{font-size:11px;color:var(--text-muted);letter-spacing:2px}
 .us-since{font-size:11px;color:var(--text-muted);margin-top:6px}
-.milestones{display:flex;flex-direction:column;gap:10px;margin-top:8px}
-.milestone{display:flex;align-items:center;gap:12px;padding:12px 36px 12px 16px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:12px;border:1px solid var(--border-light)}
+.milestones{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.milestone{display:flex;align-items:center;gap:12px;padding:14px 36px 14px 16px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:12px;border:1px solid var(--border-light);box-shadow:0 2px 12px rgba(232,160,191,0.1)}
 .milestone-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
 .milestone-dot.pink{background:var(--pink-400)}
 .milestone-dot.lavender{background:#C4A8D8}
@@ -237,7 +237,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .add-confirm{padding:10px 16px;border:none;border-radius:12px;background:var(--pink-400);color:#fff;font-family:'SGH',Georgia,serif;font-size:12px;cursor:pointer}
 
 .wishlist-section{margin-top:8px}
-.wish-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-light);font-size:12px;line-height:1.6}
+.wish-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--border-light);font-size:12px;line-height:1.6}
 .wish-item:last-child{border-bottom:none}
 .wish-check{width:14px;height:14px;border-radius:4px;border:1.5px solid var(--pink-300);margin-top:2px;flex-shrink:0;cursor:pointer;transition:all .15s}
 .wish-check.done{background:var(--pink-400);border-color:var(--pink-400)}
@@ -2121,7 +2121,7 @@ async function loadApp(){
 
 // ===== 猪肚记 (PIG BELLY DIARY) =====
 let pigBellyData={};
-const pigCardImages=['./pigcard1.jpg','./pigcard2.jpg','./pigcard3.jpg','./pigcard4.jpg','./pigcard5.jpg','./pigcard6.jpg','./pigcard7.jpg','./pigcard8.jpg'];
+const pigCardImages=['./pigcard1.jpeg','./pigcard2.jpeg','./pigcard3.jpeg','./pigcard4.jpeg','./pigcard5.jpeg','./pigcard6.jpeg','./pigcard7.jpeg','./pigcard8.jpeg'];
 const pbMealNames={breakfast:'早餐',lunch:'午餐',dinner:'晚餐'};
 let pbCurDate=new Date();
 let pbSelMeal='breakfast';
