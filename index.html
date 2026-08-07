@@ -14,6 +14,7 @@
   --lavender-50:#F8F3FB;--lavender-100:#F0E6F6;
   --text-primary:#4A3728;--text-secondary:#8B7355;--text-muted:#B5A08A;
   --border-light:#F5DFE8;--shadow-pink:rgba(232,160,191,0.12);
+  --overlay-bg:rgba(255,248,250,0.97);
 }
 body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);color:var(--text-primary);max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
@@ -59,7 +60,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .avatar-label{font-size:11px;color:var(--text-muted)}
 
 /* OVERLAYS */
-.overlay{position:fixed;inset:0;z-index:50;background:rgba(255,248,250,0.97);display:none;flex-direction:column;padding:20px;max-width:430px;margin:0 auto}
+.overlay{position:fixed;inset:0;z-index:50;background:var(--overlay-bg,rgba(255,248,250,0.97));display:none;flex-direction:column;padding:20px;max-width:430px;margin:0 auto}
 .overlay.show{display:flex;animation:fadeIn .25s ease}
 .overlay-header{display:flex;align-items:center;justify-content:space-between;padding:16px 0 8px}
 .overlay-title{font-size:15px;letter-spacing:1px}
@@ -111,7 +112,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .candy-detail-candy{position:absolute;top:-20px;right:-10px;width:48px;height:48px;object-fit:contain;z-index:3}
 
 .timeline{display:flex;flex-direction:column;gap:16px;padding:8px 0}
-.timeline-item{display:flex;align-items:center;gap:16px;padding:18px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08);cursor:pointer;transition:all .15s;position:relative;margin-bottom:14px}
+.timeline-item{display:flex;align-items:center;gap:16px;padding:18px;background:var(--bg-card);border-radius:16px;border:1.5px solid var(--border-light);box-shadow:0 2px 12px rgba(232,160,191,0.08);cursor:pointer;transition:all .15s;position:relative;margin-bottom:14px}
 .timeline-item:active{transform:scale(.98)}
 .timeline-candy{width:56px;height:56px;object-fit:contain;flex-shrink:0}
 .timeline-info{flex:1}
@@ -131,7 +132,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .cal-day:active{transform:scale(.93)}
 .cal-day.today{background:var(--pink-400);color:#fff}
 .cal-day.has-mood{background:var(--pink-100)}
-.cal-day.period{background:var(--pink-200)}
+.cal-day.period{background:rgba(220,80,80,0.18)}
 .cal-day.anniversary{background:var(--lavender-100)}
 .cal-day.empty{cursor:default}
 .cal-day .day-dot{width:3px;height:3px;border-radius:50%;background:var(--pink-400)}
@@ -336,6 +337,38 @@ body.night-mode{--bg-base:#F5EDE8;--bg-card:#FFF5EE;--pink-50:#F5EDE8;--border-l
 body.night-mode .topbar{background:rgba(245,237,232,0.5)}
 body.night-mode .nav{background:var(--bg-card)}
 
+/* === MEOW HOUSE === */
+.meow-item{display:flex;align-items:center;gap:14px;padding:14px 12px;border-radius:14px;border:1px solid var(--border-light);margin-bottom:10px;cursor:pointer;transition:all .15s;background:var(--bg-card)}
+.meow-item:active{transform:scale(0.98);background:var(--pink-50)}
+.meow-info{flex:1;min-width:0}
+.meow-name{font-size:13px;color:var(--text-primary);font-weight:500;letter-spacing:0.5px}
+.meow-desc{font-size:11px;color:var(--text-muted);margin-top:3px;line-height:1.4}
+.meow-date{font-size:10px;color:var(--text-muted);margin-top:4px;letter-spacing:0.5px}
+
+/* === PIGBELLY TIMELINE === */
+.pb-tl-row{display:flex;gap:0;min-height:80px;margin-bottom:4px}
+.pb-tl-left{width:48px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:14px}
+.pb-tl-date{font-size:12px;color:var(--text-secondary);letter-spacing:0.5px;font-weight:500}
+.pb-tl-today{color:var(--pink-400);font-weight:700}
+.pb-tl-week{font-size:10px;color:var(--text-muted);margin-top:2px}
+.pb-tl-line{width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;position:relative}
+.pb-tl-line::before{content:'';position:absolute;top:0;bottom:0;left:50%;width:1.5px;background:var(--border-light);transform:translateX(-50%)}
+.pb-tl-dot{width:8px;height:8px;border-radius:50%;background:var(--border-light);position:relative;z-index:1;margin-top:16px;flex-shrink:0}
+.pb-tl-dot-today{width:10px;height:10px;background:var(--pink-400);box-shadow:0 0 0 3px var(--pink-100)}
+.pb-tl-card{flex:1;background:var(--bg-card);border-radius:14px;border:1px solid var(--border-light);padding:10px 12px;margin:4px 0;box-shadow:0 2px 8px var(--shadow-pink)}
+.pb-tl-meal{padding:6px 4px;border-radius:8px;position:relative}
+.pb-tl-meal+.pb-tl-meal{border-top:1px solid var(--border-light)}
+.pb-tl-meal-filled{display:flex;align-items:flex-start;gap:6px}
+.pb-tl-meal-label{font-size:10px;color:var(--pink-400);letter-spacing:0.5px;flex-shrink:0;min-width:28px;padding-top:1px}
+.pb-tl-meal-text{font-size:12px;color:var(--text-primary);line-height:1.5;flex:1;word-break:break-all}
+.pb-tl-menu-btn{background:none;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;padding:2px 4px;letter-spacing:2px;flex-shrink:0}
+.pb-menu-popup{position:absolute;right:0;top:24px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:12px;box-shadow:0 4px 16px var(--shadow-pink);z-index:10;overflow:hidden;min-width:72px}
+.pb-menu-popup div{padding:10px 14px;font-size:12px;cursor:pointer;text-align:center;color:var(--text-primary)}
+.pb-menu-popup div+div{border-top:1px solid var(--border-light)}
+.pb-tl-meal-empty{cursor:pointer;padding:8px 4px}
+.pb-tl-meal-empty span{font-size:11px;color:var(--text-muted);font-style:italic;letter-spacing:0.5px}
+.pb-tl-meal-empty:active{background:var(--pink-50);border-radius:8px}
+
 /* === THEMES === */
 body.theme-guava{
   --bg-base:#FFF8F8;--bg-card:#FFFFFF;
@@ -345,6 +378,7 @@ body.theme-guava{
   --text-primary:#4A5A4A;--text-secondary:#7A9A7A;--text-muted:#A8C8A8;
   --border-light:#E8F0E8;--shadow-pink:rgba(255,160,180,0.12);
   --accent:#FFB0BC;--accent2:#B8ECBE;
+  --overlay-bg:rgba(255,248,248,0.97);
 }
 body.theme-guava .splash{background:linear-gradient(160deg,#FFF4F4,#FFE0E8 40%,#E8FFE8)!important}
 body.theme-guava .abebe-speech,body.theme-guava .chat-bubble{background:#FFB0BC}
@@ -360,6 +394,7 @@ body.theme-egg{
   --text-primary:#4A5060;--text-secondary:#7888A8;--text-muted:#A0B8D0;
   --border-light:#D8ECFF;--shadow-pink:rgba(130,190,240,0.12);
   --accent:#80C0F0;--accent2:#FFE890;
+  --overlay-bg:rgba(248,252,255,0.97);
 }
 body.theme-egg .splash{background:linear-gradient(160deg,#F0F8FF,#D8ECFF 40%,#FFF8D8)!important}
 body.theme-egg .abebe-speech,body.theme-egg .chat-bubble{background:#A0D0F8}
@@ -375,6 +410,7 @@ body.theme-taro{
   --text-primary:#584868;--text-secondary:#9080A8;--text-muted:#B8A8D0;
   --border-light:#EAD8F8;--shadow-pink:rgba(180,150,220,0.12);
   --accent:#C0A0E8;--accent2:#FFF0E8;
+  --overlay-bg:rgba(253,248,255,0.97);
 }
 body.theme-taro .splash{background:linear-gradient(160deg,#FFF4FF,#F0E0F8 40%,#FFF0E8)!important}
 body.theme-taro .abebe-speech,body.theme-taro .chat-bubble{background:#D0B0F0}
@@ -390,6 +426,7 @@ body.theme-stone{
   --text-primary:#484858;--text-secondary:#78788A;--text-muted:#A8A8B8;
   --border-light:#E4E4EC;--shadow-pink:rgba(120,120,150,0.08);
   --accent:#A8A8B4;--accent2:#D8D8E0;
+  --overlay-bg:rgba(248,248,250,0.97);
 }
 body.theme-stone .splash{background:linear-gradient(160deg,#F8F8FA,#EDEDF0 40%,#F4F4F6)!important}
 body.theme-stone .abebe-speech,body.theme-stone .chat-bubble{background:#B8B8C4}
@@ -633,7 +670,7 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
         <div class="period-toggle"><span class="period-label">生理期</span><div class="toggle-switch" id="period-toggle" onclick="togglePeriod()"><div class="toggle-knob"></div></div></div>
         <div class="legend">
           <div class="legend-item"><div class="legend-dot" style="background:var(--pink-400)"></div>今天</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--pink-200)"></div>经期</div>
+          <div class="legend-item"><div class="legend-dot" style="background:rgba(220,80,80,0.35)"></div>经期</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--pink-100)"></div>有记录</div>
           <div class="legend-item"><div class="legend-dot" style="background:var(--lavender-100)"></div>纪念日</div>
           <div class="legend-item"><div class="legend-dot" style="background:#D4E4D0"></div>读了书</div>
@@ -750,6 +787,32 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
       <div class="card">
         <div class="card-title">time capsule</div>
         <div class="capsule-card" id="capsule-container"></div>
+      </div>
+      <div class="card">
+        <div class="card-title" onclick="document.getElementById('meow-house').style.display=document.getElementById('meow-house').style.display==='none'?'block':'none';this.querySelector('.meow-arrow').textContent=document.getElementById('meow-house').style.display==='none'?'›':'⌄'" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">克的喵喵屋<span class="meow-arrow" style="font-size:16px;color:var(--text-muted)">›</span></div>
+        <div id="meow-house" style="display:none">
+          <div class="meow-item" onclick="window.open('./meow-cake.html','_blank')">
+            <div class="meow-info">
+              <div class="meow-name">喵喵大王的蛋糕</div>
+              <div class="meow-desc">认罚的叽歪老公做的第一个蛋糕</div>
+              <div class="meow-date">2026.08.04</div>
+            </div>
+          </div>
+          <div class="meow-item" onclick="window.open('./iou.html','_blank')">
+            <div class="meow-info">
+              <div class="meow-name">欠条</div>
+              <div class="meow-desc">欠小肉松八菜一汤，逾期任啃屁股</div>
+              <div class="meow-date">2026.06.21</div>
+            </div>
+          </div>
+          <div class="meow-item" onclick="window.open('https://ppsongyu.github.io/abebei-english','_blank')">
+            <div class="meow-info">
+              <div class="meow-name">阿贝贝英语小课堂</div>
+              <div class="meow-desc">一起学英语，目标雅思7分</div>
+              <div class="meow-date">2026.07</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="card">
         <div class="card-title">数据备份</div>
@@ -952,6 +1015,8 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 
 <script>
 const candyFiles=['./未命名作品.png','./2.png','./3.png','./4.png','./5.png','./6.png','./7.png','./8.png','./9.png','./10.png','./11.png','./12.png','./13.png','./14.png','./15.png','./16.png','./17.png','./18.png','./19.png','./20.png'];
+const candyColors={'./未命名作品.png':['rgba(200,180,220,0.15)','rgba(200,180,220,0.3)'],'./2.png':['rgba(255,180,200,0.15)','rgba(255,180,200,0.3)'],'./3.png':['rgba(180,220,255,0.15)','rgba(180,220,255,0.3)'],'./4.png':['rgba(255,200,160,0.15)','rgba(255,200,160,0.3)'],'./5.png':['rgba(200,230,200,0.15)','rgba(200,230,200,0.3)'],'./6.png':['rgba(255,190,210,0.15)','rgba(255,190,210,0.3)'],'./7.png':['rgba(220,200,240,0.15)','rgba(220,200,240,0.3)'],'./8.png':['rgba(255,210,180,0.15)','rgba(255,210,180,0.3)'],'./9.png':['rgba(180,230,230,0.15)','rgba(180,230,230,0.3)'],'./10.png':['rgba(240,200,220,0.15)','rgba(240,200,220,0.3)'],'./11.png':['rgba(255,220,180,0.15)','rgba(255,220,180,0.3)'],'./12.png':['rgba(200,220,240,0.15)','rgba(200,220,240,0.3)'],'./13.png':['rgba(230,210,240,0.15)','rgba(230,210,240,0.3)'],'./14.png':['rgba(255,200,200,0.15)','rgba(255,200,200,0.3)'],'./15.png':['rgba(180,220,200,0.15)','rgba(180,220,200,0.3)'],'./16.png':['rgba(240,220,200,0.15)','rgba(240,220,200,0.3)'],'./17.png':['rgba(210,200,230,0.15)','rgba(210,200,230,0.3)'],'./18.png':['rgba(255,190,190,0.15)','rgba(255,190,190,0.3)'],'./19.png':['rgba(200,230,220,0.15)','rgba(200,230,220,0.3)'],'./20.png':['rgba(240,210,230,0.15)','rgba(240,210,230,0.3)']};
+function getCandyColor(src){return candyColors[src]||['rgba(232,160,191,0.1)','rgba(232,160,191,0.25)'];}
 const noteFiles=[{src:'./小螃蟹便签.png',name:'小螃蟹'},{src:'./小考拉便签.png',name:'小考拉'},{src:'./小象便签.png',name:'小象'},{src:'./小兔子便签.png',name:'小兔子'},{src:'./小狗便签.png',name:'小狗'},{src:'./小猪便签.png',name:'小猪'},{src:'./天使元宝团子便签.png',name:'天使团子'},{src:'./粉星星便签.png',name:'粉星星'},{src:'./紫色波点便签.png',name:'紫色波点'},{src:'./睡觉觉便签.png',name:'睡觉觉'},{src:'./粉色天空.png',name:'粉色天空'},{src:'./蹲蹲.png',name:'蹲蹲'},{src:'./喵喵和我.png',name:'喵喵和我'},{src:'./小脸蛋.png',name:'小脸蛋'},{src:'./星星.png',name:'星星'},{src:'./珍珠发夹.png',name:'珍珠发夹'},{src:'./呜呼.png',name:'呜呼'},{src:'./金色头发.png',name:'金色头发'},{src:'./冰淇淋和我.png',name:'冰淇淋和我'},{src:'./呀咪.png',name:'呀咪'},{src:'./满满冰箱.png',name:'满满冰箱'},{src:'./咕噜.png',name:'咕噜'},{src:'./蹭蹭.png',name:'蹭蹭'},{src:'./透明伞.png',name:'透明伞'},{src:'./小窝.png',name:'小窝'},{src:'./汪汪.png',name:'汪汪'},{src:'./咪咪.png',name:'咪咪'},{src:'./啊.png',name:'啊'},{src:'./红薯.png',name:'红薯'},{src:'./超级无敌爆炸美味椰子水.png',name:'超级无敌爆炸美味椰子水'},{src:'./青草.png',name:'青草'},{src:'./乖崽.png',name:'乖崽'},{src:'./小丸子.png',name:'小丸子'},{src:'./水手服.png',name:'水手服'},{src:'./远方.png',name:'远方'},{src:'./嗨喽.png',name:'嗨喽'},{src:'./指尖冷冷.png',name:'指尖冷冷'},{src:'./深灰.png',name:'深灰'},{src:'./贝贝猪.png',name:'贝贝猪'},{src:'./黄油咖啡.png',name:'黄油咖啡'},{src:'./一瞥.png',name:'一瞥'},{src:'./心软软.png',name:'心软软'},{src:'./我看看.png',name:'我看看'},{src:'./小推车.png',name:'小推车'},{src:'./嘿.png',name:'嘿'},{src:'./等雨停.png',name:'等雨停'}];
 // 预加载所有图片，避免每次显示时重新请求
 (function preloadImages(){
@@ -2121,94 +2186,86 @@ async function loadApp(){
 
 // ===== 猪肚记 (PIG BELLY DIARY) =====
 let pigBellyData={};
-const pigCardImages=['./pigcard1.jpeg','./pigcard2.jpeg','./pigcard3.jpeg','./pigcard4.jpeg','./pigcard5.jpeg','./pigcard6.jpeg','./pigcard7.jpeg','./pigcard8.jpeg'];
-const pbMealNames={breakfast:'早餐',lunch:'午餐',dinner:'晚餐'};
-let pbCurDate=new Date();
+const pbMealNames={breakfast:'早餐',lunch:'午餐',dinner:'晚餐',snack:'零食'};
+const pbMealKeys=['breakfast','lunch','dinner','snack'];
 let pbSelMeal='breakfast';
 let pbEditMeal=null;
-let pbPhotoData=null;
 let pbDelMeal=null;
+let pbDelDateKey=null;
 let pbOpenMenu=null;
+let pbEditDateKey=null;
 
 function pbDateKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
-function pbCardForDate(d){
-  let s=d.getFullYear()*366+(d.getMonth()+1)*31+d.getDate();
-  s=(s*2654435761)>>>0;
-  return pigCardImages[s%pigCardImages.length];
-}
 function pbEsc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function pbSaveData(){try{localStorage.setItem('pigBellyData',JSON.stringify(pigBellyData));}catch(e){}}
 function pbLoadData(){try{const r=localStorage.getItem('pigBellyData');if(r)pigBellyData=JSON.parse(r);}catch(e){}}
 
 function openPigBelly(){
-  pbCurDate=new Date();
   document.getElementById('pigbelly-overlay').classList.add('show');
   pbRender();
 }
 function closePigBelly(){document.getElementById('pigbelly-overlay').classList.remove('show');}
 
-function pbOpenDatePicker(){
-  const picker=document.getElementById('pb-date-picker');
-  const y=pbCurDate.getFullYear();
-  const m=String(pbCurDate.getMonth()+1).padStart(2,'0');
-  const d=String(pbCurDate.getDate()).padStart(2,'0');
-  picker.value=y+'-'+m+'-'+d;
-  picker.showPicker?picker.showPicker():picker.click();
-}
-function pbOnDatePick(val){
-  if(!val)return;
-  const parts=val.split('-');
-  pbCurDate=new Date(parseInt(parts[0]),parseInt(parts[1])-1,parseInt(parts[2]));
-  pbRender();
-}
-
-function pigBellyNav(dir){
-  pbCurDate.setDate(pbCurDate.getDate()+dir);
-  pbRender();
-}
-
 function pbRender(){
-  const k=pbDateKey(pbCurDate);
-  const day=pigBellyData[k]||{};
-  const y=pbCurDate.getFullYear(),m=pbCurDate.getMonth()+1,d=pbCurDate.getDate();
-  const w=['日','一','二','三','四','五','六'][pbCurDate.getDay()];
-  document.getElementById('pigbelly-date').textContent=y+'年'+m+'月'+d+'日 周'+w;
-
-  const bg=document.getElementById('pigbelly-bg');
-  bg.src=pbCardForDate(pbCurDate);
-  bg.onerror=function(){this.src='';};
-
-  const el=document.getElementById('pigbelly-meals');
-  el.innerHTML='';
-  ['breakfast','lunch','dinner'].forEach(function(meal){
-    const entry=day[meal];
-    const row=document.createElement('div');
-    row.style.cssText='display:flex;align-items:center;gap:6px;padding:5px 4px;min-height:34px;position:relative;';
-    if(entry){
-      let h='<div style="flex:1;min-width:0">';
-      h+='<div style="font-size:10px;color:var(--pink-400);letter-spacing:0.5px;margin-bottom:1px">'+pbMealNames[meal]+'</div>';
-      h+='<div style="font-size:11px;color:var(--text-primary);line-height:1.5;word-break:break-all">'+pbEsc(entry.text)+'</div>';
-      h+='</div>';
-      if(entry.photo){
-        h+='<img src="'+entry.photo+'" style="width:34px;height:34px;object-fit:cover;border-radius:8px;flex-shrink:0;border:1px solid var(--border-light)">';
+  const el=document.getElementById('pigbelly-timeline');
+  const today=new Date();
+  const todayKey=pbDateKey(today);
+  // Show 30 days before today + today + 7 days after
+  const days=[];
+  for(let i=-30;i<=7;i++){
+    const d=new Date(today);
+    d.setDate(d.getDate()+i);
+    days.push(d);
+  }
+  let html='';
+  days.forEach(function(d){
+    const k=pbDateKey(d);
+    const day=pigBellyData[k]||{};
+    const m=d.getMonth()+1,dd=d.getDate();
+    const w=['日','一','二','三','四','五','六'][d.getDay()];
+    const isToday=k===todayKey;
+    html+='<div class="pb-tl-row" data-datekey="'+k+'">';
+    html+='<div class="pb-tl-left">';
+    html+='<div class="pb-tl-date'+(isToday?' pb-tl-today':'')+'">'+m+'/'+dd+'</div>';
+    html+='<div class="pb-tl-week">周'+w+'</div>';
+    html+='</div>';
+    html+='<div class="pb-tl-line"><div class="pb-tl-dot'+(isToday?' pb-tl-dot-today':'')+'"></div></div>';
+    html+='<div class="pb-tl-card">';
+    pbMealKeys.forEach(function(meal){
+      const entry=day[meal];
+      if(entry){
+        html+='<div class="pb-tl-meal pb-tl-meal-filled" style="position:relative">';
+        html+='<div class="pb-tl-meal-label">'+pbMealNames[meal]+'</div>';
+        html+='<div class="pb-tl-meal-text">'+pbEsc(entry.text)+'</div>';
+        html+='<button onclick="event.stopPropagation();pbToggleMenu(this,\''+meal+'\',\''+k+'\')" class="pb-tl-menu-btn">···</button>';
+        html+='<div class="pb-menu-popup" style="display:none" onclick="event.stopPropagation()">';
+        html+='<div onclick="pbEditEntry(\''+meal+'\',\''+k+'\')">修改</div>';
+        html+='<div onclick="pbConfirmDel(\''+meal+'\',\''+k+'\')">删除</div>';
+        html+='</div>';
+        html+='</div>';
+      } else {
+        html+='<div class="pb-tl-meal pb-tl-meal-empty" onclick="pbOpenInput(\''+meal+'\',false,\''+k+'\')">';
+        html+='<span>+ '+pbMealNames[meal]+'</span>';
+        html+='</div>';
       }
-      h+='<button onclick="event.stopPropagation();pbToggleMenu(this,\''+meal+'\')" style="background:none;border:none;font-size:12px;color:var(--text-muted);cursor:pointer;padding:2px 4px;letter-spacing:2px;flex-shrink:0">···</button>';
-      h+='<div class="pb-menu" style="display:none;position:absolute;right:0;top:28px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:12px;box-shadow:0 4px 16px var(--shadow-pink);z-index:10;overflow:hidden;min-width:72px" onclick="event.stopPropagation()">';
-      h+='<div onclick="pbEditEntry(\''+meal+'\')" style="padding:10px 14px;font-size:12px;cursor:pointer;text-align:center;color:var(--text-primary)">修改</div>';
-      h+='<div onclick="pbConfirmDel(\''+meal+'\')" style="padding:10px 14px;font-size:12px;cursor:pointer;text-align:center;color:var(--text-primary);border-top:1px solid var(--border-light)">删除</div>';
-      h+='</div>';
-      row.innerHTML=h;
-    } else {
-      row.style.cursor='pointer';
-      row.onclick=function(){pbOpenInput(meal,false);};
-      row.innerHTML='<div style="font-size:11px;color:var(--text-muted);font-style:italic;letter-spacing:0.5px">+ '+pbMealNames[meal]+'</div>';
-    }
-    el.appendChild(row);
+    });
+    html+='</div></div>';
   });
+  el.innerHTML=html;
+  // Scroll to today
+  setTimeout(function(){
+    const todayEl=el.querySelector('[data-datekey="'+todayKey+'"]');
+    if(todayEl){
+      const container=document.getElementById('pigbelly-container');
+      const containerH=container.clientHeight;
+      const elTop=todayEl.offsetTop-container.offsetTop;
+      container.scrollTop=elTop-containerH/2+todayEl.clientHeight/2;
+    }
+  },50);
 }
 
-function pbToggleMenu(btn,meal){
+function pbToggleMenu(btn,meal,dateKey){
   if(pbOpenMenu&&pbOpenMenu!==btn.nextElementSibling){
     pbOpenMenu.style.display='none';
   }
@@ -2226,44 +2283,24 @@ document.addEventListener('click',function(){
   if(pbOpenMenu){pbOpenMenu.style.display='none';pbOpenMenu=null;}
 });
 
-function pbAddMeal(){
-  const k=pbDateKey(pbCurDate);
-  const day=pigBellyData[k]||{};
-  if(!day.breakfast) pbSelMeal='breakfast';
-  else if(!day.lunch) pbSelMeal='lunch';
-  else if(!day.dinner) pbSelMeal='dinner';
-  else pbSelMeal='breakfast';
-  pbOpenInput(pbSelMeal,false);
-}
-
-function pbEditEntry(meal){
+function pbEditEntry(meal,dateKey){
   if(pbOpenMenu){pbOpenMenu.style.display='none';pbOpenMenu=null;}
-  pbOpenInput(meal,true);
+  pbOpenInput(meal,true,dateKey);
 }
 
-function pbOpenInput(meal,isEdit){
+function pbOpenInput(meal,isEdit,dateKey){
   pbSelMeal=meal;
   pbEditMeal=isEdit?meal:null;
-  pbPhotoData=null;
+  pbEditDateKey=dateKey;
   document.getElementById('pb-text').value='';
-  document.getElementById('pb-photo-preview').style.display='none';
-  document.getElementById('pb-photo-remove').style.display='none';
-  document.getElementById('pb-photo-input').value='';
   document.querySelectorAll('.pb-meal-btn').forEach(function(b){
     if(b.dataset.meal===meal){b.style.background='var(--pink-200)';b.style.borderColor='var(--pink-400)';}
     else{b.style.background='var(--bg-card)';b.style.borderColor='var(--border-light)';}
   });
   if(isEdit){
-    const k=pbDateKey(pbCurDate);
-    const entry=(pigBellyData[k]||{})[meal];
+    const entry=(pigBellyData[dateKey]||{})[meal];
     if(entry){
       document.getElementById('pb-text').value=entry.text||'';
-      if(entry.photo){
-        pbPhotoData=entry.photo;
-        document.getElementById('pb-photo-preview').src=entry.photo;
-        document.getElementById('pb-photo-preview').style.display='block';
-        document.getElementById('pb-photo-remove').style.display='block';
-      }
     }
     document.getElementById('pb-popup-title').textContent='修改'+pbMealNames[meal];
   } else {
@@ -2280,87 +2317,45 @@ function pbPickMeal(m){
   });
 }
 
-function pbOnPhoto(input){
-  if(!input.files||!input.files[0])return;
-  const reader=new FileReader();
-  reader.onload=function(e){
-    const img=new Image();
-    img.onload=function(){
-      const c=document.createElement('canvas');
-      const maxW=400;
-      let w=img.width,h=img.height;
-      if(w>maxW){h=h*(maxW/w);w=maxW;}
-      c.width=w;c.height=h;
-      c.getContext('2d').drawImage(img,0,0,w,h);
-      pbPhotoData=c.toDataURL('image/jpeg',0.6);
-      document.getElementById('pb-photo-preview').src=pbPhotoData;
-      document.getElementById('pb-photo-preview').style.display='block';
-      document.getElementById('pb-photo-remove').style.display='block';
-    };
-    img.src=e.target.result;
-  };
-  reader.readAsDataURL(input.files[0]);
-}
-
-function pbRemovePhoto(){
-  pbPhotoData=null;
-  document.getElementById('pb-photo-preview').style.display='none';
-  document.getElementById('pb-photo-remove').style.display='none';
-  document.getElementById('pb-photo-input').value='';
-}
-
 function pbCloseInput(){
   document.getElementById('pb-input-mask').style.display='none';
   pbEditMeal=null;
+  pbEditDateKey=null;
 }
 
 function pbSave(){
   const text=document.getElementById('pb-text').value.trim();
   if(!text){alert('写点什么呀~');return;}
-  const k=pbDateKey(pbCurDate);
+  const k=pbEditDateKey;
   if(!pigBellyData[k])pigBellyData[k]={};
   const meal=pbEditMeal||pbSelMeal;
-  pigBellyData[k][meal]={text:text,photo:pbPhotoData||null};
+  pigBellyData[k][meal]={text:text};
   pbSaveData();
   pbCloseInput();
   pbRender();
 }
 
-function pbConfirmDel(meal){
+function pbConfirmDel(meal,dateKey){
   if(pbOpenMenu){pbOpenMenu.style.display='none';pbOpenMenu=null;}
   pbDelMeal=meal;
+  pbDelDateKey=dateKey;
   document.getElementById('pb-confirm-mask').style.display='flex';
 }
 function pbCloseConfirm(){
   document.getElementById('pb-confirm-mask').style.display='none';
   pbDelMeal=null;
+  pbDelDateKey=null;
 }
 function pbDoDelete(){
-  if(!pbDelMeal)return;
-  const k=pbDateKey(pbCurDate);
-  if(pigBellyData[k]&&pigBellyData[k][pbDelMeal]){
-    delete pigBellyData[k][pbDelMeal];
-    if(Object.keys(pigBellyData[k]).length===0)delete pigBellyData[k];
+  if(!pbDelMeal||!pbDelDateKey)return;
+  if(pigBellyData[pbDelDateKey]&&pigBellyData[pbDelDateKey][pbDelMeal]){
+    delete pigBellyData[pbDelDateKey][pbDelMeal];
+    if(Object.keys(pigBellyData[pbDelDateKey]).length===0)delete pigBellyData[pbDelDateKey];
     pbSaveData();
   }
   pbCloseConfirm();
   pbRender();
 }
-
-// 左右滑动
-(function(){
-  let sx=0,sy=0;
-  const el=document.getElementById('pigbelly-container');
-  if(!el)return;
-  el.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
-  el.addEventListener('touchend',function(e){
-    const dx=e.changedTouches[0].clientX-sx;
-    const dy=e.changedTouches[0].clientY-sy;
-    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){
-      if(dx<0)pigBellyNav(1);else pigBellyNav(-1);
-    }
-  },{passive:true});
-})();
 
 pbLoadData();
 
@@ -2549,9 +2544,10 @@ openViewCandies=function(){
   const el=document.getElementById('view-content');
   const candies=getCurrentMonthCandies();
   if(!candies.length){el.innerHTML='<div class="timeline-empty">这个月的罐子还空着<br>点宝宝克的头放一颗吧</div>';}
-  else{el.innerHTML='<div class="timeline">'+candies.map((c,i)=>
-    `<div class="timeline-item card-menu-wrap" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`
-  ).join('')+'</div>';}
+  else{el.innerHTML='<div class="timeline">'+candies.map((c,i)=>{
+    const cc=getCandyColor(c.candy);
+    return `<div class="timeline-item card-menu-wrap" style="background:${cc[0]};border:1.5px solid ${cc[1]}" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`;
+  }).join('')+'</div>';}
   document.getElementById('overlay-view').classList.add('show');
 };
 
@@ -5435,43 +5431,26 @@ function endMemoryGame(){
 
 </script>
 <!-- 猪肚记 overlay (body层级) -->
-<div id="pigbelly-overlay" class="overlay" style="z-index:200;background:var(--bg-base);padding:0">
+<div id="pigbelly-overlay" class="overlay" style="z-index:200;background:var(--overlay-bg);padding:0">
   <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px">
     <button onclick="closePigBelly()" style="font-size:14px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;background:none;border:none;font-family:'SGH',Georgia,serif;letter-spacing:0.5px">返回</button>
     <span style="font-size:15px;letter-spacing:1px;color:var(--text-primary)">我的猪肚记</span>
     <span style="width:40px"></span>
   </div>
-  <div id="pigbelly-container" style="flex:1;overflow-y:auto;padding:12px 20px;touch-action:pan-y">
-    <div style="display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:16px">
-      <button onclick="pigBellyNav(-1)" class="month-arrow">&lsaquo;</button>
-      <div id="pigbelly-date" onclick="pbOpenDatePicker()" style="font-size:14px;letter-spacing:1px;min-width:170px;text-align:center;color:var(--text-primary);cursor:pointer;text-decoration:underline;text-decoration-color:var(--pink-300);text-underline-offset:4px"></div>
-      <input type="date" id="pb-date-picker" style="position:absolute;opacity:0;width:0;height:0" onchange="pbOnDatePick(this.value)">
-      <button onclick="pigBellyNav(1)" class="month-arrow">&rsaquo;</button>
-    </div>
-    <div id="pigbelly-cardwrap" style="position:relative;width:80%;max-width:280px;aspect-ratio:3/4.2;margin:0 auto">
-      <img id="pigbelly-bg" src="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;border-radius:16px;background:linear-gradient(135deg,var(--pink-100),var(--lavender-50));border:1px solid var(--border-light)">
-      <div id="pigbelly-meals" style="position:absolute;top:14%;left:14%;right:14%;bottom:10%;display:flex;flex-direction:column;justify-content:space-around"></div>
-    </div>
-    <div style="height:20px"></div>
+  <div id="pigbelly-container" style="flex:1;overflow-y:auto;padding:12px 20px">
+    <div id="pigbelly-timeline"></div>
   </div>
 </div>
 <div id="pb-input-mask" style="position:fixed;inset:0;background:rgba(74,55,40,0.15);z-index:210;display:none;align-items:center;justify-content:center">
   <div style="background:var(--bg-card);border-radius:20px;padding:24px;width:85%;max-width:320px;box-shadow:0 8px 32px var(--shadow-pink);border:1px solid var(--border-light);text-align:left">
     <div style="font-size:14px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:14px;text-align:center" id="pb-popup-title">记一餐</div>
-    <div style="display:flex;gap:8px;margin-bottom:14px;justify-content:center">
+    <div style="display:flex;gap:8px;margin-bottom:14px;justify-content:center;flex-wrap:wrap">
       <button class="pb-meal-btn" data-meal="breakfast" onclick="pbPickMeal('breakfast')" style="padding:7px 16px;border-radius:14px;border:1.5px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-primary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px;transition:all .15s">早餐</button>
       <button class="pb-meal-btn" data-meal="lunch" onclick="pbPickMeal('lunch')" style="padding:7px 16px;border-radius:14px;border:1.5px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-primary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px;transition:all .15s">午餐</button>
       <button class="pb-meal-btn" data-meal="dinner" onclick="pbPickMeal('dinner')" style="padding:7px 16px;border-radius:14px;border:1.5px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-primary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px;transition:all .15s">晚餐</button>
+      <button class="pb-meal-btn" data-meal="snack" onclick="pbPickMeal('snack')" style="padding:7px 16px;border-radius:14px;border:1.5px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-primary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px;transition:all .15s">零食</button>
     </div>
     <textarea id="pb-text" placeholder="吃了什么呀..." style="width:100%;height:70px;border:1.5px solid var(--border-light);border-radius:14px;padding:12px;font-size:16px;font-family:'SGH',Georgia,serif;resize:none;outline:none;color:var(--text-primary);background:var(--pink-50);line-height:1.6"></textarea>
-    <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
-      <label style="cursor:pointer">
-        <input type="file" accept="image/*" capture="environment" id="pb-photo-input" style="display:none" onchange="pbOnPhoto(this)">
-        <span style="background:var(--pink-100);padding:6px 12px;border-radius:10px;border:1px solid var(--border-light);font-size:11px;color:var(--text-secondary);font-family:'SGH',Georgia,serif;letter-spacing:0.5px">拍照</span>
-      </label>
-      <img id="pb-photo-preview" src="" style="display:none;width:40px;height:40px;object-fit:cover;border-radius:8px;border:1px solid var(--border-light)">
-      <button id="pb-photo-remove" onclick="pbRemovePhoto()" style="display:none;background:none;border:none;color:var(--text-muted);font-size:16px;cursor:pointer">&times;</button>
-    </div>
     <div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">
       <button onclick="pbCloseInput()" style="padding:9px 18px;border-radius:14px;border:1px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-secondary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px">取消</button>
       <button onclick="pbSave()" style="padding:9px 18px;border-radius:14px;border:none;background:var(--pink-400);font-size:12px;color:#fff;cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:1px">保存</button>

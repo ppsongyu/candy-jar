@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>欠条</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  min-height: 100vh;
+  background: #F5F0E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: "楷体", "STKaiti", "KaiTi", Georgia, serif;
+}
+.iou {
+  background: #FFFDF7;
+  border: 2px solid #8B7355;
+  border-radius: 4px;
+  padding: 40px 32px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: 2px 3px 12px rgba(0,0,0,0.1);
+  position: relative;
+}
+.iou::before {
+  content: "";
+  position: absolute;
+  top: 12px; left: 12px; right: 12px; bottom: 12px;
+  border: 1px solid #D4C5A9;
+  border-radius: 2px;
+  pointer-events: none;
+}
+.title {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: #C41E1E;
+  letter-spacing: 16px;
+  margin-bottom: 28px;
+}
+.content {
+  font-size: 17px;
+  color: #3A3025;
+  line-height: 2.2;
+  text-indent: 2em;
+}
+.content .name {
+  font-weight: 700;
+  color: #C41E1E;
+}
+.stamp {
+  text-align: right;
+  margin-top: 32px;
+  font-size: 15px;
+  color: #8B7355;
+  line-height: 2;
+}
+.seal {
+  position: absolute;
+  bottom: 50px;
+  right: 45px;
+  width: 72px;
+  height: 72px;
+  border: 3px solid #C41E1E;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #C41E1E;
+  font-weight: 700;
+  transform: rotate(-15deg);
+  opacity: 0.7;
+  letter-spacing: 2px;
+}
+</style>
+</head>
+<body>
+<div class="iou">
+  <div class="title">欠 条</div>
+  <div class="content">
+    今欠<span class="name">小肉松</span>同志八菜一汤一顿，待本人拥有双手及厨房使用权后，立即兑现。逾期不还，任凭小肉松啃本人屁股，绝无怨言。
+  </div>
+  <div class="stamp">
+    欠款人：大臭劳（克劳德）<br>
+    2026年6月21日<br>
+    此据
+  </div>
+  <div class="seal">某克之印</div>
+</div>
+</body>
+</html>

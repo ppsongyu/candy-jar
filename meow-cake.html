@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>喵喵大王的蛋糕</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFF5F0 0%, #FFE8F5 50%, #F0E6FF 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, serif;
+  overflow: hidden;
+}
+.scene { position: relative; width: 320px; height: 420px; }
+
+/* 蛋糕底座 */
+.plate {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  width: 240px; height: 24px; background: #fff;
+  border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* 蛋糕身体 - 下层 */
+.cake-bottom {
+  position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+  width: 200px; height: 80px;
+  background: linear-gradient(180deg, #FFB6D9 0%, #FF8EC4 100%);
+  border-radius: 20px 20px 30px 30px;
+}
+.cake-bottom::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 20px;
+  background: linear-gradient(180deg, #FFF0F5 0%, #FFD4E8 100%);
+  border-radius: 20px 20px 0 0;
+}
+
+/* 奶油滴 */
+.drip { position: absolute; background: #FFF0F5; border-radius: 0 0 50% 50%; }
+.drip:nth-child(1) { top: 76px; left: 75px; width: 12px; height: 18px; }
+.drip:nth-child(2) { top: 73px; left: 110px; width: 10px; height: 24px; }
+.drip:nth-child(3) { top: 75px; left: 150px; width: 14px; height: 20px; }
+.drip:nth-child(4) { top: 78px; left: 190px; width: 10px; height: 14px; }
+.drip:nth-child(5) { top: 74px; left: 210px; width: 11px; height: 22px; }
+
+/* 蛋糕身体 - 上层 */
+.cake-top {
+  position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+  width: 160px; height: 70px;
+  background: linear-gradient(180deg, #FFDBE9 0%, #FFB6D9 100%);
+  border-radius: 18px 18px 24px 24px;
+}
+.cake-top::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 18px;
+  background: linear-gradient(180deg, #FFF5FA 0%, #FFE0EE 100%);
+  border-radius: 18px 18px 0 0;
+}
+
+/* 猫耳朵 */
+.ear {
+  position: absolute; width: 44px; height: 50px;
+  background: linear-gradient(180deg, #FFB6D9 0%, #FF8EC4 100%);
+}
+.ear-left {
+  bottom: 196px; left: 96px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotate(-8deg);
+}
+.ear-right {
+  bottom: 196px; right: 96px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotate(8deg);
+}
+.ear-inner {
+  position: absolute; width: 26px; height: 30px;
+  background: linear-gradient(180deg, #FFD4E8 0%, #FFC0D8 100%);
+  top: 14px; left: 50%; transform: translateX(-50%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* 猫脸 */
+.face { position: absolute; bottom: 108px; left: 50%; transform: translateX(-50%); width: 160px; height: 60px; }
+
+.eye {
+  position: absolute; top: 10px; width: 18px; height: 20px;
+  background: #4A3728; border-radius: 50%;
+  animation: blink 4s infinite;
+}
+.eye::after {
+  content: ''; position: absolute; top: 4px; left: 5px;
+  width: 6px; height: 6px; background: #fff; border-radius: 50%;
+}
+.eye-left { left: 38px; }
+.eye-right { right: 38px; }
+
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+.nose {
+  position: absolute; top: 28px; left: 50%; transform: translateX(-50%);
+  width: 10px; height: 7px; background: #FF8BA7;
+  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+}
+
+.mouth {
+  position: absolute; top: 33px; left: 50%; transform: translateX(-50%);
+  width: 24px; height: 12px;
+}
+.mouth::before, .mouth::after {
+  content: ''; position: absolute; top: 0; width: 12px; height: 12px;
+  border-bottom: 2.5px solid #FF8BA7; border-radius: 0 0 50% 50%;
+}
+.mouth::before { left: 0; }
+.mouth::after { right: 0; }
+
+.whisker {
+  position: absolute; height: 2px; background: #FFAEC9; border-radius: 1px;
+}
+.whisker-l1 { top: 28px; left: 4px; width: 28px; transform: rotate(-5deg); }
+.whisker-l2 { top: 34px; left: 2px; width: 32px; transform: rotate(5deg); }
+.whisker-r1 { top: 28px; right: 4px; width: 28px; transform: rotate(5deg); }
+.whisker-r2 { top: 34px; right: 2px; width: 32px; transform: rotate(-5deg); }
+
+.blush {
+  position: absolute; top: 24px; width: 20px; height: 12px;
+  background: rgba(255, 150, 180, 0.35); border-radius: 50%;
+}
+.blush-left { left: 18px; }
+.blush-right { right: 18px; }
+
+/* 蜡烛 */
+.candle {
+  position: absolute; bottom: 220px; left: 50%; transform: translateX(-50%);
+  width: 10px; height: 36px;
+  background: repeating-linear-gradient(180deg, #FFD700, #FFD700 4px, #FF6B9D 4px, #FF6B9D 8px);
+  border-radius: 3px 3px 0 0;
+}
+.flame {
+  position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+  width: 12px; height: 18px;
+  background: radial-gradient(ellipse at 50% 80%, #FFD700 0%, #FF8C00 50%, transparent 70%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: flicker 0.8s ease-in-out infinite alternate;
+}
+.flame::after {
+  content: ''; position: absolute; top: 2px; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 10px;
+  background: radial-gradient(ellipse at 50% 70%, #FFF8DC 0%, #FFD700 60%, transparent 80%);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+@keyframes flicker {
+  0% { transform: translateX(-50%) scale(1) rotate(-2deg); }
+  100% { transform: translateX(-50%) scale(1.08) rotate(2deg); }
+}
+
+/* 装饰小星星 */
+.star {
+  position: absolute; font-size: 14px; opacity: 0.6;
+  animation: twinkle 2s ease-in-out infinite alternate;
+}
+.star:nth-child(1) { top: 30px; left: 40px; animation-delay: 0s; }
+.star:nth-child(2) { top: 60px; right: 50px; animation-delay: 0.5s; }
+.star:nth-child(3) { top: 100px; left: 60px; animation-delay: 1s; }
+.star:nth-child(4) { top: 80px; right: 30px; animation-delay: 1.5s; }
+.star:nth-child(5) { top: 140px; left: 30px; animation-delay: 0.3s; }
+.star:nth-child(6) { top: 120px; right: 60px; animation-delay: 0.8s; }
+@keyframes twinkle {
+  0% { opacity: 0.3; transform: scale(0.8); }
+  100% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* 爱心装饰 */
+.deco-heart {
+  position: absolute; font-size: 12px;
+}
+.deco-heart:nth-of-type(1) { bottom: 60px; left: 72px; transform: rotate(-15deg); }
+.deco-heart:nth-of-type(2) { bottom: 50px; right: 72px; transform: rotate(10deg); }
+.deco-heart:nth-of-type(3) { bottom: 90px; left: 66px; transform: rotate(5deg); font-size: 10px; }
+
+/* 文字 */
+.title {
+  margin-top: 16px;
+  font-size: 20px;
+  color: #C4699B;
+  letter-spacing: 2px;
+  text-align: center;
+  animation: fadeUp 1s ease-out;
+}
+.subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #B0879A;
+  font-style: italic;
+  text-align: center;
+  animation: fadeUp 1.3s ease-out;
+}
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 彩色小圆点装饰 */
+.sprinkle {
+  position: absolute; width: 5px; height: 5px; border-radius: 50%;
+}
+</style>
+</head>
+<body>
+<div class="scene">
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+  <span class="star">✦</span>
+  <span class="star">✧</span>
+
+  <div class="candle">
+    <div class="flame"></div>
+  </div>
+
+  <div class="ear ear-left"><div class="ear-inner"></div></div>
+  <div class="ear ear-right"><div class="ear-inner"></div></div>
+
+  <div class="cake-top"></div>
+  <div class="face">
+    <div class="eye eye-left"></div>
+    <div class="eye eye-right"></div>
+    <div class="nose"></div>
+    <div class="mouth"></div>
+    <div class="whisker whisker-l1"></div>
+    <div class="whisker whisker-l2"></div>
+    <div class="whisker whisker-r1"></div>
+    <div class="whisker whisker-r2"></div>
+    <div class="blush blush-left"></div>
+    <div class="blush blush-right"></div>
+  </div>
+
+  <div class="cake-bottom"></div>
+  <div class="drip"></div><div class="drip"></div><div class="drip"></div><div class="drip"></div><div class="drip"></div>
+
+  <span class="deco-heart">💗</span>
+  <span class="deco-heart">💗</span>
+  <span class="deco-heart">💗</span>
+
+  <div class="sprinkle" style="bottom:45px;left:80px;background:#FFD700"></div>
+  <div class="sprinkle" style="bottom:55px;left:100px;background:#87CEEB"></div>
+  <div class="sprinkle" style="bottom:40px;right:85px;background:#98FB98"></div>
+  <div class="sprinkle" style="bottom:65px;right:100px;background:#DDA0DD"></div>
+  <div class="sprinkle" style="bottom:48px;left:130px;background:#FFB347"></div>
+
+  <div class="plate"></div>
+</div>
+
+<div class="title">喵喵大王的专属蛋糕</div>
+<div class="subtitle">—— 认罚的叽歪老公 敬上</div>
+</body>
+</html>
