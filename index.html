@@ -223,8 +223,11 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 
 /* US */
 .us-hero{text-align:center;padding:24px 0}
-.us-avatars{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:20px}
-.us-avatar-img{width:56px;height:56px;object-fit:contain}
+.us-avatars{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:8px}
+.us-avatar-img{width:56px;height:56px;object-fit:contain;cursor:pointer;transition:transform .15s}
+.us-avatar-img:active{transform:scale(.93)}
+.us-couple-name{font-size:11px;color:var(--text-secondary);letter-spacing:1px;text-align:center;margin-bottom:16px;cursor:pointer;padding:4px 8px;border-radius:8px;transition:background .15s}
+.us-couple-name:active{background:var(--pink-100)}
 .us-and{font-size:11px;color:var(--pink-400);letter-spacing:1px}
 .us-days{font-size:36px;font-weight:300;margin:8px 0;letter-spacing:2px}
 .us-days-label{font-size:11px;color:var(--text-muted);letter-spacing:2px}
@@ -756,7 +759,8 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
     <div class="page" id="page-us">
       <div class="card">
         <div class="us-hero">
-          <div class="us-avatars"><img class="us-avatar-img" src="./小头雨.png" alt="宝宝雨"><div class="us-and">and</div><img class="us-avatar-img" src="./大头克.png" alt="宝宝克"></div>
+          <div class="us-avatars"><img class="us-avatar-img" id="us-avatar-her" src="./小头雨.png" alt="宝宝雨" onclick="changeAvatar('her')"><div class="us-and">and</div><img class="us-avatar-img" id="us-avatar-him" src="./大头克.png" alt="宝宝克" onclick="changeAvatar('him')"></div>
+          <div class="us-couple-name" id="us-couple-name" onclick="editCoupleName()">世界在下萝卜雨 | 心是兔子做的</div>
           <div class="us-days" id="us-days">0</div>
           <div class="us-days-label">days together</div>
           <div class="us-since">since 2026.06.18</div>
@@ -2585,6 +2589,8 @@ openViewCandies=function(){
     return `<div class="timeline-item card-menu-wrap" style="background:${cc[0]};border:1.5px solid ${cc[1]}" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`;
   }).join('')+'</div>';}
   document.getElementById('overlay-view').classList.add('show');
+  const viewTitle=document.getElementById('overlay-view').querySelector('.overlay-title');
+  viewTitle.textContent='罐子里的糖 · '+candies.length+'颗';
 };
 
 // ===== BOOK MANAGEMENT =====
@@ -5464,6 +5470,93 @@ function endMemoryGame(){
   }
   document.getElementById('mem-end-stats').innerText=stats;
 }
+// ===== AVATAR & COUPLE NAME =====
+const AVATAR_KEY='candyJarAvatars';
+const COUPLE_NAME_KEY='candyJarCoupleName';
+
+function loadCustomAvatars(){
+  try{
+    const raw=localStorage.getItem(AVATAR_KEY);
+    if(raw){
+      const d=JSON.parse(raw);
+      if(d.her){
+        document.getElementById('us-avatar-her').src=d.her;
+        const sweetsHer=document.querySelector('.avatar-btn:nth-child(2) .avatar-img');
+        if(sweetsHer) sweetsHer.src=d.her;
+        const authorHer=document.querySelector('.author-option:nth-child(2) img');
+        if(authorHer) authorHer.src=d.her;
+      }
+      if(d.him){
+        document.getElementById('us-avatar-him').src=d.him;
+        const sweetsHim=document.querySelector('.avatar-btn:nth-child(1) .avatar-img');
+        if(sweetsHim) sweetsHim.src=d.him;
+        const authorHim=document.querySelector('.author-option:nth-child(1) img');
+        if(authorHim) authorHim.src=d.him;
+      }
+    }
+  }catch(e){}
+}
+
+function changeAvatar(who){
+  const input=document.createElement('input');
+  input.type='file';
+  input.accept='image/*';
+  input.onchange=function(e){
+    const file=e.target.files[0];
+    if(!file) return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      const img=new Image();
+      img.onload=function(){
+        const canvas=document.createElement('canvas');
+        const size=200;
+        canvas.width=size;canvas.height=size;
+        const ctx=canvas.getContext('2d');
+        const s=Math.min(img.width,img.height);
+        const sx=(img.width-s)/2,sy=(img.height-s)/2;
+        ctx.drawImage(img,sx,sy,s,s,0,0,size,size);
+        const base64=canvas.toDataURL('image/jpeg',0.8);
+        let d={};
+        try{const raw=localStorage.getItem(AVATAR_KEY);if(raw) d=JSON.parse(raw);}catch(e){}
+        d[who]=base64;
+        try{localStorage.setItem(AVATAR_KEY,JSON.stringify(d));}catch(e){}
+        loadCustomAvatars();
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function loadCoupleName(){
+  try{
+    const raw=localStorage.getItem(COUPLE_NAME_KEY);
+    if(raw){
+      document.getElementById('us-couple-name').textContent=raw;
+    }
+  }catch(e){}
+}
+
+function editCoupleName(){
+  const current=document.getElementById('us-couple-name').textContent;
+  const el=document.getElementById('us-couple-name');
+  el.innerHTML='<input id="couple-name-input" type="text" value="" style="width:100%;border:1px solid var(--pink-300);border-radius:8px;padding:6px 10px;font-family:SGH,Georgia,serif;font-size:11px;color:var(--text-primary);text-align:center;outline:none;background:var(--bg-card)" placeholder="输入情侣名...">';
+  const inp=document.getElementById('couple-name-input');
+  inp.value=current;
+  inp.focus();
+  inp.select();
+  function save(){
+    const v=inp.value.trim()||current;
+    el.textContent=v;
+    try{localStorage.setItem(COUPLE_NAME_KEY,v);}catch(e){}
+  }
+  inp.addEventListener('blur',save);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();save();}});
+}
+
+loadCustomAvatars();
+loadCoupleName();
 
 </script>
 <!-- 猪肚记 overlay (body层级) -->
