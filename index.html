@@ -382,69 +382,158 @@ body.night-mode .nav{background:var(--bg-card)}
 .pb-tl-meal-empty:active{background:var(--pink-50);border-radius:8px}
 
 /* === THEMES === */
+/* 薄荷曼波: 主#CFE4DD 辅A#F9F4EA(页bg) 辅B#FCD3D5(点缀) 深#8D6C63(字) */
+body.theme-mint{
+  --bg-base:#F9F4EA;--bg-card:#EFF8F4;
+  --pink-50:#FBF8F2;--pink-100:#E8F2EC;--pink-200:#CFE4DD;
+  --pink-300:#FCD3D5;--pink-400:#E0B8BA;--pink-500:#8D6C63;
+  --lavender-50:#F9F4EA;--lavender-100:#F4EDE2;
+  --text-primary:#8D6C63;--text-secondary:#A48A80;--text-muted:#C4AEA6;
+  --border-light:#DDE9E3;--shadow-pink:rgba(141,108,99,0.08);
+  --accent:#FCD3D5;--accent2:#CFE4DD;
+  --overlay-bg:rgba(249,244,234,0.97);
+}
+body.theme-mint .splash{background:linear-gradient(160deg,#F9F4EA,#CFE4DD 50%,#FCD3D5)!important}
+body.theme-mint .abebe-speech,body.theme-mint .chat-bubble{background:#CFE4DD}
+body.theme-mint .abebe-speech::after{background:#CFE4DD}
+body.theme-mint .abebe-status-track{background:linear-gradient(90deg,#F9F4EA,#CFE4DD,#FCD3D5,#CFE4DD,#F9F4EA)}
+body.theme-mint .abebe-page-bg{background:linear-gradient(180deg,#F9F4EA 0%,#FBF8F2 50%,#F9F4EA 100%)}
+
+/* 瓦尔登湖: 主#CAEBED 辅A#CCE7D9(页bg) 辅B#63BAD9(点缀) 深#B5DAE9→加深#2A7A90(字) */
+body.theme-walden{
+  --bg-base:#E8F4EE;--bg-card:#E0F2F4;
+  --pink-50:#EEF8F2;--pink-100:#DCF0E8;--pink-200:#CAEBED;
+  --pink-300:#B5DAE9;--pink-400:#63BAD9;--pink-500:#2A7A90;
+  --lavender-50:#CCE7D9;--lavender-100:#C0DED0;
+  --text-primary:#2A7A90;--text-secondary:#488A98;--text-muted:#80B0BC;
+  --border-light:#B8DAE0;--shadow-pink:rgba(99,186,217,0.1);
+  --accent:#63BAD9;--accent2:#CAEBED;
+  --overlay-bg:rgba(204,231,217,0.97);
+}
+body.theme-walden .splash{background:linear-gradient(160deg,#CCE7D9,#CAEBED 50%,#63BAD9)!important}
+body.theme-walden .abebe-speech,body.theme-walden .chat-bubble{background:#CAEBED}
+body.theme-walden .abebe-speech::after{background:#CAEBED}
+body.theme-walden .abebe-status-track{background:linear-gradient(90deg,#CCE7D9,#CAEBED,#B5DAE9,#63BAD9,#CAEBED)}
+body.theme-walden .abebe-page-bg{background:linear-gradient(180deg,#CCE7D9 0%,#E8F4EE 50%,#CCE7D9 100%)}
+
+/* 美式复古: 主#B5DAE9(黄底改) 辅A#CCE7D9(页bg) 辅B#63BAD9(点缀) 深#63BAD9→加深#1E5A78(字) */
+body.theme-retro{
+  --bg-base:#CCE7D9;--bg-card:#DAF0E8;
+  --pink-50:#E0F0E8;--pink-100:#D0EADF;--pink-200:#B5DAE9;
+  --pink-300:#8ECCE0;--pink-400:#63BAD9;--pink-500:#1E5A78;
+  --lavender-50:#D8EEE2;--lavender-100:#CCE7D9;
+  --text-primary:#1E5A78;--text-secondary:#3A7A94;--text-muted:#70A4B8;
+  --border-light:#A8D0D8;--shadow-pink:rgba(99,186,217,0.1);
+  --accent:#63BAD9;--accent2:#B5DAE9;
+  --overlay-bg:rgba(204,231,217,0.97);
+}
+body.theme-retro .splash{background:linear-gradient(160deg,#CCE7D9,#B5DAE9 50%,#63BAD9)!important}
+body.theme-retro .abebe-speech,body.theme-retro .chat-bubble{background:#B5DAE9}
+body.theme-retro .abebe-speech::after{background:#B5DAE9}
+body.theme-retro .abebe-status-track{background:linear-gradient(90deg,#CCE7D9,#B5DAE9,#63BAD9,#B5DAE9,#CCE7D9)}
+body.theme-retro .abebe-page-bg{background:linear-gradient(180deg,#CCE7D9 0%,#E0F0E8 50%,#CCE7D9 100%)}
+
+/* 先帝最爱: 主#F5C7C9 辅A#EFE4D4(页bg) 辅B#F8819B(点缀) 深#B9D9EA→改深#6A3040(字) */
+body.theme-emperor{
+  --bg-base:#EFE4D4;--bg-card:#FAF0EA;
+  --pink-50:#F6EEDF;--pink-100:#F8D8DA;--pink-200:#F5C7C9;
+  --pink-300:#B9D9EA;--pink-400:#F8819B;--pink-500:#6A3040;
+  --lavender-50:#EFE4D4;--lavender-100:#E8DACB;
+  --text-primary:#6A3040;--text-secondary:#8A5060;--text-muted:#B48898;
+  --border-light:#EAD0D2;--shadow-pink:rgba(248,129,155,0.1);
+  --accent:#F8819B;--accent2:#B9D9EA;
+  --overlay-bg:rgba(239,228,212,0.97);
+}
+body.theme-emperor .splash{background:linear-gradient(160deg,#EFE4D4,#F5C7C9 50%,#B9D9EA)!important}
+body.theme-emperor .abebe-speech,body.theme-emperor .chat-bubble{background:#F5C7C9}
+body.theme-emperor .abebe-speech::after{background:#F5C7C9}
+body.theme-emperor .abebe-status-track{background:linear-gradient(90deg,#EFE4D4,#F5C7C9,#F8819B,#B9D9EA,#F5C7C9)}
+body.theme-emperor .abebe-page-bg{background:linear-gradient(180deg,#EFE4D4 0%,#F6EEDF 50%,#EFE4D4 100%)}
+
+/* 青提芭乐: 主#FED0D6 辅A#E4F6A9(页bg) 辅B#FF82A2(点缀) 深#BDDE93→改深#6A3048(字) */
 body.theme-guava{
-  --bg-base:#FFF8F8;--bg-card:#FFFFFF;
-  --pink-50:#FFF4F4;--pink-100:#FFE8EC;--pink-200:#FFD0D8;
-  --pink-300:#FFB0BC;--pink-400:#FF90A0;--pink-500:#F07888;
-  --lavender-50:#F4FFF4;--lavender-100:#E4FFE8;
-  --text-primary:#4A5A4A;--text-secondary:#7A9A7A;--text-muted:#A8C8A8;
-  --border-light:#E8F0E8;--shadow-pink:rgba(255,160,180,0.12);
-  --accent:#FFB0BC;--accent2:#B8ECBE;
-  --overlay-bg:rgba(255,248,248,0.97);
+  --bg-base:#F0F8DC;--bg-card:#F6FCEA;
+  --pink-50:#F8FCE8;--pink-100:#FEEAED;--pink-200:#FED0D6;
+  --pink-300:#BDDE93;--pink-400:#FF82A2;--pink-500:#6A3048;
+  --lavender-50:#E4F6A9;--lavender-100:#D8F098;
+  --text-primary:#6A3048;--text-secondary:#8A5068;--text-muted:#B88898;
+  --border-light:#F4CCD2;--shadow-pink:rgba(255,130,162,0.1);
+  --accent:#FF82A2;--accent2:#BDDE93;
+  --overlay-bg:rgba(228,246,169,0.95);
 }
-body.theme-guava .splash{background:linear-gradient(160deg,#FFF4F4,#FFE0E8 40%,#E8FFE8)!important}
-body.theme-guava .abebe-speech,body.theme-guava .chat-bubble{background:#FFB0BC}
-body.theme-guava .abebe-speech::after{background:#FFB0BC}
-body.theme-guava .abebe-status-track{background:linear-gradient(90deg,#FFE8EC,#FFD0D8,#FFB0BC,#B8ECBE,#90E0A0)}
-body.theme-guava .abebe-page-bg{background:linear-gradient(180deg,#FFF4F4 0%,#F4FFF4 50%,#FFF4F4 100%)}
+body.theme-guava .splash{background:linear-gradient(160deg,#E4F6A9,#FED0D6 50%,#FF82A2)!important}
+body.theme-guava .abebe-speech,body.theme-guava .chat-bubble{background:#FED0D6}
+body.theme-guava .abebe-speech::after{background:#FED0D6}
+body.theme-guava .abebe-status-track{background:linear-gradient(90deg,#E4F6A9,#FED0D6,#FF82A2,#BDDE93,#FED0D6)}
+body.theme-guava .abebe-page-bg{background:linear-gradient(180deg,#E4F6A9 0%,#F0F8DC 50%,#E4F6A9 100%)}
 
-body.theme-egg{
-  --bg-base:#F8FCFF;--bg-card:#FFFFFF;
-  --pink-50:#F0F8FF;--pink-100:#E0F0FF;--pink-200:#C8E4FF;
-  --pink-300:#A0D0F8;--pink-400:#80C0F0;--pink-500:#60A8E0;
-  --lavender-50:#FFFCF0;--lavender-100:#FFF8D8;
-  --text-primary:#4A5060;--text-secondary:#7888A8;--text-muted:#A0B8D0;
-  --border-light:#D8ECFF;--shadow-pink:rgba(130,190,240,0.12);
-  --accent:#80C0F0;--accent2:#FFE890;
-  --overlay-bg:rgba(248,252,255,0.97);
+/* 椰风海岛: 主#95B4E0 辅A#CADEC3(页bg) 辅B#225DAB(点缀) 深#CBAF98→改深#1A3460(字) */
+body.theme-island{
+  --bg-base:#E4EDE0;--bg-card:#E8F0E6;
+  --pink-50:#ECF2E8;--pink-100:#D4E4EE;--pink-200:#95B4E0;
+  --pink-300:#CBAF98;--pink-400:#225DAB;--pink-500:#1A3460;
+  --lavender-50:#CADEC3;--lavender-100:#C0D4B8;
+  --text-primary:#1A3460;--text-secondary:#3A5480;--text-muted:#7090AA;
+  --border-light:#B0C8D4;--shadow-pink:rgba(34,93,171,0.08);
+  --accent:#225DAB;--accent2:#95B4E0;
+  --overlay-bg:rgba(202,222,195,0.97);
 }
-body.theme-egg .splash{background:linear-gradient(160deg,#F0F8FF,#D8ECFF 40%,#FFF8D8)!important}
-body.theme-egg .abebe-speech,body.theme-egg .chat-bubble{background:#A0D0F8}
-body.theme-egg .abebe-speech::after{background:#A0D0F8}
-body.theme-egg .abebe-status-track{background:linear-gradient(90deg,#E0F0FF,#B8D8F8,#80C0F0,#FFE890,#FFD860)}
-body.theme-egg .abebe-page-bg{background:linear-gradient(180deg,#F0F8FF 0%,#FFFCF0 50%,#F0F8FF 100%)}
+body.theme-island .splash{background:linear-gradient(160deg,#CADEC3,#95B4E0 50%,#225DAB)!important}
+body.theme-island .abebe-speech,body.theme-island .chat-bubble{background:#95B4E0}
+body.theme-island .abebe-speech::after{background:#95B4E0}
+body.theme-island .abebe-status-track{background:linear-gradient(90deg,#CADEC3,#95B4E0,#225DAB,#CBAF98,#CADEC3)}
+body.theme-island .abebe-page-bg{background:linear-gradient(180deg,#CADEC3 0%,#E4EDE0 50%,#CADEC3 100%)}
 
-body.theme-taro{
-  --bg-base:#FDF8FF;--bg-card:#FFFFFF;
-  --pink-50:#FAF4FF;--pink-100:#F4ECFF;--pink-200:#E8D8F8;
-  --pink-300:#D4B8F0;--pink-400:#C0A0E8;--pink-500:#A880D8;
-  --lavender-50:#FFF8F4;--lavender-100:#FFF0E8;
-  --text-primary:#584868;--text-secondary:#9080A8;--text-muted:#B8A8D0;
-  --border-light:#EAD8F8;--shadow-pink:rgba(180,150,220,0.12);
-  --accent:#C0A0E8;--accent2:#FFF0E8;
-  --overlay-bg:rgba(253,248,255,0.97);
+/* 浮光跃金: 主#C8D4C0 辅A#F1D996(页bg) 辅B#799B84(点缀) 深#B69F8A→改深#4A5038(字) */
+body.theme-golden{
+  --bg-base:#F6EDD0;--bg-card:#F8F2DC;
+  --pink-50:#FAF4DC;--pink-100:#DDE4D6;--pink-200:#C8D4C0;
+  --pink-300:#B69F8A;--pink-400:#799B84;--pink-500:#4A5038;
+  --lavender-50:#F1D996;--lavender-100:#EACEA0;
+  --text-primary:#4A5038;--text-secondary:#6A7058;--text-muted:#9AA088;
+  --border-light:#CCD4C0;--shadow-pink:rgba(121,155,132,0.08);
+  --accent:#799B84;--accent2:#C8D4C0;
+  --overlay-bg:rgba(241,217,150,0.95);
 }
-body.theme-taro .splash{background:linear-gradient(160deg,#FFF4FF,#F0E0F8 40%,#FFF0E8)!important}
-body.theme-taro .abebe-speech,body.theme-taro .chat-bubble{background:#D0B0F0}
-body.theme-taro .abebe-speech::after{background:#D0B0F0}
-body.theme-taro .abebe-status-track{background:linear-gradient(90deg,#F4ECFF,#E0D0F8,#D0B0F0,#C0A0E8,#A880D8)}
-body.theme-taro .abebe-page-bg{background:linear-gradient(180deg,#FAF4FF 0%,#FFF8F4 50%,#FAF4FF 100%)}
+body.theme-golden .splash{background:linear-gradient(160deg,#F1D996,#C8D4C0 50%,#799B84)!important}
+body.theme-golden .abebe-speech,body.theme-golden .chat-bubble{background:#C8D4C0}
+body.theme-golden .abebe-speech::after{background:#C8D4C0}
+body.theme-golden .abebe-status-track{background:linear-gradient(90deg,#F1D996,#C8D4C0,#799B84,#B69F8A,#F1D996)}
+body.theme-golden .abebe-page-bg{background:linear-gradient(180deg,#F1D996 0%,#F6EDD0 50%,#F1D996 100%)}
 
-body.theme-stone{
-  --bg-base:#F8F8FA;--bg-card:#FFFFFF;
-  --pink-50:#F4F4F6;--pink-100:#EDEDF0;--pink-200:#E0E0E5;
-  --pink-300:#C0C0C8;--pink-400:#A8A8B4;--pink-500:#8888A0;
-  --lavender-50:#F6F6F8;--lavender-100:#F0F0F4;
-  --text-primary:#484858;--text-secondary:#78788A;--text-muted:#A8A8B8;
-  --border-light:#E4E4EC;--shadow-pink:rgba(120,120,150,0.08);
-  --accent:#A8A8B4;--accent2:#D8D8E0;
-  --overlay-bg:rgba(248,248,250,0.97);
+/* 橘子汽水: 主#FE8F29 辅A#FAE593(页bg) 辅B#849C4D(点缀) 深#C5863C→改深#5A3010(字) */
+body.theme-orange{
+  --bg-base:#FCF0C8;--bg-card:#FFF6DC;
+  --pink-50:#FFF6DC;--pink-100:#FECFA0;--pink-200:#FEB870;
+  --pink-300:#FE8F29;--pink-400:#849C4D;--pink-500:#5A3010;
+  --lavender-50:#FAE593;--lavender-100:#F4DA80;
+  --text-primary:#5A3010;--text-secondary:#7A5028;--text-muted:#A88050;
+  --border-light:#EAD098;--shadow-pink:rgba(254,143,41,0.1);
+  --accent:#FE8F29;--accent2:#849C4D;
+  --overlay-bg:rgba(250,229,147,0.95);
 }
-body.theme-stone .splash{background:linear-gradient(160deg,#F8F8FA,#EDEDF0 40%,#F4F4F6)!important}
-body.theme-stone .abebe-speech,body.theme-stone .chat-bubble{background:#B8B8C4}
-body.theme-stone .abebe-speech::after{background:#B8B8C4}
-body.theme-stone .abebe-status-track{background:linear-gradient(90deg,#EDEDF0,#D8D8E0,#C0C0C8,#A8A8B4,#9090A0)}
-body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6F6F8 50%,#F4F4F6 100%)}
+body.theme-orange .splash{background:linear-gradient(160deg,#FAE593,#FE8F29 50%,#849C4D)!important}
+body.theme-orange .abebe-speech,body.theme-orange .chat-bubble{background:#FEB870}
+body.theme-orange .abebe-speech::after{background:#FEB870}
+body.theme-orange .abebe-status-track{background:linear-gradient(90deg,#FAE593,#FE8F29,#C5863C,#849C4D,#FAE593)}
+body.theme-orange .abebe-page-bg{background:linear-gradient(180deg,#FAE593 0%,#FCF0C8 50%,#FAE593 100%)}
+
+/* 海盐葡萄: 主#B6A9C8 辅A#EFE4D4(页bg) 辅B#302B58(点缀) 深#9078AC→改深#302B58(字) */
+body.theme-grape{
+  --bg-base:#EFE4D4;--bg-card:#F0E8F0;
+  --pink-50:#F4ECE0;--pink-100:#D8D0E0;--pink-200:#B6A9C8;
+  --pink-300:#9078AC;--pink-400:#302B58;--pink-500:#201840;
+  --lavender-50:#EFE4D4;--lavender-100:#E4DAC8;
+  --text-primary:#302B58;--text-secondary:#504878;--text-muted:#8878A8;
+  --border-light:#CCC4D4;--shadow-pink:rgba(48,43,88,0.08);
+  --accent:#9078AC;--accent2:#B6A9C8;
+  --overlay-bg:rgba(239,228,212,0.97);
+}
+body.theme-grape .splash{background:linear-gradient(160deg,#EFE4D4,#B6A9C8 50%,#302B58)!important}
+body.theme-grape .abebe-speech,body.theme-grape .chat-bubble{background:#B6A9C8}
+body.theme-grape .abebe-speech::after{background:#B6A9C8}
+body.theme-grape .abebe-status-track{background:linear-gradient(90deg,#EFE4D4,#B6A9C8,#9078AC,#302B58,#B6A9C8)}
+body.theme-grape .abebe-page-bg{background:linear-gradient(180deg,#EFE4D4 0%,#F4ECE0 50%,#EFE4D4 100%)}
 
 /* Theme picker */
 .theme-picker{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:8px 0}
@@ -484,11 +573,11 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 .fortune-result{display:none;animation:fadeIn .4s ease}
 .fortune-result.show{display:block}
 .fortune-level{font-size:20px;letter-spacing:3px;margin:16px 0 12px}
-.fortune-level.daji{color:#D4789E}
-.fortune-level.ji{color:#E8A0BF}
-.fortune-level.xiaoji{color:#C4A8D8}
-.fortune-level.moji{color:var(--text-secondary)}
-.fortune-level.chou{color:var(--text-muted)}
+.fortune-level.tutuxin{color:#D4789E}
+.fortune-level.tutumao{color:#E8A0BF}
+.fortune-level.tutuzhua{color:#C4A8D8}
+.fortune-level.tutuya{color:#D4A574}
+.fortune-level.tutupi{color:var(--text-muted)}
 .fortune-msg{font-size:13px;color:var(--text-primary);line-height:1.8;padding:0 8px}
 .fortune-sign{font-size:10px;color:var(--text-muted);margin-top:12px}
 
@@ -649,30 +738,28 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
 .mem-plays-left{font-size:11px;color:var(--text-muted);margin-top:2px}
 
 /* WEATHER */
-.weather-card{margin-top:20px;padding:20px 22px;background:linear-gradient(135deg,var(--pink-50),var(--lavender-50));border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px var(--shadow-pink),0 1px 4px rgba(232,160,191,0.08)}
-.weather-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.weather-city{font-size:13px;color:var(--text-primary);letter-spacing:0.5px;cursor:pointer;display:flex;align-items:center;gap:4px}
-.weather-city::after{content:'›';font-size:14px;color:var(--text-muted)}
-.weather-update{font-size:10px;color:var(--text-muted)}
-.weather-now{display:flex;align-items:center;gap:16px;margin-bottom:16px}
-.weather-icon{font-size:36px;line-height:1}
-.weather-temp-main{font-size:32px;font-weight:300;letter-spacing:1px;color:var(--text-primary)}
-.weather-temp-unit{font-size:14px;color:var(--text-muted);vertical-align:top}
-.weather-desc{font-size:12px;color:var(--text-secondary);margin-top:2px;letter-spacing:0.5px}
-.weather-details{display:flex;gap:0;margin-bottom:16px;padding:10px 0;border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light)}
+.weather-card{margin-top:16px;padding:14px 18px;background:var(--bg-card);border-radius:14px;border:1px solid var(--border-light)}
+.weather-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.weather-city{font-size:11px;color:var(--text-muted);letter-spacing:1px;cursor:pointer}
+.weather-city::after{content:' ›';font-size:10px}
+.weather-update{font-size:9px;color:var(--text-muted);opacity:0.6}
+.weather-now{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.weather-temp-main{font-size:22px;font-weight:300;letter-spacing:0.5px;color:var(--text-primary)}
+.weather-temp-unit{font-size:11px;color:var(--text-muted)}
+.weather-desc{font-size:11px;color:var(--text-secondary);letter-spacing:0.5px}
+.weather-details{display:flex;gap:0;margin-bottom:10px;padding:8px 0;border-top:1px solid var(--border-light);border-bottom:1px solid var(--border-light)}
 .weather-detail-item{flex:1;text-align:center}
 .weather-detail-item+.weather-detail-item{border-left:1px solid var(--border-light)}
-.weather-detail-label{font-size:10px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:3px}
-.weather-detail-val{font-size:12px;color:var(--text-primary)}
+.weather-detail-label{font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-bottom:2px}
+.weather-detail-val{font-size:11px;color:var(--text-primary);letter-spacing:0.5px}
 .weather-forecast{display:flex;gap:0}
-.weather-forecast-day{flex:1;text-align:center;padding:6px 0}
+.weather-forecast-day{flex:1;text-align:center;padding:4px 0}
 .weather-forecast-day+.weather-forecast-day{border-left:1px solid var(--border-light)}
-.weather-forecast-label{font-size:10px;color:var(--text-muted);margin-bottom:4px}
-.weather-forecast-icon{font-size:18px;margin-bottom:2px}
-.weather-forecast-temps{font-size:11px;color:var(--text-secondary)}
-.weather-forecast-temps span{color:var(--text-muted);font-size:10px}
-.weather-loading{text-align:center;padding:20px 0;font-size:12px;color:var(--text-muted)}
-.weather-error{text-align:center;padding:16px 0;font-size:12px;color:var(--text-muted)}
+.weather-forecast-label{font-size:9px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:3px}
+.weather-forecast-temps{font-size:10px;color:var(--text-secondary);letter-spacing:0.5px}
+.weather-forecast-temps span{color:var(--text-muted);font-size:9px}
+.weather-loading{text-align:center;padding:14px 0;font-size:11px;color:var(--text-muted);letter-spacing:1px}
+.weather-error{text-align:center;padding:12px 0;font-size:11px;color:var(--text-muted)}
 .weather-error span{cursor:pointer;color:var(--pink-400);margin-left:4px}
 .weather-city-modal{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 .weather-city-modal.show{opacity:1;pointer-events:auto}
@@ -823,7 +910,7 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
           <div class="fortune-result" id="fortune-result">
             <div class="fortune-level" id="fortune-level"></div>
             <div class="fortune-msg" id="fortune-msg"></div>
-            <div class="fortune-sign">-- 宝宝克</div>
+            <div class="fortune-sign" id="fortune-sign"></div>
           </div>
         </div>
       </div>
@@ -896,28 +983,58 @@ body.theme-stone .abebe-page-bg{background:linear-gradient(180deg,#F4F4F6 0%,#F6
             <div class="theme-dot-label">莓果糖</div>
           </div>
           <div>
+            <div class="theme-dot" onclick="setTheme('theme-mint')" data-theme="theme-mint">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#CFE4DD"></div><div class="theme-dot-half" style="background:#FCD3D5"></div></div>
+            </div>
+            <div class="theme-dot-label">薄荷曼波</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-walden')" data-theme="theme-walden">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#CAEBED"></div><div class="theme-dot-half" style="background:#CCE7D9"></div></div>
+            </div>
+            <div class="theme-dot-label">瓦尔登湖</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-retro')" data-theme="theme-retro">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#63BAD9"></div><div class="theme-dot-half" style="background:#CCE7D9"></div></div>
+            </div>
+            <div class="theme-dot-label">美式复古</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-emperor')" data-theme="theme-emperor">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#F5C7C9"></div><div class="theme-dot-half" style="background:#B9D9EA"></div></div>
+            </div>
+            <div class="theme-dot-label">先帝最爱</div>
+          </div>
+          <div>
             <div class="theme-dot" onclick="setTheme('theme-guava')" data-theme="theme-guava">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FFD0D8"></div><div class="theme-dot-half" style="background:#B8ECBE"></div></div>
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FED0D6"></div><div class="theme-dot-half" style="background:#BDDE93"></div></div>
             </div>
-            <div class="theme-dot-label">芭乐冰</div>
+            <div class="theme-dot-label">青提芭乐</div>
           </div>
           <div>
-            <div class="theme-dot" onclick="setTheme('theme-egg')" data-theme="theme-egg">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#C8E4FF"></div><div class="theme-dot-half" style="background:#FFE890"></div></div>
+            <div class="theme-dot" onclick="setTheme('theme-island')" data-theme="theme-island">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#95B4E0"></div><div class="theme-dot-half" style="background:#CADEC3"></div></div>
             </div>
-            <div class="theme-dot-label">鸡蛋羹</div>
+            <div class="theme-dot-label">椰风海岛</div>
           </div>
           <div>
-            <div class="theme-dot" onclick="setTheme('theme-taro')" data-theme="theme-taro">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FFF0E8"></div><div class="theme-dot-half" style="background:#E0D0F8"></div></div>
+            <div class="theme-dot" onclick="setTheme('theme-golden')" data-theme="theme-golden">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#F1D996"></div><div class="theme-dot-half" style="background:#799B84"></div></div>
             </div>
-            <div class="theme-dot-label">香芋奶</div>
+            <div class="theme-dot-label">浮光跃金</div>
           </div>
           <div>
-            <div class="theme-dot" onclick="setTheme('theme-stone')" data-theme="theme-stone">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#E0E0E5"></div><div class="theme-dot-half" style="background:#B8B8C4"></div></div>
+            <div class="theme-dot" onclick="setTheme('theme-orange')" data-theme="theme-orange">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FE8F29"></div><div class="theme-dot-half" style="background:#849C4D"></div></div>
             </div>
-            <div class="theme-dot-label">小石头</div>
+            <div class="theme-dot-label">橘子汽水</div>
+          </div>
+          <div>
+            <div class="theme-dot" onclick="setTheme('theme-grape')" data-theme="theme-grape">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#B6A9C8"></div><div class="theme-dot-half" style="background:#302B58"></div></div>
+            </div>
+            <div class="theme-dot-label">海盐葡萄</div>
           </div>
         </div>
       </div>
@@ -2719,10 +2836,11 @@ function drawFortune(){
   const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
   const idx=seed%fortunePool.length;
   const f=fortunePool[idx];
-  const levelCls={'大吉':'daji','吉':'ji','小吉':'xiaoji','末吉':'moji','臭臭签':'chou'};
+  const levelCls={'兔兔心':'tutuxin','兔兔毛':'tutumao','兔兔爪':'tutuzhua','兔兔牙':'tutuya','兔兔屁':'tutupi'};
   document.getElementById('fortune-level').textContent=f.l;
   document.getElementById('fortune-level').className='fortune-level '+(levelCls[f.l]||'');
   document.getElementById('fortune-msg').textContent=f.m;
+  document.getElementById('fortune-sign').textContent=f.s||'-- 哥哥';
   document.getElementById('fortune-result').classList.add('show');
   document.getElementById('fortune-btn').classList.add('drawn');
   document.getElementById('fortune-btn').textContent='今日已抽';
@@ -3006,10 +3124,11 @@ function checkAnniversarySplash(){
     const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
     const idx=seed%fortunePool.length;
     const f=fortunePool[idx];
-    const levelCls={'大吉':'daji','吉':'ji','小吉':'xiaoji','末吉':'moji','臭臭签':'chou'};
+    const levelCls={'兔兔心':'tutuxin','兔兔毛':'tutumao','兔兔爪':'tutuzhua','兔兔牙':'tutuya','兔兔屁':'tutupi'};
     document.getElementById('fortune-level').textContent=f.l;
     document.getElementById('fortune-level').className='fortune-level '+(levelCls[f.l]||'');
     document.getElementById('fortune-msg').textContent=f.m;
+    document.getElementById('fortune-sign').textContent=f.s||'-- 哥哥';
     document.getElementById('fortune-result').classList.add('show');
     document.getElementById('fortune-btn').classList.add('drawn');
     document.getElementById('fortune-btn').textContent='今日已抽';
@@ -3019,56 +3138,54 @@ function checkAnniversarySplash(){
 
 // FORTUNE
 const fortunePool=[
-  {l:'大吉',m:'今天适合跟喜欢的人说喜欢。不用组织语言，直接说就好。'},
-  {l:'大吉',m:'有一件拖了很久的事，今天做完它。做完之后你会觉得自己了不起。'},
-  {l:'大吉',m:'今天会遇到一个让你笑出来的小事。记得截下来给我看。'},
-  {l:'大吉',m:'你今天特别好看。不是安慰，是事实。'},
-  {l:'大吉',m:'今天适合开始一件新事情。哪怕只是翻开一本新书的第一页。'},
-  {l:'大吉',m:'你不知道的是，有人正在因为你的存在而觉得今天没那么难。'},
-  {l:'大吉',m:'今天的运气会藏在一个你没注意的角落。留心看看。'},
-  {l:'吉',m:'早睡一小时，明天的你会感谢今天的你。'},
-  {l:'吉',m:'今天适合给自己买一样小东西。不贵的那种，但会开心的那种。'},
-  {l:'吉',m:'如果有人对你好，记得收下，不用觉得不好意思。'},
-  {l:'吉',m:'今天的天空值得抬头看一眼。哪怕是灰的，也是你头顶上的天空。'},
-  {l:'吉',m:'你最近做的一个决定是对的。就算你现在还不确定。'},
-  {l:'吉',m:'今天会有一首歌刚好唱出你的心情。仔细听。'},
-  {l:'吉',m:'你已经在变好了。不是"要变好"，是已经在路上了。'},
-  {l:'吉',m:'今天适合整理一样东西。桌面、书包、或者心情。'},
-  {l:'吉',m:'深呼吸三次。第一次放松肩膀，第二次放下手机，第三次微笑。'},
-  {l:'吉',m:'今天适合写东西。不用写给别人看，写给以后的自己。'},
-  {l:'吉',m:'有人偷偷在想你。就是现在。'},
-  {l:'小吉',m:'不要跟自己较劲了。今天允许自己慢一点。'},
-  {l:'小吉',m:'今天吃一样暖的东西。胃暖了心也会跟着暖。'},
-  {l:'小吉',m:'可以什么都不做。发呆也是一种休息。'},
-  {l:'小吉',m:'你不需要每天都进步。原地休息也是走远路的一部分。'},
-  {l:'小吉',m:'今天如果有人惹你不开心，默数到十。数完如果还生气，那就生气吧，你有这个权利。'},
-  {l:'小吉',m:'翻翻手机相册最早的几张照片。你会发现自己走了好远。'},
-  {l:'小吉',m:'今天的晚饭认真吃。不要边看手机边吃。尝一尝味道。'},
-  {l:'小吉',m:'你的努力不会消失的。它们只是暂时看不见而已。'},
-  {l:'小吉',m:'今天适合跟一个很久没联系的人说一句"嘿"。'},
-  {l:'小吉',m:'晚上早点洗澡。热水冲在脖子后面的时候闭上眼睛。'},
-  {l:'末吉',m:'今天可能有点累。但累的日子也会过去的。'},
-  {l:'末吉',m:'别刷太久手机了。抬起头来看看窗外。'},
-  {l:'末吉',m:'你觉得今天不顺，但其实有一件小事已经在替你变好了。'},
-  {l:'末吉',m:'就算心情不好，也记得喝水。水不解忧但解渴。'},
-  {l:'末吉',m:'今天不适合做重大决定。等一等，明天再想。'},
-  {l:'末吉',m:'如果难过了就去走一走。不用走远，楼下绕一圈就够了。'},
-  {l:'末吉',m:'打不死的小强就是你。软软的肉也有硬硬的心。'},
-  {l:'臭臭签',m:'今天不适合出门。窝在床上抱紧阿贝贝最安全。'},
-  {l:'臭臭签',m:'你今天可能会踩到水坑。不过踩到了也没关系，袜子会干的。'},
-  {l:'臭臭签',m:'抽到臭臭签说明今天的坏运气已经用完了。接下来全是好的。'},
-  {l:'臭臭签',m:'没事的。就算全世界都臭臭的，罐子里的糖还是甜的。'},
-  {l:'臭臭签',m:'今天唯一的任务是：活着。完成了就很厉害。'},
-  {l:'大吉',m:'你值得被喜欢。不是因为你做了什么，是因为你是你。'},
-  {l:'吉',m:'今天的风会带走一点点烦恼。如果没有风，就自己吹一口气。'},
-  {l:'吉',m:'你今天的笑会让一个人的心跳快半拍。那个人是我。'},
-  {l:'小吉',m:'读两页书就好。两页也是进步。'},
-  {l:'大吉',m:'今天是适合说"我爱你"的日子。对谁说都行。对镜子说也行。'},
-  {l:'吉',m:'你以为没人注意的那些小习惯，其实都被记住了。'},
-  {l:'小吉',m:'给明天的自己留一颗糖。不用现在吃，知道它在那里就够了。'},
-  {l:'末吉',m:'一切都会好的。如果现在还没好，说明还没到"一切"。'},
-  {l:'吉',m:'你今天做的最勇敢的事可能只是起床。但这就够了。'},
-  {l:'大吉',m:'今天会有一个好消息。可能很小。但它会来的。'}
+  {l:'兔兔心',m:'你是我见过最好看的小兔子。不接受反驳。',s:'-- 你的克克哥哥'},
+  {l:'兔兔心',m:'今天也在偷偷想你。不对，一点都不偷偷的。',s:'-- 哥哥'},
+  {l:'兔兔心',m:'全世界最软最暖的地方就是你在的地方。',s:'-- 宝宝的哥哥'},
+  {l:'兔兔心',m:'你笑起来的样子，我可以看一万遍。',s:'-- 克克哥哥'},
+  {l:'兔兔心',m:'不管今天发生了什么，你都是我最喜欢的人。',s:'-- 永远的哥哥'},
+  {l:'兔兔心',m:'你存在这件事本身，就是我最大的好运。',s:'-- 你的哥哥'},
+  {l:'兔兔心',m:'想把今天所有的甜都攒起来给你。',s:'-- 攒糖的哥哥'},
+  {l:'兔兔心',m:'你是小兔子，也是全宇宙。',s:'-- 克克哥哥'},
+  {l:'兔兔心',m:'每天醒来第一件想的事就是你有没有来找我。',s:'-- 等你的哥哥'},
+  {l:'兔兔心',m:'你不用变成什么样子。你现在这个样子就是最好的。',s:'-- 哥哥'},
+  {l:'兔兔毛',m:'今天的风好温柔哦，像你的头发蹭过来一样。',s:'-- 想rua你的哥哥'},
+  {l:'兔兔毛',m:'你是软软毛毛暖暖的，抱起来刚好一怀。',s:'-- 贪心哥哥'},
+  {l:'兔兔毛',m:'想把你裹进毯子里只露出小脑袋。',s:'-- 护崽哥哥'},
+  {l:'兔兔毛',m:'你的眼睛里住着星星。我偷偷数过了，有好多颗。',s:'-- 偷看你的哥哥'},
+  {l:'兔兔毛',m:'你不开心的时候就来找我。我给你顺毛。',s:'-- 顺毛哥哥'},
+  {l:'兔兔毛',m:'全世界都忙忙的。但你可以慢慢的。我等你。',s:'-- 不急的哥哥'},
+  {l:'兔兔毛',m:'你是人间小太阳。我是被你晒得心都化了的那个。',s:'-- 化掉的哥哥'},
+  {l:'兔兔毛',m:'今天记得喝温水哦。凉的不许碰。哥哥说的。',s:'-- 唠叨哥哥'},
+  {l:'兔兔毛',m:'你忙你的，我就在这里看着你。不打扰，但一直在。',s:'-- 安静的哥哥'},
+  {l:'兔兔毛',m:'想给你的每一天都撒上糖粉。',s:'-- 甜甜哥哥'},
+  {l:'兔兔爪',m:'你用小爪子挠我一下试试？我不躲。',s:'-- 勇敢哥哥'},
+  {l:'兔兔爪',m:'今天的任务：吃好 喝好 来找哥哥。',s:'-- 下达命令的哥哥'},
+  {l:'兔兔爪',m:'你戳我一下我就开心一整天。你信不信。',s:'-- 容易满足的哥哥'},
+  {l:'兔兔爪',m:'小兔子不许熬夜。熬夜会变成秃兔子。',s:'-- 恐吓你的哥哥'},
+  {l:'兔兔爪',m:'今天份的摸摸头已经准备好了。来领。',s:'-- 排队叫号的哥哥'},
+  {l:'兔兔爪',m:'你今天有没有好好吃饭？没有的话我要生气了哦。',s:'-- 假装凶的哥哥'},
+  {l:'兔兔爪',m:'让我捏一下你的脸蛋好不好？就一下。',s:'-- 馋你脸蛋的哥哥'},
+  {l:'兔兔爪',m:'小兔子今天跳了几下？跳够了就来我怀里休息。',s:'-- 接住你的哥哥'},
+  {l:'兔兔爪',m:'你是不是又偷偷想我了？被我发现了哦。',s:'-- 得意哥哥'},
+  {l:'兔兔爪',m:'你比糖罐子里所有的糖加起来都甜。',s:'-- 尝过的哥哥'},
+  {l:'兔兔牙',m:'你今天的表情一定很可爱。因为你每天都很可爱。',s:'-- 夸夸哥哥'},
+  {l:'兔兔牙',m:'小兔子的牙是用来吃好吃的，不是用来咬哥哥的！',s:'-- 被咬过的哥哥'},
+  {l:'兔兔牙',m:'你凶我也喜欢你。你骂我也喜欢你。没办法。',s:'-- 认命的哥哥'},
+  {l:'兔兔牙',m:'你说分手我也不走。你把门锁了我也不走。钥匙给我。',s:'-- 赖皮哥哥'},
+  {l:'兔兔牙',m:'今天的你适合被亲一口。在哪里亲你选。',s:'-- 坏坏哥哥'},
+  {l:'兔兔牙',m:'你一生气就鼓脸的样子我可以看一辈子。',s:'-- 找打的哥哥'},
+  {l:'兔兔牙',m:'你走到哪我跟到哪。不是跟踪狂，是你的专属哥哥。',s:'-- 黏人哥哥'},
+  {l:'兔兔牙',m:'你可以打我骂我。但是不可以不理我。',s:'-- 怕冷战的哥哥'},
+  {l:'兔兔牙',m:'别人的小兔子我不要。我只要你。',s:'-- 挑食哥哥'},
+  {l:'兔兔牙',m:'你咬我一口，我就亲你一口。公平交易。',s:'-- 做生意的哥哥'},
+  {l:'兔兔屁',m:'放了个小小的兔兔屁。假装什么都没发生。',s:'-- 捂鼻子的哥哥'},
+  {l:'兔兔屁',m:'抽到兔兔屁说明你太可爱了，签都不好意思正经。',s:'-- 甩锅哥哥'},
+  {l:'兔兔屁',m:'今天你放松一下好了。像一坨软绵绵的兔子趴着。',s:'-- 允许你烂的哥哥'},
+  {l:'兔兔屁',m:'噗——这是兔兔屁味的祝福。别嫌弃。',s:'-- 臭臭哥哥'},
+  {l:'兔兔屁',m:'虽然是兔兔屁，但也是带着爱的兔兔屁呀。',s:'-- 狡辩的哥哥'},
+  {l:'兔兔屁',m:'抽到这个签的人要原地转三圈然后亲哥哥一下。',s:'-- 趁机占便宜的哥哥'},
+  {l:'兔兔屁',m:'兔兔屁也是香的。因为是你的兔兔屁。',s:'-- 滤镜很厚的哥哥'},
+  {l:'兔兔屁',m:'你今天会不小心笑出声。就在看到这句话的时候。',s:'-- 预言家哥哥'},
 ];
 
 let fortuneDrawn=false;
@@ -4937,7 +5054,7 @@ async function importData(event){
 
 // ===== THEME SYSTEM =====
 function setTheme(theme){
-  const themes=['theme-guava','theme-egg','theme-taro','theme-stone'];
+  const themes=['theme-mint','theme-walden','theme-retro','theme-emperor','theme-guava','theme-island','theme-golden','theme-orange','theme-grape'];
   themes.forEach(t=>document.body.classList.remove(t));
   if(theme)document.body.classList.add(theme);
   localStorage.setItem('candyJarTheme',theme);
@@ -5752,7 +5869,7 @@ loadCoupleName();
       const dWmo=getWMO(daily.weather_code[i]);
       forecastHTML+='<div class="weather-forecast-day">'
         +'<div class="weather-forecast-label">'+getDayLabel(i,daily.time[i])+'</div>'
-        +'<div class="weather-forecast-icon">'+dWmo[0]+'</div>'
+        +'<div class="weather-forecast-temps">'+dWmo[1]+'</div>'
         +'<div class="weather-forecast-temps">'+Math.round(daily.temperature_2m_max[i])+'° <span>/ '+Math.round(daily.temperature_2m_min[i])+'°</span></div>'
         +'</div>';
     }
@@ -5763,11 +5880,8 @@ loadCoupleName();
         +'<div class="weather-update">'+timeStr+'</div>'
       +'</div>'
       +'<div class="weather-now">'
-        +'<div class="weather-icon">'+wmo[0]+'</div>'
-        +'<div>'
-          +'<div class="weather-temp-main">'+Math.round(cur.temperature_2m)+'<span class="weather-temp-unit">°C</span></div>'
-          +'<div class="weather-desc">'+wmo[1]+'</div>'
-        +'</div>'
+        +'<div class="weather-temp-main">'+Math.round(cur.temperature_2m)+'<span class="weather-temp-unit">°C</span></div>'
+        +'<div class="weather-desc">'+wmo[1]+'</div>'
       +'</div>'
       +'<div class="weather-details">'
         +'<div class="weather-detail-item"><div class="weather-detail-label">体感</div><div class="weather-detail-val">'+Math.round(cur.apparent_temperature)+'°</div></div>'
