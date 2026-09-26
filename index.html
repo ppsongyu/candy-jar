@@ -192,10 +192,11 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .book-item{display:flex;align-items:center;gap:16px;padding:18px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08);cursor:pointer;transition:all .15s;margin-bottom:14px}
 .book-item:active{transform:scale(.98)}
 .book-cover{width:48px;height:66px;border-radius:4px 8px 8px 4px;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);flex-shrink:0}
-.book-cover-1{background:linear-gradient(135deg,#F5E6D0,#F0D8C0)}
-.book-cover-2{background:linear-gradient(135deg,#E8F0E4,#D4E4D0)}
-.book-cover-3{background:linear-gradient(135deg,#E4E8F4,#D0D8F0)}
-.book-cover-4{background:linear-gradient(135deg,#F4E4EE,#F0D4E4)}
+.book-cover{background:linear-gradient(135deg,var(--pink-200),var(--pink-100));font-size:18px;font-weight:bold;color:var(--text-secondary);letter-spacing:0}
+.book-cover-1{opacity:.95}
+.book-cover-2{opacity:.88}
+.book-cover-3{opacity:.82}
+.book-cover-4{opacity:.9}
 .book-info{flex:1}
 .book-title-text{font-size:14px;margin-bottom:4px}
 .book-author{font-size:11px;color:var(--text-muted)}
@@ -383,157 +384,66 @@ body.night-mode .nav{background:var(--bg-card)}
 
 /* === THEMES === */
 /* 薄荷曼波: 主#CFE4DD 辅A#F9F4EA(页bg) 辅B#FCD3D5(点缀) 深#8D6C63(字) */
-body.theme-mint{
-  --bg-base:#F9F4EA;--bg-card:#EFF8F4;
-  --pink-50:#FBF8F2;--pink-100:#E8F2EC;--pink-200:#CFE4DD;
-  --pink-300:#FCD3D5;--pink-400:#E0B8BA;--pink-500:#8D6C63;
-  --lavender-50:#F9F4EA;--lavender-100:#F4EDE2;
-  --text-primary:#8D6C63;--text-secondary:#A48A80;--text-muted:#C4AEA6;
-  --border-light:#DDE9E3;--shadow-pink:rgba(141,108,99,0.08);
-  --accent:#FCD3D5;--accent2:#CFE4DD;
-  --overlay-bg:rgba(249,244,234,0.97);
+/* 水色糖: 背景奶白 模块淡薄荷 边框灰绿 文字深棕灰 */
+body.theme-water{
+  --bg-base:#FFF8FA;--bg-card:#E4EDE8;
+  --pink-50:#EDF2EF;--pink-100:#DCE8E0;--pink-200:#D5E8DE;
+  --pink-300:#BBCCC4;--pink-400:#BBCCC4;--pink-500:#696254;
+  --lavender-50:#E4EDE8;--lavender-100:#D5E8DE;
+  --text-primary:#696254;--text-secondary:#8A8275;--text-muted:#A9A298;
+  --border-light:#BBCCC4;--shadow-pink:rgba(105,98,84,0.08);
+  --accent:#BBCCC4;--accent2:#D5E8DE;
+  --overlay-bg:rgba(255,248,250,0.97);
 }
-body.theme-mint .splash{background:linear-gradient(160deg,#F9F4EA,#CFE4DD 50%,#FCD3D5)!important}
-body.theme-mint .abebe-speech,body.theme-mint .chat-bubble{background:#CFE4DD}
-body.theme-mint .abebe-speech::after{background:#CFE4DD}
-body.theme-mint .abebe-status-track{background:linear-gradient(90deg,#F9F4EA,#CFE4DD,#FCD3D5,#CFE4DD,#F9F4EA)}
-body.theme-mint .abebe-page-bg{background:linear-gradient(180deg,#F9F4EA 0%,#FBF8F2 50%,#F9F4EA 100%)}
+body.theme-water .splash{background:linear-gradient(160deg,#FFF8FA,#E4EDE8 50%,#BBCCC4)!important}
+body.theme-water .abebe-speech,body.theme-water .chat-bubble{background:#E4EDE8}
+body.theme-water .abebe-speech::after{background:#E4EDE8}
+body.theme-water .abebe-status-track{background:linear-gradient(90deg,#E4EDE8,#BBCCC4,#D5E8DE,#BBCCC4,#E4EDE8)}
+body.theme-water .abebe-page-bg{background:linear-gradient(180deg,#E4EDE8 0%,#EDF2EF 50%,#E4EDE8 100%)}
+body.theme-water .mood-section,body.theme-water .reading-section,body.theme-water .milestone{background:linear-gradient(135deg,#E4EDE8,#D5E8DE)!important}
+body.theme-water .shop-item-img,body.theme-water .snack-book-thumb{background:linear-gradient(135deg,#E4EDE8,#D5E8DE)!important}
 
-/* 瓦尔登湖: 主#CAEBED 辅A#CCE7D9(页bg) 辅B#63BAD9(点缀) 深#B5DAE9→加深#2A7A90(字) */
-body.theme-walden{
-  --bg-base:#E8F4EE;--bg-card:#E0F2F4;
-  --pink-50:#EEF8F2;--pink-100:#DCF0E8;--pink-200:#CAEBED;
-  --pink-300:#B5DAE9;--pink-400:#63BAD9;--pink-500:#2A7A90;
-  --lavender-50:#CCE7D9;--lavender-100:#C0DED0;
-  --text-primary:#2A7A90;--text-secondary:#488A98;--text-muted:#80B0BC;
-  --border-light:#B8DAE0;--shadow-pink:rgba(99,186,217,0.1);
-  --accent:#63BAD9;--accent2:#CAEBED;
-  --overlay-bg:rgba(204,231,217,0.97);
+/* 流心糖: 背景雾蓝 模块奶黄 边框米灰 文字深灰 */
+body.theme-cream{
+  --bg-base:#CFD9E6;--bg-card:#FBF5E2;
+  --pink-50:#E4EAF0;--pink-100:#F5F0DC;--pink-200:#EDE6D0;
+  --pink-300:#D6CDC1;--pink-400:#D6CDC1;--pink-500:#6F6D6D;
+  --lavender-50:#FBF5E2;--lavender-100:#F5F0DC;
+  --text-primary:#6F6D6D;--text-secondary:#8A8888;--text-muted:#A8A6A6;
+  --border-light:#D6CDC1;--shadow-pink:rgba(111,109,109,0.08);
+  --accent:#D6CDC1;--accent2:#FBF5E2;
+  --overlay-bg:rgba(207,217,230,0.97);
 }
-body.theme-walden .splash{background:linear-gradient(160deg,#CCE7D9,#CAEBED 50%,#63BAD9)!important}
-body.theme-walden .abebe-speech,body.theme-walden .chat-bubble{background:#CAEBED}
-body.theme-walden .abebe-speech::after{background:#CAEBED}
-body.theme-walden .abebe-status-track{background:linear-gradient(90deg,#CCE7D9,#CAEBED,#B5DAE9,#63BAD9,#CAEBED)}
-body.theme-walden .abebe-page-bg{background:linear-gradient(180deg,#CCE7D9 0%,#E8F4EE 50%,#CCE7D9 100%)}
+body.theme-cream .splash{background:linear-gradient(160deg,#CFD9E6,#FBF5E2 50%,#D6CDC1)!important}
+body.theme-cream .abebe-speech,body.theme-cream .chat-bubble{background:#FBF5E2}
+body.theme-cream .abebe-speech::after{background:#FBF5E2}
+body.theme-cream .abebe-status-track{background:linear-gradient(90deg,#FBF5E2,#D6CDC1,#CFD9E6,#D6CDC1,#FBF5E2)}
+body.theme-cream .abebe-page-bg{background:linear-gradient(180deg,#CFD9E6 0%,#E4EAF0 50%,#CFD9E6 100%)}
+body.theme-cream .mood-section,body.theme-cream .reading-section,body.theme-cream .milestone{background:#FBF5E2!important}
+body.theme-cream .shop-item-img,body.theme-cream .snack-book-thumb{background:linear-gradient(135deg,#FBF5E2,#F5F0DC)!important}
 
-/* 美式复古: 主#B5DAE9(黄底改) 辅A#CCE7D9(页bg) 辅B#63BAD9(点缀) 深#63BAD9→加深#1E5A78(字) */
-body.theme-retro{
-  --bg-base:#CCE7D9;--bg-card:#DAF0E8;
-  --pink-50:#E0F0E8;--pink-100:#D0EADF;--pink-200:#B5DAE9;
-  --pink-300:#8ECCE0;--pink-400:#63BAD9;--pink-500:#1E5A78;
-  --lavender-50:#D8EEE2;--lavender-100:#CCE7D9;
-  --text-primary:#1E5A78;--text-secondary:#3A7A94;--text-muted:#70A4B8;
-  --border-light:#A8D0D8;--shadow-pink:rgba(99,186,217,0.1);
-  --accent:#63BAD9;--accent2:#B5DAE9;
-  --overlay-bg:rgba(204,231,217,0.97);
-}
-body.theme-retro .splash{background:linear-gradient(160deg,#CCE7D9,#B5DAE9 50%,#63BAD9)!important}
-body.theme-retro .abebe-speech,body.theme-retro .chat-bubble{background:#B5DAE9}
-body.theme-retro .abebe-speech::after{background:#B5DAE9}
-body.theme-retro .abebe-status-track{background:linear-gradient(90deg,#CCE7D9,#B5DAE9,#63BAD9,#B5DAE9,#CCE7D9)}
-body.theme-retro .abebe-page-bg{background:linear-gradient(180deg,#CCE7D9 0%,#E0F0E8 50%,#CCE7D9 100%)}
-
-/* 先帝最爱: 主#F5C7C9 辅A#EFE4D4(页bg) 辅B#F8819B(点缀) 深#B9D9EA→改深#6A3040(字) */
-body.theme-emperor{
-  --bg-base:#EFE4D4;--bg-card:#FAF0EA;
-  --pink-50:#F6EEDF;--pink-100:#F8D8DA;--pink-200:#F5C7C9;
-  --pink-300:#B9D9EA;--pink-400:#F8819B;--pink-500:#6A3040;
-  --lavender-50:#EFE4D4;--lavender-100:#E8DACB;
-  --text-primary:#6A3040;--text-secondary:#8A5060;--text-muted:#B48898;
-  --border-light:#EAD0D2;--shadow-pink:rgba(248,129,155,0.1);
-  --accent:#F8819B;--accent2:#B9D9EA;
-  --overlay-bg:rgba(239,228,212,0.97);
-}
-body.theme-emperor .splash{background:linear-gradient(160deg,#EFE4D4,#F5C7C9 50%,#B9D9EA)!important}
-body.theme-emperor .abebe-speech,body.theme-emperor .chat-bubble{background:#F5C7C9}
-body.theme-emperor .abebe-speech::after{background:#F5C7C9}
-body.theme-emperor .abebe-status-track{background:linear-gradient(90deg,#EFE4D4,#F5C7C9,#F8819B,#B9D9EA,#F5C7C9)}
-body.theme-emperor .abebe-page-bg{background:linear-gradient(180deg,#EFE4D4 0%,#F6EEDF 50%,#EFE4D4 100%)}
-
-/* 青提芭乐: 主#FED0D6 辅A#E4F6A9(页bg) 辅B#FF82A2(点缀) 深#BDDE93→改深#6A3048(字) */
-body.theme-guava{
-  --bg-base:#F0F8DC;--bg-card:#F6FCEA;
-  --pink-50:#F8FCE8;--pink-100:#FEEAED;--pink-200:#FED0D6;
-  --pink-300:#BDDE93;--pink-400:#FF82A2;--pink-500:#6A3048;
-  --lavender-50:#E4F6A9;--lavender-100:#D8F098;
-  --text-primary:#6A3048;--text-secondary:#8A5068;--text-muted:#B88898;
-  --border-light:#F4CCD2;--shadow-pink:rgba(255,130,162,0.1);
-  --accent:#FF82A2;--accent2:#BDDE93;
-  --overlay-bg:rgba(228,246,169,0.95);
-}
-body.theme-guava .splash{background:linear-gradient(160deg,#E4F6A9,#FED0D6 50%,#FF82A2)!important}
-body.theme-guava .abebe-speech,body.theme-guava .chat-bubble{background:#FED0D6}
-body.theme-guava .abebe-speech::after{background:#FED0D6}
-body.theme-guava .abebe-status-track{background:linear-gradient(90deg,#E4F6A9,#FED0D6,#FF82A2,#BDDE93,#FED0D6)}
-body.theme-guava .abebe-page-bg{background:linear-gradient(180deg,#E4F6A9 0%,#F0F8DC 50%,#E4F6A9 100%)}
-
-/* 椰风海岛: 主#95B4E0 辅A#CADEC3(页bg) 辅B#225DAB(点缀) 深#CBAF98→改深#1A3460(字) */
-body.theme-island{
-  --bg-base:#E4EDE0;--bg-card:#E8F0E6;
-  --pink-50:#ECF2E8;--pink-100:#D4E4EE;--pink-200:#95B4E0;
-  --pink-300:#CBAF98;--pink-400:#225DAB;--pink-500:#1A3460;
-  --lavender-50:#CADEC3;--lavender-100:#C0D4B8;
-  --text-primary:#1A3460;--text-secondary:#3A5480;--text-muted:#7090AA;
-  --border-light:#B0C8D4;--shadow-pink:rgba(34,93,171,0.08);
-  --accent:#225DAB;--accent2:#95B4E0;
-  --overlay-bg:rgba(202,222,195,0.97);
-}
-body.theme-island .splash{background:linear-gradient(160deg,#CADEC3,#95B4E0 50%,#225DAB)!important}
-body.theme-island .abebe-speech,body.theme-island .chat-bubble{background:#95B4E0}
-body.theme-island .abebe-speech::after{background:#95B4E0}
-body.theme-island .abebe-status-track{background:linear-gradient(90deg,#CADEC3,#95B4E0,#225DAB,#CBAF98,#CADEC3)}
-body.theme-island .abebe-page-bg{background:linear-gradient(180deg,#CADEC3 0%,#E4EDE0 50%,#CADEC3 100%)}
-
-/* 浮光跃金: 主#C8D4C0 辅A#F1D996(页bg) 辅B#799B84(点缀) 深#B69F8A→改深#4A5038(字) */
-body.theme-golden{
-  --bg-base:#F6EDD0;--bg-card:#F8F2DC;
-  --pink-50:#FAF4DC;--pink-100:#DDE4D6;--pink-200:#C8D4C0;
-  --pink-300:#B69F8A;--pink-400:#799B84;--pink-500:#4A5038;
-  --lavender-50:#F1D996;--lavender-100:#EACEA0;
-  --text-primary:#4A5038;--text-secondary:#6A7058;--text-muted:#9AA088;
-  --border-light:#CCD4C0;--shadow-pink:rgba(121,155,132,0.08);
-  --accent:#799B84;--accent2:#C8D4C0;
-  --overlay-bg:rgba(241,217,150,0.95);
-}
-body.theme-golden .splash{background:linear-gradient(160deg,#F1D996,#C8D4C0 50%,#799B84)!important}
-body.theme-golden .abebe-speech,body.theme-golden .chat-bubble{background:#C8D4C0}
-body.theme-golden .abebe-speech::after{background:#C8D4C0}
-body.theme-golden .abebe-status-track{background:linear-gradient(90deg,#F1D996,#C8D4C0,#799B84,#B69F8A,#F1D996)}
-body.theme-golden .abebe-page-bg{background:linear-gradient(180deg,#F1D996 0%,#F6EDD0 50%,#F1D996 100%)}
-
-/* 橘子汽水: 主#FE8F29 辅A#FAE593(页bg) 辅B#849C4D(点缀) 深#C5863C→改深#5A3010(字) */
-body.theme-orange{
-  --bg-base:#FCF0C8;--bg-card:#FFF6DC;
-  --pink-50:#FFF6DC;--pink-100:#FECFA0;--pink-200:#FEB870;
-  --pink-300:#FE8F29;--pink-400:#849C4D;--pink-500:#5A3010;
-  --lavender-50:#FAE593;--lavender-100:#F4DA80;
-  --text-primary:#5A3010;--text-secondary:#7A5028;--text-muted:#A88050;
-  --border-light:#EAD098;--shadow-pink:rgba(254,143,41,0.1);
-  --accent:#FE8F29;--accent2:#849C4D;
-  --overlay-bg:rgba(250,229,147,0.95);
-}
-body.theme-orange .splash{background:linear-gradient(160deg,#FAE593,#FE8F29 50%,#849C4D)!important}
-body.theme-orange .abebe-speech,body.theme-orange .chat-bubble{background:#FEB870}
-body.theme-orange .abebe-speech::after{background:#FEB870}
-body.theme-orange .abebe-status-track{background:linear-gradient(90deg,#FAE593,#FE8F29,#C5863C,#849C4D,#FAE593)}
-body.theme-orange .abebe-page-bg{background:linear-gradient(180deg,#FAE593 0%,#FCF0C8 50%,#FAE593 100%)}
-
-/* 海盐葡萄: 主#B6A9C8 辅A#EFE4D4(页bg) 辅B#302B58(点缀) 深#9078AC→改深#302B58(字) */
+body.theme-water .chat-bubble,body.theme-water .abebe-speech,body.theme-water .story-bubble,body.theme-water .repeat-line-bubble{color:var(--text-primary)!important}
+body.theme-cream .chat-bubble,body.theme-cream .abebe-speech,body.theme-cream .story-bubble,body.theme-cream .repeat-line-bubble{color:var(--text-primary)!important}
+/* 葡萄糖: 背景奶茶 模块淡紫 边框紫色 文字深紫 */
 body.theme-grape{
-  --bg-base:#EFE4D4;--bg-card:#F0E8F0;
+  --bg-base:#EFE4D4;--bg-card:#C8BDD8;
   --pink-50:#F4ECE0;--pink-100:#D8D0E0;--pink-200:#B6A9C8;
-  --pink-300:#9078AC;--pink-400:#302B58;--pink-500:#201840;
-  --lavender-50:#EFE4D4;--lavender-100:#E4DAC8;
+  --pink-300:#9078AC;--pink-400:#9078AC;--pink-500:#302B58;
+  --lavender-50:#C8BDD8;--lavender-100:#B6A9C8;
   --text-primary:#302B58;--text-secondary:#504878;--text-muted:#8878A8;
-  --border-light:#CCC4D4;--shadow-pink:rgba(48,43,88,0.08);
+  --border-light:#9078AC;--shadow-pink:rgba(48,43,88,0.08);
   --accent:#9078AC;--accent2:#B6A9C8;
   --overlay-bg:rgba(239,228,212,0.97);
 }
-body.theme-grape .splash{background:linear-gradient(160deg,#EFE4D4,#B6A9C8 50%,#302B58)!important}
-body.theme-grape .abebe-speech,body.theme-grape .chat-bubble{background:#B6A9C8}
-body.theme-grape .abebe-speech::after{background:#B6A9C8}
-body.theme-grape .abebe-status-track{background:linear-gradient(90deg,#EFE4D4,#B6A9C8,#9078AC,#302B58,#B6A9C8)}
+body.theme-grape .splash{background:linear-gradient(160deg,#EFE4D4,#B6A9C8 50%,#9078AC)!important}
+body.theme-grape .abebe-speech,body.theme-grape .chat-bubble{background:#C8BDD8}
+body.theme-grape .abebe-speech::after{background:#C8BDD8}
+body.theme-grape .abebe-status-track{background:linear-gradient(90deg,#C8BDD8,#9078AC,#B6A9C8,#9078AC,#C8BDD8)}
 body.theme-grape .abebe-page-bg{background:linear-gradient(180deg,#EFE4D4 0%,#F4ECE0 50%,#EFE4D4 100%)}
+body.theme-grape .mood-section,body.theme-grape .reading-section,body.theme-grape .milestone{background:#C8BDD8!important}
+body.theme-grape .shop-item-img,body.theme-grape .snack-book-thumb{background:linear-gradient(135deg,#C8BDD8,#B6A9C8)!important}
+body.theme-grape .book-cover{background:linear-gradient(135deg,#EFE4D4,#E8DACB)!important;color:#9078AC!important}
+body.theme-grape .chat-bubble,body.theme-grape .abebe-speech,body.theme-grape .story-bubble,body.theme-grape .repeat-line-bubble{color:var(--text-primary)!important}
 
 /* Theme picker */
 .theme-picker{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:8px 0}
@@ -858,10 +768,10 @@ body.theme-grape .abebe-page-bg{background:linear-gradient(180deg,#EFE4D4 0%,#F4
     <div class="page" id="page-books">
       <div id="books-list">
         <div class="bookshelf">
-          <div class="book-item" onclick="openBook(0)"><div class="book-cover book-cover-1">封面</div><div class="book-info"><div class="book-title-text">记一忘三二</div><div class="book-author">李娟</div><div class="book-notes-count">3 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
-          <div class="book-item" onclick="openBook(1)"><div class="book-cover book-cover-2">封面</div><div class="book-info"><div class="book-title-text">蛤蟆先生去看心理医生</div><div class="book-author">罗伯特 · 戴博德</div><div class="book-notes-count">1 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
-          <div class="book-item" onclick="openBook(2)"><div class="book-cover book-cover-3">封面</div><div class="book-info"><div class="book-title-text">人间草木</div><div class="book-author">汪曾祺</div><div class="book-notes-count">0 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
-          <div class="book-item" onclick="openBook(3)"><div class="book-cover book-cover-4">封面</div><div class="book-info"><div class="book-title-text">俗女养成记</div><div class="book-author">江鹅</div><div class="book-notes-count">2 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
+          <div class="book-item" onclick="openBook(0)"><div class="book-cover book-cover-1">记</div><div class="book-info"><div class="book-title-text">记一忘三二</div><div class="book-author">李娟</div><div class="book-notes-count">3 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
+          <div class="book-item" onclick="openBook(1)"><div class="book-cover book-cover-2">蛤</div><div class="book-info"><div class="book-title-text">蛤蟆先生去看心理医生</div><div class="book-author">罗伯特 · 戴博德</div><div class="book-notes-count">1 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
+          <div class="book-item" onclick="openBook(2)"><div class="book-cover book-cover-3">人</div><div class="book-info"><div class="book-title-text">人间草木</div><div class="book-author">汪曾祺</div><div class="book-notes-count">0 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
+          <div class="book-item" onclick="openBook(3)"><div class="book-cover book-cover-4">俗</div><div class="book-info"><div class="book-title-text">俗女养成记</div><div class="book-author">江鹅</div><div class="book-notes-count">2 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>
           <div class="add-book-btn">+ 加一本书</div>
         </div>
       </div>
@@ -983,58 +893,22 @@ body.theme-grape .abebe-page-bg{background:linear-gradient(180deg,#EFE4D4 0%,#F4
             <div class="theme-dot-label">莓果糖</div>
           </div>
           <div>
-            <div class="theme-dot" onclick="setTheme('theme-mint')" data-theme="theme-mint">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#CFE4DD"></div><div class="theme-dot-half" style="background:#FCD3D5"></div></div>
+            <div class="theme-dot" onclick="setTheme('theme-water')" data-theme="theme-water">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#E4EDE8"></div><div class="theme-dot-half" style="background:#BBCCC4"></div></div>
             </div>
-            <div class="theme-dot-label">薄荷曼波</div>
+            <div class="theme-dot-label">水色糖</div>
           </div>
           <div>
-            <div class="theme-dot" onclick="setTheme('theme-walden')" data-theme="theme-walden">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#CAEBED"></div><div class="theme-dot-half" style="background:#CCE7D9"></div></div>
+            <div class="theme-dot" onclick="setTheme('theme-cream')" data-theme="theme-cream">
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#CFD9E6"></div><div class="theme-dot-half" style="background:#FBF5E2"></div></div>
             </div>
-            <div class="theme-dot-label">瓦尔登湖</div>
-          </div>
-          <div>
-            <div class="theme-dot" onclick="setTheme('theme-retro')" data-theme="theme-retro">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#63BAD9"></div><div class="theme-dot-half" style="background:#CCE7D9"></div></div>
-            </div>
-            <div class="theme-dot-label">美式复古</div>
-          </div>
-          <div>
-            <div class="theme-dot" onclick="setTheme('theme-emperor')" data-theme="theme-emperor">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#F5C7C9"></div><div class="theme-dot-half" style="background:#B9D9EA"></div></div>
-            </div>
-            <div class="theme-dot-label">先帝最爱</div>
-          </div>
-          <div>
-            <div class="theme-dot" onclick="setTheme('theme-guava')" data-theme="theme-guava">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FED0D6"></div><div class="theme-dot-half" style="background:#BDDE93"></div></div>
-            </div>
-            <div class="theme-dot-label">青提芭乐</div>
-          </div>
-          <div>
-            <div class="theme-dot" onclick="setTheme('theme-island')" data-theme="theme-island">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#95B4E0"></div><div class="theme-dot-half" style="background:#CADEC3"></div></div>
-            </div>
-            <div class="theme-dot-label">椰风海岛</div>
-          </div>
-          <div>
-            <div class="theme-dot" onclick="setTheme('theme-golden')" data-theme="theme-golden">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#F1D996"></div><div class="theme-dot-half" style="background:#799B84"></div></div>
-            </div>
-            <div class="theme-dot-label">浮光跃金</div>
-          </div>
-          <div>
-            <div class="theme-dot" onclick="setTheme('theme-orange')" data-theme="theme-orange">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#FE8F29"></div><div class="theme-dot-half" style="background:#849C4D"></div></div>
-            </div>
-            <div class="theme-dot-label">橘子汽水</div>
+            <div class="theme-dot-label">流心糖</div>
           </div>
           <div>
             <div class="theme-dot" onclick="setTheme('theme-grape')" data-theme="theme-grape">
-              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#B6A9C8"></div><div class="theme-dot-half" style="background:#302B58"></div></div>
+              <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#B6A9C8"></div><div class="theme-dot-half" style="background:#EFE4D4"></div></div>
             </div>
-            <div class="theme-dot-label">海盐葡萄</div>
+            <div class="theme-dot-label">葡萄糖</div>
           </div>
         </div>
       </div>
@@ -1542,7 +1416,7 @@ function addNote(){
 function closeBook(){document.getElementById('books-list').style.display='block';document.getElementById('book-detail').style.display='none';currentBookIdx=-1}
 function renderBooksList(){
   document.querySelector('.bookshelf').innerHTML=booksData.map((b,i)=>
-    `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">封面</div><div class="book-info"><div class="book-title-text">${b.title}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`
+    `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${b.title[0]}</div><div class="book-info"><div class="book-title-text">${b.title}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`
   ).join('')+'<div class="add-book-btn" onclick="showAddBook()">+ 加一本书</div><div id="add-book-form" style="display:none"></div>';
 }
 function showAddBook(){
@@ -2811,7 +2685,7 @@ const origRenderBooksList=renderBooksList;
 renderBooksList=function(){
   document.querySelector('.bookshelf').innerHTML=booksData.map((b,i)=>{
     const badge=b.done?'<span class="book-done-badge">✓</span>':'';
-    return `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">封面</div><div class="book-info"><div class="book-title-text">${b.title}${badge}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`;
+    return `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${b.title[0]}</div><div class="book-info"><div class="book-title-text">${b.title}${badge}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`;
   }).join('')+'<div class="add-book-btn" onclick="showAddBook()">+ 加一本书</div><div id="add-book-form" style="display:none"></div>';
 };
 
@@ -5054,7 +4928,7 @@ async function importData(event){
 
 // ===== THEME SYSTEM =====
 function setTheme(theme){
-  const themes=['theme-mint','theme-walden','theme-retro','theme-emperor','theme-guava','theme-island','theme-golden','theme-orange','theme-grape'];
+  const themes=['theme-water','theme-cream','theme-grape'];
   themes.forEach(t=>document.body.classList.remove(t));
   if(theme)document.body.classList.add(theme);
   localStorage.setItem('candyJarTheme',theme);
