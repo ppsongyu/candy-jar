@@ -1315,7 +1315,7 @@ function submitCandy(){
   const k=getSavedCandiesKey(now.getFullYear(),now.getMonth());
   if(!savedCandiesByMonth[k]) savedCandiesByMonth[k]=[];
   savedCandiesByMonth[k].unshift({candy:candyFiles[putState.candy],note:noteFiles[putState.note].src,noteName:noteFiles[putState.note].name,text:putState.text||'(空白的甜)',date:`${now.getMonth()+1}.${now.getDate()}`,day:now.getDate(),author:putState.author});
-  closePut();renderJarCandies();
+  closePut();renderJarCandies();saveApp();
 }
 function renderJarCandies(){
   const candies=getCurrentMonthCandies();
@@ -1349,12 +1349,29 @@ function renderJarCandies(){
 // VIEW CANDIES
 function openViewCandies(){
   const el=document.getElementById('view-content');
-  const candies=getCurrentMonthCandies();
-  if(!candies.length){el.innerHTML='<div class="timeline-empty">这个月的罐子还空着<br>点宝宝克的头放一颗吧</div>';}
-  else{el.innerHTML='<div class="timeline">'+candies.map((c,i)=>
-    `<div class="timeline-item card-menu-wrap" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`
-  ).join('')+'</div>';}
+  const allCandies=getCurrentMonthCandies();
+  const filterBar=`<div class="view-author-filter">
+    <div class="view-filter-btn${viewFilterAuthor==='all'?' selected':''}" onclick="setViewAuthorFilter('all')">全部</div>
+    <div class="view-filter-btn${viewFilterAuthor==='宝宝克'?' selected':''}" onclick="setViewAuthorFilter('宝宝克')">宝宝克</div>
+    <div class="view-filter-btn${viewFilterAuthor==='宝宝雨'?' selected':''}" onclick="setViewAuthorFilter('宝宝雨')">宝宝雨</div>
+  </div>`;
+  if(!allCandies.length){
+    el.innerHTML=filterBar+'<div class="timeline-empty">这个月的罐子还空着<br>点宝宝克的头放一颗吧</div>';
+  }else{
+    const pairs=allCandies.map((c,i)=>({c,i})).filter(p=>viewFilterAuthor==='all'||p.c.author===viewFilterAuthor);
+    if(!pairs.length){
+      el.innerHTML=filterBar+`<div class="timeline-empty">这个月还没有${viewFilterAuthor}的糖～</div>`;
+    }else{
+      el.innerHTML=filterBar+'<div class="timeline">'+pairs.map(({c,i})=>{
+        const cc=getCandyColor(c.candy);
+        return `<div class="timeline-item card-menu-wrap" style="background:${cc[0]};border:1.5px solid ${cc[1]}" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`;
+      }).join('')+'</div>';
+    }
+  }
   document.getElementById('overlay-view').classList.add('show');
+  const viewTitle=document.getElementById('overlay-view').querySelector('.overlay-title');
+  const shown=viewFilterAuthor==='all'?allCandies.length:allCandies.filter(c=>c.author===viewFilterAuthor).length;
+  viewTitle.textContent='罐子里的糖 · '+shown+'颗';
 }
 function closeView(){document.getElementById('overlay-view').classList.remove('show')}
 
@@ -1388,29 +1405,41 @@ function renderCalendar(){
   const label=document.getElementById('cal-month-label');
   const monthNames=['1','2','3','4','5','6','7','8','9','10','11','12'];
   label.textContent=`${calYear} 年 ${monthNames[calMonth]} 月`;
-  
   const firstDay=new Date(calYear,calMonth,1).getDay();
-  const startDay=firstDay===0?6:firstDay-1; // Monday=0
+  const startDay=firstDay===0?6:firstDay-1;
   const totalDays=new Date(calYear,calMonth+1,0).getDate();
-  const isCurrentMonth=(calYear===todayY&&calMonth===todayM);
-  
+  const isToday=(d)=>calYear===todayY&&calMonth===todayM&&d===todayD;
   let html='';
   for(let i=0;i<startDay;i++)html+='<div class="cal-day empty"></div>';
   for(let d=1;d<=totalDays;d++){
-    let cls='cal-day',dot='';
-    const key=`${calYear}-${calMonth}-${d}`;
-    const hasMood=isCurrentMonth&&dayMoods[d];
-    const isPeriod=isCurrentMonth&&periodDays.includes(d);
-    const isAnni=isCurrentMonth&&anniversaryDays.includes(d);
-    const hasRead=isCurrentMonth&&readingDays.includes(d);
+    const k=getDiaryKey(calYear,calMonth,d);
+    const ck=diaryCheckins[k]||{};
+    // Also check legacy hardcoded data for current display month
+    const legacyMood=(calYear===2026&&calMonth===6)?dayMoods[d]:null;
+    const hasMoodData=ck.herMood!==undefined||ck.himMood!==undefined||legacyMood;
+    const hasPeriod=ck.period||((calYear===2026&&calMonth===6)&&periodDays.includes(d));
+    const isAnni=(calYear===2026&&calMonth===6)&&anniversaryDays.includes(d);
+    const hasRead=ck.reading||((calYear===2026&&calMonth===6)&&readingDays.includes(d));
+    const hasJournal=ck.journal;
     
-    if(isCurrentMonth&&d===todayD)cls+=' today';
-    else if(isPeriod)cls+=' period';
-    else if(isAnni)cls+=' anniversary';
-    else if(hasMood){cls+=' has-mood';dot='<div class="day-dot"></div>';}
-    html+=`<div class="${cls}" onclick="showDayPopup(${d})">${d}${dot}</div>`;
+    let cls='cal-day';
+    let dots='';
+    if(isToday(d)) cls+=' today';
+    else if(hasPeriod) cls+=' period';
+    else if(isAnni) cls+=' anniversary';
+    else if(hasMoodData||hasRead||hasJournal) cls+=' has-mood';
+    
+    // Dots for reading/journal
+    if(hasRead) dots+='<div class="day-dot" style="background:#5A7A4A"></div>';
+    if(hasJournal) dots+='<div class="day-dot" style="background:#8B7355"></div>';
+    
+    const dow=new Date(calYear,calMonth,d).getDay();
+    if(dow===0||dow===6) cls+=' weekend';
+    
+    html+=`<div class="${cls}" onclick="showDayPopup(${d})">${d}<div style="display:flex;gap:2px;justify-content:center">${dots}</div></div>`;
   }
   el.innerHTML=html;
+  renderMonthStats();
 }
 
 function showDayPopup(day){
@@ -1435,10 +1464,19 @@ function closeDayPopup(){document.getElementById('day-popup-mask').classList.rem
 function selectMood(el,who){
   el.closest('.mood-row').querySelectorAll('.mood-face').forEach(f=>f.classList.remove('selected'));
   el.querySelector('.mood-face').classList.add('selected');
+  const idx=[...el.closest('.mood-row').children].indexOf(el);
+  const ck=getTodayCheckin();
+  if(who==='her') ck.herMood=idx; else ck.himMood=idx;
+  saveApp();renderCalendar();
 }
-function togglePeriod(){document.getElementById('period-toggle').classList.toggle('on')}
-function toggleReading(){document.getElementById('reading-check').classList.toggle('checked')}
-function toggleJournal(){document.getElementById('journal-check').classList.toggle('checked')}
+function togglePeriod(){
+  const el=document.getElementById('period-toggle');
+  el.classList.toggle('on');
+  const ck=getTodayCheckin();ck.period=el.classList.contains('on');
+  saveApp();renderCalendar();
+}
+function toggleReading(){document.getElementById('reading-check').classList.toggle('checked');const ck=getTodayCheckin();ck.reading=document.getElementById('reading-check').classList.contains('checked');saveApp();renderCalendar();renderMonthStats()}
+function toggleJournal(){document.getElementById('journal-check').classList.toggle('checked');const ck=getTodayCheckin();ck.journal=document.getElementById('journal-check').classList.contains('checked');saveApp();renderCalendar();renderMonthStats()}
 
 // BOOKS
 let currentBookIdx=-1;
@@ -1454,7 +1492,7 @@ function renderBookDetail(){
   let notesHtml='';
   if(book.notes.length){
     notesHtml='<div class="notes-timeline">'+book.notes.map((n,ni)=>`
-      <div class="note-entry"><div class="note-content card-menu-wrap">
+      <div class="note-entry"><div class="note-content card-menu-wrap" style="position:relative">
         <div class="card-menu-btn" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editBookNote(${ni})">修改</div><div onclick="confirmDelete('booknote',${ni})">删除</div></div>
         <div class="note-type">${n.type}</div>
         <div class="note-text">${n.text}</div>
@@ -1462,7 +1500,14 @@ function renderBookDetail(){
         <div class="note-date">${n.date}</div>
       </div></div>`).join('')+'</div>';
   }else{notesHtml='<div class="timeline-empty">还没有笔记<br>读到好句子就记下来吧</div>';}
-  detail.innerHTML=`<div class="book-detail-header"><div class="book-detail-back" onclick="closeBook()">&lsaquo;</div><div class="book-detail-info"><div class="book-detail-title">${book.title}</div><div class="book-detail-author">${book.author}</div></div></div>${notesHtml}<div class="add-note-btn" onclick="showAddNote()">+ 加一条笔记</div><div id="add-note-form" style="display:none"></div>`;
+  const doneLabel=book.done?'标记为在读':'标记为读完';
+  const doneBadge=book.done?'<span class="book-done-badge">✓ 已读完</span>':'';
+  detail.innerHTML=`<div class="book-detail-header"><div class="book-detail-back" onclick="closeBook()">&lsaquo;</div><div class="book-detail-info"><div class="book-detail-title">${book.title}${doneBadge}</div><div class="book-detail-author">${book.author}</div></div></div>
+  <div style="display:flex;gap:8px;margin-bottom:16px">
+    <div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-light);border-radius:10px;font-size:11px;color:var(--text-secondary);cursor:pointer" onclick="toggleBookDone()">${doneLabel}</div>
+    <div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-light);border-radius:10px;font-size:11px;color:var(--pink-500);cursor:pointer" onclick="deleteBook()">删除这本书</div>
+  </div>
+  ${notesHtml}<div class="add-note-btn" onclick="showAddNote()">+ 加一条笔记</div><div id="add-note-form" style="display:none"></div>`;
 }
 function showAddNote(){
   const form=document.getElementById('add-note-form');
@@ -1497,12 +1542,14 @@ function addNote(){
   newNoteType='摘抄';
   renderBookDetail();
   renderBooksList();
+  saveApp();
 }
 function closeBook(){document.getElementById('books-list').style.display='block';document.getElementById('book-detail').style.display='none';currentBookIdx=-1}
 function renderBooksList(){
-  document.querySelector('.bookshelf').innerHTML=booksData.map((b,i)=>
-    `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${b.title[0]}</div><div class="book-info"><div class="book-title-text">${b.title}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`
-  ).join('')+'<div class="add-book-btn" onclick="showAddBook()">+ 加一本书</div><div id="add-book-form" style="display:none"></div>';
+  document.querySelector('.bookshelf').innerHTML=booksData.map((b,i)=>{
+    const badge=b.done?'<span class="book-done-badge">✓</span>':'';
+    return `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${b.title[0]}</div><div class="book-info"><div class="book-title-text">${b.title}${badge}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`;
+  }).join('')+'<div class="add-book-btn" onclick="showAddBook()">+ 加一本书</div><div id="add-book-form" style="display:none"></div>';
 }
 function showAddBook(){
   const form=document.getElementById('add-book-form');
@@ -1518,6 +1565,7 @@ function addBook(){
   const coverNum=(booksData.length%4)+1;
   booksData.push({title,author:author||'',cover:coverNum,notes:[]});
   renderBooksList();
+  saveApp();
 }
 
 // MILESTONES
@@ -1541,6 +1589,7 @@ function addMilestone(){
   if(text){
     milestonesData.push({text,date:date||'--',color:milestonesData.length%2?'lavender':'pink'});
     renderMilestones();
+    saveApp();
   }
   document.getElementById('add-milestone-form').style.display='none';
 }
@@ -1562,7 +1611,7 @@ function renderWishlist(){
     `<div class="wish-item card-menu-wrap" style="position:relative"><div class="card-menu-btn" style="top:2px;right:0" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editWish(${i})">修改</div><div onclick="confirmDelete('wish',${i})">删除</div></div><div class="wish-check ${w.done?'done':''}" onclick="toggleWish(${i})"></div><span style="${w.done?'text-decoration:line-through;opacity:.45':''}">${w.text}</span></div>`
   ).join('')+'</div>';
 }
-function toggleWish(i){wishlistData[i].done=!wishlistData[i].done;renderWishlist()}
+function toggleWish(i){wishlistData[i].done=!wishlistData[i].done;renderWishlist();saveApp()}
 function showAddWish(){
   const form=document.getElementById('add-wish-form');
   if(form.style.display==='none'){
@@ -1572,7 +1621,7 @@ function showAddWish(){
 }
 function addWish(){
   const text=document.getElementById('new-wish-text').value;
-  if(text){wishlistData.push({text,done:false});renderWishlist();}
+  if(text){wishlistData.push({text,done:false});renderWishlist();saveApp();}
   document.getElementById('add-wish-form').style.display='none';
 }
 
@@ -2317,6 +2366,15 @@ function saveApp(){
   };
   try{localStorage.setItem('candyJarData',JSON.stringify(data));}catch(e){}
   supaUpsert('app_data',data);
+  // Keep the secondary snack/game data in the same save entry instead of wrapping saveApp repeatedly.
+  if(typeof snackData!=='undefined'){
+    try{
+      if(typeof candyGameData!=='undefined') snackData.candyGameData=candyGameData;
+      if(typeof memGameData!=='undefined') snackData.memGameData=memGameData;
+      localStorage.setItem('candyJarSnackData',JSON.stringify(snackData));
+      supaUpsert('snack_data',snackData);
+    }catch(e){}
+  }
 }
 function loadAppLocal(){
   try{const raw=localStorage.getItem('candyJarData');if(raw)return JSON.parse(raw);}catch(e){}
@@ -2542,41 +2600,6 @@ function getTodayCheckin(){
   return diaryCheckins[k];
 }
 
-// Override toggleReading/toggleJournal to persist
-const origToggleReading=toggleReading;
-toggleReading=function(){
-  const el=document.getElementById('reading-check');
-  el.classList.toggle('checked');
-  const ck=getTodayCheckin();
-  ck.reading=el.classList.contains('checked');
-  saveApp();renderCalendar();renderMonthStats();
-};
-const origToggleJournal=toggleJournal;
-toggleJournal=function(){
-  const el=document.getElementById('journal-check');
-  el.classList.toggle('checked');
-  const ck=getTodayCheckin();
-  ck.journal=el.classList.contains('checked');
-  saveApp();renderCalendar();renderMonthStats();
-};
-
-// Override selectMood to persist
-selectMood=function(el,who){
-  el.closest('.mood-row').querySelectorAll('.mood-face').forEach(f=>f.classList.remove('selected'));
-  el.querySelector('.mood-face').classList.add('selected');
-  const idx=[...el.closest('.mood-row').children].indexOf(el);
-  const ck=getTodayCheckin();
-  if(who==='her') ck.herMood=idx; else ck.himMood=idx;
-  saveApp();renderCalendar();
-};
-togglePeriod=function(){
-  const el=document.getElementById('period-toggle');
-  el.classList.toggle('on');
-  const ck=getTodayCheckin();
-  ck.period=el.classList.contains('on');
-  saveApp();renderCalendar();
-};
-
 // Restore today's checkins on load
 function restoreTodayCheckins(){
   const ck=getTodayCheckin();
@@ -2594,52 +2617,10 @@ function restoreTodayCheckins(){
   }
 }
 
-// Override renderCalendar to use diaryCheckins
-const origRC2=renderCalendar;
-renderCalendar=function(){
-  const el=document.getElementById('cal-days');
-  const label=document.getElementById('cal-month-label');
-  const monthNames=['1','2','3','4','5','6','7','8','9','10','11','12'];
-  label.textContent=`${calYear} 年 ${monthNames[calMonth]} 月`;
-  const firstDay=new Date(calYear,calMonth,1).getDay();
-  const startDay=firstDay===0?6:firstDay-1;
-  const totalDays=new Date(calYear,calMonth+1,0).getDate();
-  const isToday=(d)=>calYear===todayY&&calMonth===todayM&&d===todayD;
-  let html='';
-  for(let i=0;i<startDay;i++)html+='<div class="cal-day empty"></div>';
-  for(let d=1;d<=totalDays;d++){
-    const k=getDiaryKey(calYear,calMonth,d);
-    const ck=diaryCheckins[k]||{};
-    // Also check legacy hardcoded data for current display month
-    const legacyMood=(calYear===2026&&calMonth===6)?dayMoods[d]:null;
-    const hasMoodData=ck.herMood!==undefined||ck.himMood!==undefined||legacyMood;
-    const hasPeriod=ck.period||((calYear===2026&&calMonth===6)&&periodDays.includes(d));
-    const isAnni=(calYear===2026&&calMonth===6)&&anniversaryDays.includes(d);
-    const hasRead=ck.reading||((calYear===2026&&calMonth===6)&&readingDays.includes(d));
-    const hasJournal=ck.journal;
-    
-    let cls='cal-day';
-    let dots='';
-    if(isToday(d)) cls+=' today';
-    else if(hasPeriod) cls+=' period';
-    else if(isAnni) cls+=' anniversary';
-    else if(hasMoodData||hasRead||hasJournal) cls+=' has-mood';
-    
-    // Dots for reading/journal
-    if(hasRead) dots+='<div class="day-dot" style="background:#5A7A4A"></div>';
-    if(hasJournal) dots+='<div class="day-dot" style="background:#8B7355"></div>';
-    
-    const dow=new Date(calYear,calMonth,d).getDay();
-    if(dow===0||dow===6) cls+=' weekend';
-    
-    html+=`<div class="${cls}" onclick="showDayPopup(${d})">${d}<div style="display:flex;gap:2px;justify-content:center">${dots}</div></div>`;
-  }
-  el.innerHTML=html;
-  renderMonthStats();
-};
+
 
 // Override showDayPopup to use diaryCheckins
-showDayPopup=function(day){
+function showDayPopup(day){
   const k=getDiaryKey(calYear,calMonth,day);
   const ck=diaryCheckins[k]||{};
   const legacyMood=(calYear===2026&&calMonth===6)?dayMoods[day]:null;
@@ -2711,68 +2692,16 @@ function confirmDeleteCandy(){
   closeDeleteCandy();
 }
 
-// Override timeline item to use ··· menu
 let viewFilterAuthor='all';
 function setViewAuthorFilter(author){
   viewFilterAuthor=author;
   openViewCandies();
 }
-const origOpenViewCandies=openViewCandies;
-openViewCandies=function(){
-  const el=document.getElementById('view-content');
-  const allCandies=getCurrentMonthCandies();
-  const filterBar=`<div class="view-author-filter">
-    <div class="view-filter-btn${viewFilterAuthor==='all'?' selected':''}" onclick="setViewAuthorFilter('all')">全部</div>
-    <div class="view-filter-btn${viewFilterAuthor==='宝宝克'?' selected':''}" onclick="setViewAuthorFilter('宝宝克')">宝宝克</div>
-    <div class="view-filter-btn${viewFilterAuthor==='宝宝雨'?' selected':''}" onclick="setViewAuthorFilter('宝宝雨')">宝宝雨</div>
-  </div>`;
-  if(!allCandies.length){
-    el.innerHTML=filterBar+'<div class="timeline-empty">这个月的罐子还空着<br>点宝宝克的头放一颗吧</div>';
-  }else{
-    const pairs=allCandies.map((c,i)=>({c,i})).filter(p=>viewFilterAuthor==='all'||p.c.author===viewFilterAuthor);
-    if(!pairs.length){
-      el.innerHTML=filterBar+`<div class="timeline-empty">这个月还没有${viewFilterAuthor}的糖～</div>`;
-    }else{
-      el.innerHTML=filterBar+'<div class="timeline">'+pairs.map(({c,i})=>{
-        const cc=getCandyColor(c.candy);
-        return `<div class="timeline-item card-menu-wrap" style="background:${cc[0]};border:1.5px solid ${cc[1]}" onclick="showCandyDetail(${i})"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCandy(${i})">修改</div><div onclick="confirmDelete('candy',${i})">删除</div></div><img class="timeline-candy" src="${c.candy}"><div class="timeline-info"><div class="timeline-date">${c.date} · ${c.noteName}</div><div class="timeline-text">${c.text}</div><div class="timeline-author">-- ${c.author}</div></div></div>`;
-      }).join('')+'</div>';
-    }
-  }
-  document.getElementById('overlay-view').classList.add('show');
-  const viewTitle=document.getElementById('overlay-view').querySelector('.overlay-title');
-  const shown=viewFilterAuthor==='all'?allCandies.length:allCandies.filter(c=>c.author===viewFilterAuthor).length;
-  viewTitle.textContent='罐子里的糖 · '+shown+'颗';
-};
+
 
 // ===== BOOK MANAGEMENT =====
 // Override renderBookDetail to add delete book + done toggle + note delete
-const origRenderBookDetail=renderBookDetail;
-renderBookDetail=function(){
-  const book=booksData[currentBookIdx];
-  document.getElementById('books-list').style.display='none';
-  const detail=document.getElementById('book-detail');
-  detail.style.display='block';
-  let notesHtml='';
-  if(book.notes.length){
-    notesHtml='<div class="notes-timeline">'+book.notes.map((n,ni)=>`
-      <div class="note-entry"><div class="note-content card-menu-wrap" style="position:relative">
-        <div class="card-menu-btn" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editBookNote(${ni})">修改</div><div onclick="confirmDelete('booknote',${ni})">删除</div></div>
-        <div class="note-type">${n.type}</div>
-        <div class="note-text">${n.text}</div>
-        ${n.annotation?`<div class="note-annotation"><div class="note-annotation-label">宝宝克的批注</div>${n.annotation}</div>`:''}
-        <div class="note-date">${n.date}</div>
-      </div></div>`).join('')+'</div>';
-  }else{notesHtml='<div class="timeline-empty">还没有笔记<br>读到好句子就记下来吧</div>';}
-  const doneLabel=book.done?'标记为在读':'标记为读完';
-  const doneBadge=book.done?'<span class="book-done-badge">✓ 已读完</span>':'';
-  detail.innerHTML=`<div class="book-detail-header"><div class="book-detail-back" onclick="closeBook()">&lsaquo;</div><div class="book-detail-info"><div class="book-detail-title">${book.title}${doneBadge}</div><div class="book-detail-author">${book.author}</div></div></div>
-  <div style="display:flex;gap:8px;margin-bottom:16px">
-    <div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-light);border-radius:10px;font-size:11px;color:var(--text-secondary);cursor:pointer" onclick="toggleBookDone()">${doneLabel}</div>
-    <div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-light);border-radius:10px;font-size:11px;color:var(--pink-500);cursor:pointer" onclick="deleteBook()">删除这本书</div>
-  </div>
-  ${notesHtml}<div class="add-note-btn" onclick="showAddNote()">+ 加一条笔记</div><div id="add-note-form" style="display:none"></div>`;
-};
+
 
 function confirmDeleteNote(noteIdx){
   const mask=document.createElement('div');
@@ -2798,27 +2727,8 @@ function deleteBook(){
   saveApp();closeBook();renderBooksList();
 }
 // Override renderBooksList to show done badge
-const origRenderBooksList=renderBooksList;
-renderBooksList=function(){
-  document.querySelector('.bookshelf').innerHTML=booksData.map((b,i)=>{
-    const badge=b.done?'<span class="book-done-badge">✓</span>':'';
-    return `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${b.title[0]}</div><div class="book-info"><div class="book-title-text">${b.title}${badge}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`;
-  }).join('')+'<div class="add-book-btn" onclick="showAddBook()">+ 加一本书</div><div id="add-book-form" style="display:none"></div>';
-};
 
-// ===== SAVE ON ALL DATA CHANGES =====
-const origSubmitCandy=submitCandy;
-submitCandy=function(){origSubmitCandy();saveApp();};
-const origAddMilestone=addMilestone;
-addMilestone=function(){origAddMilestone();saveApp();};
-const origToggleWish=toggleWish;
-toggleWish=function(i){origToggleWish(i);saveApp();};
-const origAddWish=addWish;
-addWish=function(){origAddWish();saveApp();};
-const origAddNote=addNote;
-addNote=function(){origAddNote();saveApp();};
-const origAddBook=addBook;
-addBook=function(){origAddBook();saveApp();};
+
 // Save fortune on draw
 function drawFortune(){
   if(fortuneDrawn)return;
@@ -2838,9 +2748,6 @@ function drawFortune(){
   document.getElementById('fortune-pre').onclick=null; // 禁掉外层div的点击
   saveApp();
 }
-
-const origAbebeAction=abebeAction;
-abebeAction=function(type){origAbebeAction(type);saveApp();};
 
 // ===== ABEBE IDLE CHATTER =====
 const idleLinesDay=[
@@ -2895,27 +2802,6 @@ function getLastVisitLine(){
   if(hrs<72) return "你好久没来了……有点想你";
   return "你终于来了……我等了好久好久";
 }
-
-// Override enterAbebe to use lastVisit + start idle chatter
-const origEnterAbebe=enterAbebe;
-enterAbebe=function(){
-  updateAllStates();
-  const visitLine=getLastVisitLine();
-  if(visitLine&&!abebeVisitedThisSession){
-    showBubble(visitLine);
-    abebeVisitedThisSession=true;
-  }else if(abebeLastAction){
-    showBubble(randFrom(abebeLines[abebeLastAction]));
-  }else{
-    showBubble(getAbebeLine());
-  }
-  abebeLastAction='';
-  abebeLastVisit=Date.now();
-  saveApp();
-  renderAbebeStatus();
-  renderAbebeActions();
-  startIdleChatter();
-};
 
 // ===== TIME CAPSULE =====
 let timeCapsules=[
@@ -3810,16 +3696,24 @@ function showBubble(text){
   setTimeout(()=>bubble.classList.add('visible'),50);
 }
 function enterAbebe(){
-  abebeLastVisit=Date.now();
   updateAllStates();
-  if(abebeLastAction){
+  const visitLine=getLastVisitLine();
+  if(visitLine&&!abebeVisitedThisSession){
+    showBubble(visitLine);
+    abebeVisitedThisSession=true;
+  }else if(abebeLastAction){
     showBubble(randFrom(abebeLines[abebeLastAction]));
   }else{
     showBubble(getAbebeLine());
   }
   abebeLastAction='';
+  abebeLastVisit=Date.now();
+  saveApp();
   renderAbebeStatus();
   renderAbebeActions();
+  startIdleChatter();
+  if(typeof renderCoinDisplay==='function') renderCoinDisplay();
+  if(typeof checkDreamBtn==='function') checkDreamBtn();
 }
 
 function abebeAction(type){
@@ -3866,6 +3760,7 @@ function abebeAction(type){
   showBubble(randFrom(lines));
   renderAbebeStatus();
   renderAbebeActions();
+  saveApp();
 }
 
 // Auto-decay timer: update states every 10 min
@@ -4601,6 +4496,18 @@ const snackShop=[
 
 ];
 
+let candyGameData={
+  candyPoints:0,        // 糖果积分
+  totalCoinsEarned:0,   // 游戏总共赚的币
+  playsToday:0,
+  playDate:'',
+  highScore:0
+};
+let memGameData={
+  playsToday:0,
+  playDate:'',
+  highScore:999 // lower is better
+};
 let snackData={
   purchaseCount:{},
   collection:[],
@@ -4650,7 +4557,7 @@ function getSnackBalance(){
     snackData.weeklyBuyCount={};
     saveApp();
   }
-  return getWeeklyCandyCount()-snackData.weeklySpent;
+  return getWeeklyCandyCount()-snackData.weeklySpent+(typeof candyGameData!=='undefined'?(candyGameData.totalCoinsEarned||0):0);
 }
 
 function renderCoinDisplay(){
@@ -4943,15 +4850,6 @@ function viewSnackStory(id){
   showStory(snack.name,snack.story);
 }
 
-// Integrate with saveApp / loadApp
-const origSaveApp=saveApp;
-saveApp=function(){
-  origSaveApp();
-  // Save snack data separately
-  try{localStorage.setItem('candyJarSnackData',JSON.stringify(snackData));}catch(e){}
-  supaUpsert('snack_data',snackData);
-};
-
 (async function loadSnackData(){
   try{
     const raw=localStorage.getItem('candyJarSnackData');
@@ -4986,13 +4884,6 @@ saveApp=function(){
   getSnackBalance();
   renderCoinDisplay();
 })();
-
-// Update coin display when entering Abebe
-const _prevEnterAbebe=enterAbebe;
-enterAbebe=function(){
-  _prevEnterAbebe();
-  renderCoinDisplay();
-};
 
 // ===== ADD SNACK FORM =====
 let newSnackPrice=2;
@@ -5167,24 +5058,10 @@ function showDream(){
   document.body.appendChild(overlay);
 }
 
-// hook into enterAbebe to check dream btn
-const origEnterAbebe2=typeof enterAbebe==='function'?enterAbebe:null;
-enterAbebe=function(){
-  if(origEnterAbebe2)origEnterAbebe2();
-  checkDreamBtn();
-};
-
 // also check on interval
 setInterval(checkDreamBtn,60000);
 
 // ===== CANDY CATCH GAME =====
-let candyGameData={
-  candyPoints:0,        // 糖果积分
-  totalCoinsEarned:0,   // 游戏总共赚的币
-  playsToday:0,
-  playDate:'',
-  highScore:0
-};
 const GAME_MAX_PLAYS=2;
 const GAME_POINTS_PER_COIN=5;     // 5积分=1币
 const GAME_CATCH_PER_POINT=20;    // 20颗=1积分
@@ -5201,26 +5078,6 @@ const GAME_CATCH_PER_POINT=20;    // 20颗=1积分
   const today=new Date().toDateString();
   if(candyGameData.playDate!==today){candyGameData.playsToday=0;candyGameData.playDate=today;}
 })();
-
-// Hook into saveApp to save game data
-const _origSaveAppGame=saveApp;
-saveApp=function(){
-  _origSaveAppGame();
-  // Also update snackData in localStorage with game data
-  try{
-    const raw=localStorage.getItem('candyJarSnackData');
-    const d=raw?JSON.parse(raw):{};
-    d.candyGameData=candyGameData;
-    localStorage.setItem('candyJarSnackData',JSON.stringify(d));
-    supaUpsert('snack_data',Object.assign({},snackData,{candyGameData}));
-  }catch(e){}
-};
-
-// Hook into getSnackBalance to include game-earned coins
-const _origGetSnackBalance=getSnackBalance;
-getSnackBalance=function(){
-  return _origGetSnackBalance()+(candyGameData.totalCoinsEarned||0);
-};
 
 // Game state
 let gameActive=false;
@@ -5463,18 +5320,7 @@ function endGame(){
   document.getElementById('game-face').style.display='none';
 }
 
-// Refresh on enter
-const _prevEnterAbebeGame=enterAbebe;
-enterAbebe=function(){
-  _prevEnterAbebeGame();
-};
-
 // ===== MEMORY GAME =====
-let memGameData={
-  playsToday:0,
-  playDate:'',
-  highScore:999 // lower is better
-};
 const MEM_MAX_REWARD_PLAYS=2;
 const MEM_PAIRS=8;
 
@@ -5490,18 +5336,6 @@ const MEM_PAIRS=8;
   const today=new Date().toDateString();
   if(memGameData.playDate!==today){memGameData.playsToday=0;memGameData.playDate=today;}
 })();
-
-// Hook saveApp to include memGameData
-const _origSaveAppMem=saveApp;
-saveApp=function(){
-  _origSaveAppMem();
-  try{
-    const raw=localStorage.getItem('candyJarSnackData');
-    const d=raw?JSON.parse(raw):{};
-    d.memGameData=memGameData;
-    localStorage.setItem('candyJarSnackData',JSON.stringify(d));
-  }catch(e){}
-};
 
 let memFlips=0;
 let memMatched=0;
