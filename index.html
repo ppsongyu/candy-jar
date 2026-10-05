@@ -1234,6 +1234,7 @@ function getCurrentMonthCandies(){return savedCandiesByMonth[getSavedCandiesKey(
 function enterApp(){
   document.getElementById('splash').classList.add('hidden');
   setTimeout(()=>document.getElementById('app').classList.add('visible'),400);
+  setTimeout(checkBackupReminder,2500);
   document.getElementById('jar-month-label').textContent=jarYear+'年'+(jarMonth+1)+'月';
   document.getElementById('cal-month-label').textContent=calYear+' 年 '+(calMonth+1)+' 月';
 }
@@ -2362,14 +2363,18 @@ async function supaGet(key){
     setTimeout(()=>ctrl.abort(),6000);
     const r=await fetch(`${SUPABASE_URL}/rest/v1/candy_jar_data?key=eq.${key}&select=value`,{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},signal:ctrl.signal});
     const d=await r.json();
+    if(!r.ok) return undefined;
     return d&&d[0]?d[0].value:null;
-  }catch(e){return null;}
+  }catch(e){return undefined;}
 }
 
 // ===== FULL PERSISTENCE =====
 // Don't save until loadApp has applied the stored data, otherwise an early tap
 // writes the empty defaults over localStorage and the cloud copy.
 let appLoaded=false;
+// False when this phone had nothing saved and the cloud couldn't be reached:
+// uploading then would replace the real cloud copy with empty defaults.
+let appCloudSync=true;
 function saveApp(){
   if(!appLoaded) return;
   const data={
@@ -2384,14 +2389,15 @@ function saveApp(){
     timeCapsules
   };
   try{localStorage.setItem('candyJarData',JSON.stringify(data));}catch(e){}
-  supaUpsert('app_data',data);
+  if(appCloudSync) supaUpsert('app_data',data);
   // Keep the secondary snack/game data in the same save entry instead of wrapping saveApp repeatedly.
   if(typeof snackData!=='undefined'){
     try{
       if(typeof candyGameData!=='undefined') snackData.candyGameData=candyGameData;
       if(typeof memGameData!=='undefined') snackData.memGameData=memGameData;
+      snackData.savedAt=Date.now();
       localStorage.setItem('candyJarSnackData',JSON.stringify(snackData));
-      supaUpsert('snack_data',snackData);
+      if(appCloudSync) supaUpsert('snack_data',snackData);
     }catch(e){}
   }
 }
@@ -2406,6 +2412,7 @@ async function loadApp(){
     const cloud=await supaGet('app_data');
     // Only trust the cloud copy over local when it was saved later. Older cloud
     // copies have no savedAt and may hold the empty defaults, so they never win.
+    if(cloud===undefined&&!data) appCloudSync=false;
     if(cloud&&(!data||(cloud.savedAt||0)>(data.savedAt||0))) data=cloud;
   }catch(e){}
   appLoaded=true;
@@ -2447,8 +2454,36 @@ let pbEditDateKey=null;
 function pbDateKey(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
 function pbEsc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
-function pbSaveData(){try{localStorage.setItem('pigBellyData',JSON.stringify(pigBellyData));}catch(e){}}
+// pbCloudReady stays false until the cloud copy has been checked, so a save made
+// before that can't overwrite a newer cloud copy.
+let pbCloudReady=false;
+function pbSaveData(){
+  const savedAt=Date.now();
+  try{
+    localStorage.setItem('pigBellyData',JSON.stringify(pigBellyData));
+    localStorage.setItem('pigBellySavedAt',String(savedAt));
+  }catch(e){}
+  if(pbCloudReady) supaUpsert('pig_belly',{savedAt,data:pigBellyData});
+}
 function pbLoadData(){try{const r=localStorage.getItem('pigBellyData');if(r)pigBellyData=JSON.parse(r);}catch(e){}}
+async function pbSyncCloud(){
+  const cloud=await supaGet('pig_belly');
+  if(cloud===undefined) return; // offline: keep this session local-only
+  let localSavedAt=0;
+  try{localSavedAt=Number(localStorage.getItem('pigBellySavedAt'))||0;}catch(e){}
+  const hasLocal=Object.keys(pigBellyData).length>0;
+  pbCloudReady=true;
+  if(cloud&&cloud.data&&(!hasLocal||(cloud.savedAt||0)>localSavedAt)){
+    pigBellyData=cloud.data;
+    try{
+      localStorage.setItem('pigBellyData',JSON.stringify(pigBellyData));
+      localStorage.setItem('pigBellySavedAt',String(cloud.savedAt||0));
+    }catch(e){}
+    if(document.getElementById('pigbelly-overlay').classList.contains('show')) pbRender();
+  }else if(hasLocal&&(!cloud||localSavedAt>(cloud.savedAt||0))){
+    pbSaveData();
+  }
+}
 
 function openPigBelly(){
   document.getElementById('pigbelly-overlay').classList.add('show');
@@ -2607,6 +2642,7 @@ function pbDoDelete(){
 }
 
 pbLoadData();
+pbSyncCloud();
 
 // ===== DIARY CHECKINS =====
 let diaryCheckins={}; // key: "2026-6-21" => {reading:bool,journal:bool,herMood:int,himMood:int,period:bool}
@@ -4869,10 +4905,12 @@ function viewSnackStory(id){
 }
 
 (async function loadSnackData(){
+  let localSavedAt=0,hasLocal=false;
   try{
     const raw=localStorage.getItem('candyJarSnackData');
     if(raw){
       const d=JSON.parse(raw);
+      hasLocal=true;localSavedAt=d.savedAt||0;
       if(d.purchaseCount) snackData.purchaseCount=d.purchaseCount;
       if(d.collection) snackData.collection=d.collection;
       if(d.weeklySpent!==undefined) snackData.weeklySpent=d.weeklySpent;
@@ -4886,7 +4924,8 @@ function viewSnackStory(id){
   }catch(e){}
   try{
     const cloud=await supaGet('snack_data');
-    if(cloud){
+    // Same rule as loadApp: older cloud copies never overwrite what's on this phone.
+    if(cloud&&(!hasLocal||(cloud.savedAt||0)>localSavedAt)){
       if(cloud.purchaseCount) snackData.purchaseCount=cloud.purchaseCount;
       if(cloud.collection) snackData.collection=cloud.collection;
       if(cloud.weeklySpent!==undefined) snackData.weeklySpent=cloud.weeklySpent;
@@ -4967,6 +5006,9 @@ function exportData(){
   a.href=url;
   a.download='candy-jar-backup-'+(now.getMonth()+1)+'-'+now.getDate()+'.json';
   a.click();
+  try{localStorage.setItem('candyJarLastBackup',String(Date.now()));}catch(e){}
+  const tip=document.getElementById('backup-reminder');
+  if(tip) tip.remove();
   URL.revokeObjectURL(url);
 }
 
@@ -4977,16 +5019,21 @@ async function importData(event){
   reader.onload=async function(e){
     try{
       const data=JSON.parse(e.target.result);
+      const now=Date.now();
       if(data.appData){
+        data.appData.savedAt=now;
         localStorage.setItem('candyJarData',JSON.stringify(data.appData));
         await supaUpsert('app_data',data.appData);
       }
       if(data.snackData){
+        data.snackData.savedAt=now;
         localStorage.setItem('candyJarSnackData',JSON.stringify(data.snackData));
         await supaUpsert('snack_data',data.snackData);
       }
       if(data.pigBellyData){
         localStorage.setItem('pigBellyData',JSON.stringify(data.pigBellyData));
+        localStorage.setItem('pigBellySavedAt',String(now));
+        await supaUpsert('pig_belly',{savedAt:now,data:data.pigBellyData});
       }
       alert('数据恢复成功！页面将刷新');
       location.reload();
@@ -4996,6 +5043,30 @@ async function importData(event){
   };
   reader.readAsText(file);
   event.target.value='';
+}
+
+// Weekly nudge to export a backup. "晚点再说" snoozes it for a day.
+function checkBackupReminder(){
+  let last=0,snooze=0;
+  try{
+    last=Number(localStorage.getItem('candyJarLastBackup'))||0;
+    snooze=Number(localStorage.getItem('candyJarBackupSnooze'))||0;
+  }catch(e){}
+  const now=Date.now();
+  if(now-last<7*86400000||now<snooze||document.getElementById('backup-reminder')) return;
+  const tip=document.createElement('div');
+  tip.id='backup-reminder';
+  tip.style.cssText='position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 48px);max-width:340px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.12);padding:14px 16px;z-index:9000;font-size:13px;color:var(--text-primary);text-align:center;line-height:1.6';
+  tip.innerHTML='<div>'+(last?'好几天没备份啦':'还没有备份过哦')+'，存一份糖罐子吧 🍬</div>'+
+    '<div style="display:flex;gap:10px;margin-top:10px">'+
+    '<div class="add-milestone-btn" style="flex:1;margin-top:0" onclick="snoozeBackupReminder()">晚点再说</div>'+
+    '<div class="add-milestone-btn" style="flex:1;margin-top:0" onclick="exportData()">现在备份</div></div>';
+  document.body.appendChild(tip);
+}
+function snoozeBackupReminder(){
+  try{localStorage.setItem('candyJarBackupSnooze',String(Date.now()+86400000));}catch(e){}
+  const tip=document.getElementById('backup-reminder');
+  if(tip) tip.remove();
 }
 
 // ===== THEME SYSTEM =====
