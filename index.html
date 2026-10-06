@@ -2375,6 +2375,8 @@ let appLoaded=false;
 // False when this phone had nothing saved and the cloud couldn't be reached:
 // uploading then would replace the real cloud copy with empty defaults.
 let appCloudSync=true;
+// Ids of candies already taken in from claude_inbox (see claudeInboxSync).
+let claudeSeen=[];
 function saveApp(){
   if(!appLoaded) return;
   const data={
@@ -2386,7 +2388,7 @@ function saveApp(){
     abebeChatCount,abebeChatDate,
     todaysChatSlots,todaysChatSlotDate,recentChatHistory,
     abebeSaidGoodnight,abebeSaidGoodmorning,
-    timeCapsules
+    timeCapsules,claudeSeen
   };
   try{localStorage.setItem('candyJarData',JSON.stringify(data));}catch(e){}
   if(appCloudSync) supaUpsert('app_data',data);
@@ -2433,12 +2435,32 @@ async function loadApp(){
   if(data.abebeSaidGoodnight) abebeSaidGoodnight=data.abebeSaidGoodnight;
   if(data.abebeSaidGoodmorning) abebeSaidGoodmorning=data.abebeSaidGoodmorning;
   if(data.timeCapsules) timeCapsules=data.timeCapsules;
+  if(data.claudeSeen) claudeSeen=data.claudeSeen;
   // Restore fortune state for today
   if(data.fortuneDrawn&&data.fortuneDate===new Date().toDateString()) fortuneDrawn=true;
   // Reset daily flags if new day
   const today=new Date().toDateString();
   if(abebeChatDate!==today){abebeChatCount=0;abebeChatDate=today;todaysChatSlots=[];todaysChatSlotDate='';abebeSaidGoodnight=false;abebeSaidGoodmorning=false;}
 }
+
+// 克劳德通过糖罐子连接器放的糖先进 claude_inbox，这里收进罐子。
+async function claudeInboxSync(){
+  if(!appLoaded) return;
+  const inbox=await supaGet('claude_inbox');
+  if(!inbox||!Array.isArray(inbox.items)) return;
+  const seen=new Set(claudeSeen);
+  const fresh=inbox.items.filter(it=>it&&it.id&&it.candy&&!seen.has(it.id));
+  if(!fresh.length) return;
+  fresh.forEach(it=>{
+    if(!savedCandiesByMonth[it.monthKey]) savedCandiesByMonth[it.monthKey]=[];
+    savedCandiesByMonth[it.monthKey].unshift(it.candy);
+    claudeSeen.push(it.id);
+  });
+  claudeSeen=claudeSeen.slice(-200);
+  renderJarCandies();
+  saveApp();
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible') claudeInboxSync();});
 
 // ===== 猪肚记 (PIG BELLY DIARY) =====
 let pigBellyData={};
@@ -3052,6 +3074,7 @@ function checkAnniversarySplash(){
 // ===== INIT =====
 (async function(){
   await loadApp();
+  claudeInboxSync();
   restoreTodayCheckins();
   checkAnniversarySplash();
   renderCalendar();
