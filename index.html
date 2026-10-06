@@ -2457,7 +2457,7 @@ function getTodayFortune(seed){
   return fortunePool[seed%fortunePool.length];
 }
 // 克劳德引用原文常常少个引号、多个空格：先完全一样，再忽略空白标点，最后看包含关系；对上多个就不动。
-function claudeNorm(s){return String(s==null?'':s).replace(/[\s"'“”‘’「」『』《》〈〉.,，。!！?？:：;；、…·—~～\-()（）\[\]【】]/g,'');}
+function claudeNorm(s){return String(s==null?'':s).replace(/[\s\uFFFC\u200B-\u200D\uFEFF"'“”‘’「」『』《》〈〉.,，。!！?？:：;；、…·—~～\-()（）\[\]【】]/g,'');}
 function claudeFind(list,key,want){
   const w=String(want==null?'':want),nw=claudeNorm(w);
   if(!nw) return -1;
