@@ -2507,7 +2507,7 @@ function claudeApply(a){
     case 'book_annotate':{
       const b=claudeBook(d.title);if(!b) return '没找到这本书';
       const ni=claudeFind(b.notes,n=>n.text,d.noteText);
-      if(ni<0) return '没找到这条笔记';
+      if(ni<0) return '没找到这条笔记：《'+b.title+'》「'+String(d.noteText||'').replace(/\s+/g,' ').slice(0,24)+'」';
       const n=b.notes[ni];
       n.annotation=d.annotation;return '写了批注';
     }
@@ -2569,20 +2569,24 @@ function claudeApply(a){
   }
   return '不认识的事情';
 }
+// Bump when claudeApply's matching changes: items that failed with "没找到" under an older version get one more try.
+const CLAUDE_APPLY_VER='2026-10-06e';
 async function claudeInboxSync(){
   if(!appLoaded) return;
   const inbox=await supaGet('claude_inbox');
   if(!inbox||!Array.isArray(inbox.items)) return;
   const seen=new Set(claudeSeen);
-  const fresh=inbox.items.filter(it=>it&&it.id&&!seen.has(it.id));
+  const lastLog={};claudeLog.forEach(l=>{lastLog[l.id]=l;});
+  const retry=it=>{const l=lastLog[it.id];return l&&/^没找到/.test(l.result||'')&&l.ver!==CLAUDE_APPLY_VER;};
+  const fresh=inbox.items.filter(it=>it&&it.id&&(!seen.has(it.id)||retry(it)));
   if(!fresh.length) return;
   fresh.forEach(it=>{
     // Items from the first connector version carry the candy directly.
     const a=it.type?it:{type:'candy_add',data:{monthKey:it.monthKey,candy:it.candy}};
     let result;
     try{result=claudeApply(a);}catch(e){result='出错了';}
-    claudeSeen.push(it.id);
-    claudeLog.push({id:it.id,type:a.type,result,at:Date.now()});
+    if(!seen.has(it.id)) claudeSeen.push(it.id);
+    claudeLog.push({id:it.id,type:a.type,result,at:Date.now(),ver:CLAUDE_APPLY_VER});
   });
   claudeSeen=claudeSeen.slice(-300);
   claudeLog=claudeLog.slice(-50);
