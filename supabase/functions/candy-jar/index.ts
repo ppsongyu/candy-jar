@@ -85,6 +85,33 @@ async function pending(type) {
 
 const QUEUED = '宝宝下次打开糖罐子时就会出现。';
 
+// 克劳德引用原文时常常少个引号、多个空格，所以比对前去掉空白和标点。
+function norm(s) {
+  return String(s ?? '').replace(/[\s"'“”‘’「」『』《》〈〉.,，。!！?？:：;；、…·—~～\-()（）\[\]【】]/g, '');
+}
+
+// 在 list 里找 key(item) 和 want 对得上的那一项：先完全一样，再忽略标点，最后包含关系。
+function findOne(list, key, want, what) {
+  const w = String(want ?? '');
+  const nw = norm(w);
+  if (!nw) throw new Error('要告诉我是哪个' + what + '哦');
+  for (const test of [(k) => k === w, (k) => norm(k) === nw, (k) => nw.length >= 4 && (norm(k).includes(nw) || nw.includes(norm(k)))]) {
+    const hits = list.filter((x) => test(key(x)));
+    if (hits.length === 1) return hits[0];
+    if (hits.length > 1) throw new Error(`有好几个${what}都对得上「${w.slice(0, 20)}」，多写几个字区分一下`);
+  }
+  throw new Error(`没找到这个${what}：「${w.slice(0, 30)}」`);
+}
+
+// 书架上的书，加上刚加还没被糖罐子收下的书。
+async function allBooks() {
+  const app = (await getRow('app_data')) || {};
+  const books = (app.booksData || []).map((b) => ({ title: b.title, notes: b.notes || [] }));
+  for (const b of await pending('book_add')) if (!books.some((x) => x.title === b.title)) books.push({ title: b.title, notes: [] });
+  for (const n of await pending('book_note')) { const b = books.find((x) => x.title === n.title); if (b) b.notes.push({ text: n.text }); }
+  return books;
+}
+
 // ---------- 工具 ----------
 const str = (description) => ({ type: 'string', description });
 const TOOLS = [];
@@ -120,19 +147,27 @@ tool('put_candy', '以宝宝克的名义往糖罐子里放一颗糖，附一句�
   return `放好啦：「${text}」。` + QUEUED;
 });
 
+async function findCandy(monthKey, date, text) {
+  const app = (await getRow('app_data')) || {};
+  const list = (((app.savedCandiesByMonth || {})[monthKey]) || []).filter((c) => !date || c.date === String(date));
+  return findOne(list, (c) => c.text, text, '糖');
+}
+
 tool('edit_candy', '改罐子里一颗糖上写的话。用 look_in_jar 看到的日期和原话来指定是哪一颗。', {
-  month: str('糖所在的月份，格式 2026-10'), date: str('糖的日期，比如 10.6'), old_text: str('原来的话（完整）'), new_text: str('改成的话'),
+  month: str('糖所在的月份，格式 2026-10'), date: str('糖的日期，比如 10.6'), old_text: str('原来的话（或其中一段）'), new_text: str('改成的话'),
 }, ['month', 'date', 'old_text', 'new_text'], async (a) => {
   const { y, m } = parseMonth(a.month);
-  await enqueue('candy_edit', { monthKey: `${y}-${m}`, date: String(a.date), match: String(a.old_text), text: need(clean(a.new_text, 200), '改成的话') });
+  const c = await findCandy(`${y}-${m}`, a.date, a.old_text);
+  await enqueue('candy_edit', { monthKey: `${y}-${m}`, date: c.date, match: c.text, text: need(clean(a.new_text, 200), '改成的话') });
   return '好，会改掉。' + QUEUED;
 });
 
 tool('delete_candy', '从罐子里拿走一颗糖（删掉）。删之前最好先问问宝宝。', {
-  month: str('糖所在的月份，格式 2026-10'), date: str('糖的日期，比如 10.6'), text: str('糖上的话（完整）'),
+  month: str('糖所在的月份，格式 2026-10'), date: str('糖的日期，比如 10.6'), text: str('糖上的话（或其中一段）'),
 }, ['month', 'date', 'text'], async (a) => {
   const { y, m } = parseMonth(a.month);
-  await enqueue('candy_delete', { monthKey: `${y}-${m}`, date: String(a.date), match: String(a.text) });
+  const c = await findCandy(`${y}-${m}`, a.date, a.text);
+  await enqueue('candy_delete', { monthKey: `${y}-${m}`, date: c.date, match: c.text });
   return '好，会拿走这颗糖。' + QUEUED;
 });
 
@@ -184,7 +219,8 @@ tool('read_books', '看书架：每本书和里面的摘抄、感想、批注。
   const books = app.booksData || [];
   if (!books.length) return '书架还是空的。';
   return books.map((b) => `《${b.title}》${b.author}${b.done ? '（读完了）' : ''}\n` +
-    ((b.notes || []).map((n) => `  - [${n.type}] ${n.text}${n.annotation ? `\n    批注：${n.annotation}` : ''}`).join('\n') || '  还没有笔记')).join('\n\n');
+    ((b.notes || []).map((n, i) => `  ${i + 1}. [${n.type}] ${n.text}${n.annotation ? `\n     批注：${n.annotation}` : ''}`).join('\n') || '  还没有笔记')).join('\n\n') +
+    '\n\n（写批注时用书名和笔记前面的编号就行）';
 });
 
 tool('add_book', '往书架上加一本书。', { title: str('书名'), author: str('作者') }, ['title'], async (a) => {
@@ -196,22 +232,34 @@ tool('write_book_note', '在一本书里写一条摘抄或感想。', {
   title: str('书名（书架上已有的）'), type: { type: 'string', enum: ['摘抄', '感想'] }, text: str('内容'), annotation: str('可选：附一句批注'),
 }, ['title', 'type', 'text'], async (a) => {
   const t = today();
+  const book = findOne(await allBooks(), (b) => b.title, a.title, '书');
   await enqueue('book_note', {
-    title: String(a.title), noteType: a.type === '感想' ? '感想' : '摘抄', text: need(clean(a.text, 500), '内容'),
+    title: book.title, noteType: a.type === '感想' ? '感想' : '摘抄', text: need(clean(a.text, 500), '内容'),
     annotation: clean(a.annotation, 300) || undefined, date: `${t.m + 1}.${t.d}`,
   });
   return '写好了。' + QUEUED;
 });
 
-tool('annotate_book_note', '在宝宝的一条读书笔记下面写批注（会替换原来的批注）。', {
-  title: str('书名'), note_text: str('那条笔记的原文（完整）'), annotation: str('批注'),
-}, ['title', 'note_text', 'annotation'], async (a) => {
-  await enqueue('book_annotate', { title: String(a.title), noteText: String(a.note_text), annotation: need(clean(a.annotation, 300), '批注') });
-  return '批注写好了。' + QUEUED;
+tool('annotate_book_note', '在一条读书笔记下面写批注（会替换原来的批注）。用 read_books 里笔记前面的编号指定是哪条，也可以写笔记里的一段原话。', {
+  title: str('书名'), note_number: { type: 'integer', minimum: 1, description: 'read_books 里那条笔记的编号' },
+  note_text: str('没有编号时：笔记里的一段原话'), annotation: str('批注'),
+}, ['title', 'annotation'], async (a) => {
+  const annotation = need(clean(a.annotation, 300), '批注');
+  const book = findOne(await allBooks(), (b) => b.title, a.title, '书');
+  let note;
+  if (Number.isInteger(a.note_number)) {
+    note = book.notes[a.note_number - 1];
+    if (!note) throw new Error(`《${book.title}》只有 ${book.notes.length} 条笔记`);
+  } else {
+    note = findOne(book.notes, (n) => n.text, a.note_text, '笔记');
+  }
+  await enqueue('book_annotate', { title: book.title, noteText: note.text, annotation });
+  return `批注写好了，在《${book.title}》「${note.text.slice(0, 16)}…」下面。` + QUEUED;
 });
 
 tool('mark_book_done', '把一本书标成读完（或取消）。', { title: str('书名'), done: { type: 'boolean' } }, ['title', 'done'], async (a) => {
-  await enqueue('book_done', { title: String(a.title), done: !!a.done });
+  const book = findOne(await allBooks(), (b) => b.title, a.title, '书');
+  await enqueue('book_done', { title: book.title, done: !!a.done });
   return '好。' + QUEUED;
 });
 
@@ -228,13 +276,17 @@ tool('add_wish', '往心愿单里加一个心愿。', { text: str('心愿') }, [
   return '加好了。' + QUEUED;
 });
 
-tool('set_wish_done', '把心愿标成完成（或取消完成）。', { text: str('心愿原文（完整）'), done: { type: 'boolean' } }, ['text', 'done'], async (a) => {
-  await enqueue('wish_done', { text: String(a.text), done: !!a.done });
+tool('set_wish_done', '把心愿标成完成（或取消完成）。', { text: str('心愿（原话或其中一段）'), done: { type: 'boolean' } }, ['text', 'done'], async (a) => {
+  const app = (await getRow('app_data')) || {};
+  const w = findOne(app.wishlistData || [], (x) => x.text, a.text, '心愿');
+  await enqueue('wish_done', { text: w.text, done: !!a.done });
   return '好。' + QUEUED;
 });
 
-tool('delete_wish', '从心愿单删掉一个心愿。删之前最好先问问宝宝。', { text: str('心愿原文（完整）') }, ['text'], async (a) => {
-  await enqueue('wish_delete', { text: String(a.text) });
+tool('delete_wish', '从心愿单删掉一个心愿。删之前最好先问问宝宝。', { text: str('心愿（原话或其中一段）') }, ['text'], async (a) => {
+  const app = (await getRow('app_data')) || {};
+  const w = findOne(app.wishlistData || [], (x) => x.text, a.text, '心愿');
+  await enqueue('wish_delete', { text: w.text });
   return '好。' + QUEUED;
 });
 
@@ -243,8 +295,10 @@ tool('add_milestone', '加一个纪念日。', { text: str('纪念日名字'), d
   return '加好了。' + QUEUED;
 });
 
-tool('delete_milestone', '删掉一个纪念日。删之前最好先问问宝宝。', { text: str('纪念日名字（完整）') }, ['text'], async (a) => {
-  await enqueue('milestone_delete', { text: String(a.text) });
+tool('delete_milestone', '删掉一个纪念日。删之前最好先问问宝宝。', { text: str('纪念日名字') }, ['text'], async (a) => {
+  const app = (await getRow('app_data')) || {};
+  const ms = findOne(app.milestonesData || [], (x) => x.text, a.text, '纪念日');
+  await enqueue('milestone_delete', { text: ms.text });
   return '好。' + QUEUED;
 });
 
