@@ -2456,10 +2456,26 @@ function getTodayFortune(seed){
   if(own) return {l:'兔兔心',m:own,s:'-- 宝宝克'};
   return fortunePool[seed%fortunePool.length];
 }
+// 克劳德引用原文常常少个引号、多个空格：先完全一样，再忽略空白标点，最后看包含关系；对上多个就不动。
+function claudeNorm(s){return String(s==null?'':s).replace(/[\s"'“”‘’「」『』《》〈〉.,，。!！?？:：;；、…·—~～\-()（）\[\]【】]/g,'');}
+function claudeFind(list,key,want){
+  const w=String(want==null?'':want),nw=claudeNorm(w);
+  if(!nw) return -1;
+  const tests=[k=>k===w,k=>claudeNorm(k)===nw,k=>nw.length>=4&&(claudeNorm(k).includes(nw)||nw.includes(claudeNorm(k)))];
+  for(const t of tests){
+    const hits=[];list.forEach((x,i)=>{if(t(key(x)))hits.push(i);});
+    if(hits.length===1) return hits[0];
+    if(hits.length>1) return -1;
+  }
+  return -1;
+}
 function claudeFindCandy(a){
   const list=savedCandiesByMonth[a.monthKey]||[];
-  return list.findIndex(c=>c.date===a.date&&c.text===a.match);
+  const idx=list.map((c,i)=>i).filter(i=>!a.date||list[i].date===a.date);
+  const j=claudeFind(idx.map(i=>list[i]),c=>c.text,a.match);
+  return j<0?-1:idx[j];
 }
+function claudeBook(title){const i=claudeFind(booksData,b=>b.title,title);return i<0?null:booksData[i];}
 function claudeApply(a){
   const d=a.data||{};
   switch(a.type){
@@ -2484,31 +2500,34 @@ function claudeApply(a){
       booksData.push({title:d.title,author:d.author||'',cover:(booksData.length%4)+1,notes:[]});return '加了一本书';
     }
     case 'book_note':{
-      const b=booksData.find(b=>b.title===d.title);if(!b) return '没找到这本书';
+      const b=claudeBook(d.title);if(!b) return '没找到这本书';
       const n={type:d.noteType,text:d.text,date:d.date};if(d.annotation) n.annotation=d.annotation;
       b.notes.push(n);return '写了一条笔记';
     }
     case 'book_annotate':{
-      const b=booksData.find(b=>b.title===d.title);const n=b&&b.notes.find(n=>n.text===d.noteText);
-      if(!n) return '没找到这条笔记';
+      const b=claudeBook(d.title);if(!b) return '没找到这本书';
+      const ni=claudeFind(b.notes,n=>n.text,d.noteText);
+      if(ni<0) return '没找到这条笔记';
+      const n=b.notes[ni];
       n.annotation=d.annotation;return '写了批注';
     }
     case 'book_done':{
-      const b=booksData.find(b=>b.title===d.title);if(!b) return '没找到这本书';
+      const b=claudeBook(d.title);if(!b) return '没找到这本书';
       b.done=!!d.done;return '标了读完';
     }
     case 'wish_add':wishlistData.push({text:d.text,done:false});return '加了心愿';
     case 'wish_done':{
-      const w=wishlistData.find(w=>w.text===d.text);if(!w) return '没找到这个心愿';
+      const wi=claudeFind(wishlistData,w=>w.text,d.text);if(wi<0) return '没找到这个心愿';
+      const w=wishlistData[wi];
       w.done=!!d.done;return '更新了心愿';
     }
     case 'wish_delete':{
-      const i=wishlistData.findIndex(w=>w.text===d.text);if(i<0) return '没找到这个心愿';
+      const i=claudeFind(wishlistData,w=>w.text,d.text);if(i<0) return '没找到这个心愿';
       wishlistData.splice(i,1);return '删了心愿';
     }
     case 'milestone_add':milestonesData.push({text:d.text,date:d.date||'--',color:milestonesData.length%2?'lavender':'pink'});return '加了纪念日';
     case 'milestone_delete':{
-      const i=milestonesData.findIndex(m=>m.text===d.text);if(i<0) return '没找到这个纪念日';
+      const i=claudeFind(milestonesData,m=>m.text,d.text);if(i<0) return '没找到这个纪念日';
       milestonesData.splice(i,1);return '删了纪念日';
     }
     case 'capsule_add':timeCapsules.push({date:d.date,label:d.label||'',text:d.text});return '埋了时间胶囊';
