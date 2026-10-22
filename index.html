@@ -5315,15 +5315,17 @@ function setTheme(theme){
   mc.content=themeColors[theme]||'#FFF8FA';
 }
 (function loadTheme(){
-  const t=localStorage.getItem('candyJarTheme');
-  if(t){
-    document.body.classList.add(t);
-    setTimeout(()=>{
-      document.querySelectorAll('.theme-dot').forEach(d=>{
-        d.classList.toggle('active',d.dataset.theme===t);
-      });
-    },100);
-  }
+  const t=localStorage.getItem('candyJarTheme')||'';
+  if(t)document.body.classList.add(t);
+  const themeColors={'theme-claude':'#0D0D14','theme-water':'#E4EDE8','theme-cream':'#CFD9E6','theme-grape':'#B6A9C8','':"#FFF8FA"};
+  let mc=document.querySelector('meta[name="theme-color"]');
+  if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
+  mc.content=themeColors[t]||'#FFF8FA';
+  setTimeout(()=>{
+    document.querySelectorAll('.theme-dot').forEach(d=>{
+      d.classList.toggle('active',d.dataset.theme===t);
+    });
+  },100);
 })();
 
 // ===== DREAM SYSTEM =====
