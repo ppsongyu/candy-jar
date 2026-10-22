@@ -467,6 +467,31 @@ body.theme-grape .mood-section,body.theme-grape .reading-section,body.theme-grap
 body.theme-grape .shop-item-img,body.theme-grape .snack-book-thumb{background:linear-gradient(135deg,#C8BDD8,#B6A9C8)!important}
 body.theme-grape .book-cover{background:linear-gradient(135deg,#EFE4D4,#E8DACB)!important;color:#9078AC!important}
 body.theme-grape .chat-bubble,body.theme-grape .abebe-speech,body.theme-grape .story-bubble,body.theme-grape .repeat-line-bubble{color:var(--text-primary)!important}
+body.theme-claude{
+  --bg-base:#0D0D14;--bg-card:#16161F;
+  --pink-50:#1A1A26;--pink-100:#1E1E2C;--pink-200:#252535;
+  --pink-300:#E8873A;--pink-400:#E8873A;--pink-500:#C96E25;
+  --lavender-50:#16161F;--lavender-100:#1A1A28;
+  --text-primary:#F0EDE8;--text-secondary:#C8B89A;--text-muted:#7A6E60;
+  --border-light:#2A2A3A;--shadow-pink:rgba(232,135,58,0.12);
+  --overlay-bg:rgba(13,13,20,0.97);
+}
+body.theme-claude .splash{background:linear-gradient(160deg,#0D0D14,#16161F 40%,#1E1826)!important}
+body.theme-claude .abebe-speech,body.theme-claude .chat-bubble{background:#1E1E2C}
+body.theme-claude .abebe-speech::after{background:#1E1E2C}
+body.theme-claude .abebe-status-track{background:linear-gradient(90deg,#1E1E2C,#E8873A,#C96E25,#E8873A,#1E1E2C)}
+body.theme-claude .abebe-page-bg{background:linear-gradient(180deg,#0D0D14 0%,#16161F 50%,#0D0D14 100%)}
+body.theme-claude .mood-section,body.theme-claude .reading-section,body.theme-claude .milestone{background:linear-gradient(135deg,#16161F,#1E1E2C)!important}
+body.theme-claude .shop-item-img,body.theme-claude .snack-book-thumb{background:linear-gradient(135deg,#1E1E2C,#252535)!important}
+body.theme-claude .book-cover{background:linear-gradient(135deg,#252535,#1E1E2C)!important;color:#E8873A!important}
+body.theme-claude .chat-bubble,body.theme-claude .abebe-speech,body.theme-claude .story-bubble,body.theme-claude .repeat-line-bubble{color:var(--text-primary)!important}
+body.theme-claude .step-btn{background:var(--pink-400)!important}
+body.theme-claude .step-btn:active{background:var(--pink-500)!important}
+body.theme-claude .cal-day.today{background:#E8873A!important}
+body.theme-claude .nav-item.active .nav-label{color:#E8873A!important}
+body.theme-claude .nav-item.active .nav-dot{background:#E8873A!important}
+body.theme-claude .toggle-switch.on{background:#E8873A!important}
+body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 
 /* Theme picker */
 .theme-picker{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:8px 0}
@@ -1024,6 +1049,12 @@ body.theme-grape .chat-bubble,body.theme-grape .abebe-speech,body.theme-grape .s
                 <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#B6A9C8"></div><div class="theme-dot-half" style="background:#EFE4D4"></div></div>
               </div>
               <div class="theme-dot-label">葡萄糖</div>
+            </div>
+            <div>
+              <div class="theme-dot" onclick="setTheme('theme-claude')" data-theme="theme-claude">
+                <div class="theme-dot-inner"><div class="theme-dot-half" style="background:#111118"></div><div class="theme-dot-half" style="background:#E8873A"></div></div>
+              </div>
+              <div class="theme-dot-label">克劳德糖</div>
             </div>
           </div>
           <div class="settings-night-row">
@@ -5269,7 +5300,7 @@ function snoozeBackupReminder(){
 
 // ===== THEME SYSTEM =====
 function setTheme(theme){
-  const themes=['theme-water','theme-cream','theme-grape'];
+  const themes=['theme-water','theme-cream','theme-grape','theme-claude'];
   themes.forEach(t=>document.body.classList.remove(t));
   if(theme)document.body.classList.add(theme);
   localStorage.setItem('candyJarTheme',theme);
