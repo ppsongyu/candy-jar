@@ -6626,65 +6626,54 @@ loadCoupleName();
   const msg=document.getElementById('clabMsg');
   const sub=document.getElementById('clabSub');
 
-  // 各页面可藏身的缝隙，side: 'left'|'right'|'center'
-  const SPOTS=[
-    {page:'page-sweets', after:'.avatars', side:'left'},
-    {page:'page-sweets', after:'.avatars', side:'right'},
-    {page:'page-diary', after:'.card', side:'left'},
-    {page:'page-diary', after:'.card', side:'right'},
-    {page:'page-diary', after:'.period-toggle', side:'left'},
-    {page:'page-diary', after:'.period-toggle', side:'right'},
-    {page:'page-books', after:'.book-list', side:'left'},
-    {page:'page-books', after:'.book-list', side:'right'},
-    {page:'page-us', after:'.us-section', side:'left'},
-    {page:'page-us', after:'.us-section', side:'right'},
-  ];
+  // 动态扫描所有页面（除阿贝贝）里的可藏身元素
+  var PAGE_IDS=['page-sweets','page-diary','page-books','page-us'];
+  // 每个页面里认为是"板块/卡片"的selector
+  var CARD_SELECTORS=['.card','.jar-area','.avatars','.book-item','.book-list','.us-section','.period-toggle','.fortune-card','.milestone-item','.wish-item','.snack-item','.capsule-item'];
+
+  function gatherSpots(){
+    var spots=[];
+    PAGE_IDS.forEach(function(pid){
+      var pg=document.getElementById(pid);
+      if(!pg)return;
+      CARD_SELECTORS.forEach(function(sel){
+        pg.querySelectorAll(sel).forEach(function(el){
+          // 每个元素贡献左右两个藏身点
+          spots.push({el:el,side:'left'});
+          spots.push({el:el,side:'right'});
+        });
+      });
+    });
+    return spots;
+  }
 
   function pickSpot(){
-    var valid=SPOTS.filter(function(s){
-      var pg=document.getElementById(s.page);
-      if(!pg)return false;
-      var el=pg.querySelector(s.after);
-      return !!el;
-    });
-    if(!valid.length)return null;
-    return valid[Math.floor(Math.random()*valid.length)];
+    var spots=gatherSpots();
+    if(!spots.length)return null;
+    return spots[Math.floor(Math.random()*spots.length)];
   }
 
   function placeAt(spot){
-    if(!spot)return;
-    var pg=document.getElementById(spot.page);
-    if(!pg)return;
-    var el=pg.querySelector(spot.after);
-    if(!el)return;
+    if(!spot||!spot.el)return;
     closeBubble();
     crab.classList.remove('visible');
-    // 偏移设置
-    var side=spot.side||'center';
+    var side=spot.side||'left';
     if(side==='left'){
       anchor.style.justifyContent='flex-start';
       anchor.style.paddingLeft='24px';
       anchor.style.paddingRight='0';
-      // 从左边爬进来
       crab.style.transition='none';
       crab.style.transform='translateX(-40px) scale(.7)';
       crab.style.opacity='0';
-    }else if(side==='right'){
+    }else{
       anchor.style.justifyContent='flex-end';
       anchor.style.paddingRight='24px';
       anchor.style.paddingLeft='0';
       crab.style.transition='none';
       crab.style.transform='translateX(40px) scale(.7)';
       crab.style.opacity='0';
-    }else{
-      anchor.style.justifyContent='center';
-      anchor.style.paddingLeft='0';
-      anchor.style.paddingRight='0';
-      crab.style.transition='none';
-      crab.style.transform='scale(.7)';
-      crab.style.opacity='0';
     }
-    el.after(anchor);
+    spot.el.after(anchor);
     setTimeout(function(){
       crab.style.transition='transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s';
       crab.style.transform='translateX(0) scale(1)';
