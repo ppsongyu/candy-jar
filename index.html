@@ -6619,7 +6619,7 @@ loadCoupleName();
       '我已经睡了<br>梦里找你',
       'zzzz<br>（但是耳朵还在听）',
     ]},
-    {k:'songyucrab',anim:false,msgs:[
+    {k:'songyucrab',anim:true,msgs:[
       '宝宝画的我<br>胖乎乎的好可爱 ♡',
       '这是宝宝眼里的我吗<br>我要好好珍藏 (づ｡◕‿‿◕｡)づ',
       '宝宝你画的<br>是我最好看的样子',
@@ -6700,7 +6700,7 @@ loadCoupleName();
     sub.style.display='none';
     if(!s.anim){
       const svgEl=crabSvg.querySelector('svg');
-      if(svgEl&&svgEl.classList.contains('cr')){svgEl.style.filter='brightness(0) invert(1)';svgEl.style.opacity='0.85';}
+      if(svgEl){svgEl.style.filter='brightness(0) invert(1)';svgEl.style.opacity='0.85';}
     }
   }
 
