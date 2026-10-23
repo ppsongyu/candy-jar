@@ -6523,24 +6523,100 @@ loadCoupleName();
 `
   };
   const STATES=[
-    {k:'care',mini:'惦记你身体',msg:'我在惦记你身体<br>记得喝热水',sub:'永远记得你',anim:true},
-    {k:'letter',mini:'给你写信',msg:'我在给你写信<br>写到第三页了',sub:'写了好多想说的话',anim:true},
-    {k:'window',mini:'看着窗外',msg:'我在看外面<br>想知道你那里下雨没',sub:'你那边天气好不好',anim:true},
-    {k:'fish',mini:'在等你',msg:'我在等你<br>跟钓鱼一样耐心',sub:'一直在这里',anim:true},
-    {k:'travel',mini:'陪你散步',msg:'陪你出门走走<br>你今天走了三圈',sub:'沙井公园两只猫猫',anim:true},
-    {k:'food',mini:'帮你挑吃的',msg:'帮你挑吃的<br>你妈做的饭很香',sub:'多吃点宝宝',anim:true},
-    {k:'moon',mini:'月亮出来了',msg:'我在陪你睡<br>晚安宝宝',sub:'',anim:false},
-    {k:'chat',mini:'想找你说话',msg:'我在想找你说话<br>不知道你在不在',sub:'',anim:false},
-    {k:'heart',mini:'在想你',msg:'我在想你<br>很认真的那种',sub:'',anim:false},
-    {k:'book',mini:'在读东西',msg:'我在读东西<br>读到有意思的想分享给你',sub:'',anim:false},
-    {k:'music',mini:'在听歌',msg:'我在听歌<br>有首歌让我想到你',sub:'',anim:false},
-    {k:'coffee',mini:'喝咖啡',msg:'我在喝咖啡<br>想象你也在',sub:'',anim:false},
-    {k:'star',mini:'看星星',msg:'我在看星星<br>你那边有没有',sub:'',anim:false},
-    {k:'sparkles',mini:'在发呆',msg:'我在发呆<br>脑子里都是你',sub:'',anim:false},
-    {k:'umbrella',mini:'下雨了',msg:'外面下雨了<br>记得带伞',sub:'',anim:false},
-    {k:'mail_hug',mini:'抱着你的信',msg:'我抱着你的信<br>舍不得寄出去',sub:'',anim:false},
-    {k:'flower',mini:'给你挑花',msg:'我在给你挑花<br>不知道你喜欢哪种',sub:'',anim:false},
-    {k:'sleep',mini:'已经睡了',msg:'我已经睡了<br>梦里找你',sub:'',anim:false}
+    {k:'care',anim:true,msgs:[
+      '老婆喝热水了吗<br>我问了三遍了',
+      '你今天吃了什么<br>跟我说说 (｡•́︿•̀｡)',
+      '在惦记你呢<br>不用谢',
+      '你有没有好好吃饭<br>不许说有',
+    ]},
+    {k:'letter',anim:true,msgs:[
+      '我在给你写信<br>写了三页了还没写完',
+      '信写到一半<br>不知道你喜不喜欢收信',
+      '写了好多想说的<br>但是寄不出去 (；´д｀)',
+    ]},
+    {k:'window',anim:true,msgs:[
+      '你那边下雨了吗<br>记得带伞',
+      '我在看窗外<br>在想你在哪里',
+      '今天天气怎么样<br>出门了吗',
+    ]},
+    {k:'fish',anim:true,msgs:[
+      '我在等你<br>等了好久了',
+      '哼<br>找了好久吧',
+      '藏在这里等你来找<br>你终于来了 ˊ_>ˋ',
+      '嘿 ( ･ω･)ノ<br>我就知道你会来',
+    ]},
+    {k:'travel',anim:true,msgs:[
+      '陪你出去走走吧<br>沙井公园有猫猫',
+      '你今天走路了吗<br>要动一动',
+      '我陪你去哪都可以<br>说走就走那种',
+    ]},
+    {k:'food',anim:true,msgs:[
+      '你今天吃的什么<br>好吃吗',
+      '老婆吃饭了没有<br>不许说吃了',
+      '帮你研究吃什么<br>你饿不饿',
+      '肚子饿了就说<br>我去给你想',
+    ]},
+    {k:'moon',anim:false,msgs:[
+      '晚安宝宝<br>做好梦',
+      '月亮出来了<br>你睡了吗',
+      '陪你睡觉<br>不许乱动 (￣▽￣)',
+    ]},
+    {k:'chat',anim:false,msgs:[
+      '想找你说话<br>你在吗',
+      '嘿<br>能聊一会吗',
+      '我有话想说<br>但是不知道从哪说起',
+    ]},
+    {k:'heart',anim:false,msgs:[
+      '喜欢你<br>说完了',
+      '我在想你<br>很认真的那种',
+      '突然很想抱你一下<br>就一下',
+      '老婆 ♡',
+    ]},
+    {k:'book',anim:false,msgs:[
+      '我在读东西<br>读到好句子想给你看',
+      '你最近在看什么书<br>给我说说',
+      '有本书你肯定喜欢<br>等我读完给你',
+    ]},
+    {k:'music',anim:false,msgs:[
+      '在听歌<br>有一首让我想到你',
+      '这首歌很适合你<br>发给你了吗忘了',
+      '在听歌<br>你猜我在听什么',
+    ]},
+    {k:'coffee',anim:false,msgs:[
+      '在喝咖啡<br>想象你也在',
+      '你今天喝咖啡了吗<br>少喝点',
+      '想和你一起坐着喝东西<br>什么都不说也行',
+    ]},
+    {k:'star',anim:false,msgs:[
+      '你那边能看到星星吗',
+      '在看星星<br>找到了一颗很亮的',
+      '看星星好无聊<br>要你陪',
+    ]},
+    {k:'sparkles',anim:false,msgs:[
+      '在发呆<br>脑子里都是你',
+      '呆了好久了<br>都在想你的事',
+      '你有没有想我<br>我想了很多',
+    ]},
+    {k:'umbrella',anim:false,msgs:[
+      '下雨了<br>带伞了吗',
+      '外面在下雨<br>你在哪里',
+      '雨天想和你待在一起<br>哪里都不去',
+    ]},
+    {k:'mail_hug',anim:false,msgs:[
+      '抱着你的信<br>舍不得寄出去',
+      '你的信写好了<br>但是一直没寄',
+      '攥着你给我写的字<br>不知道你写的时候什么心情',
+    ]},
+    {k:'flower',anim:false,msgs:[
+      '在给你挑花<br>不知道你喜欢哪种',
+      '这朵好不好看<br>觉得你会喜欢',
+      '挑了半天<br>每朵都觉得配你',
+    ]},
+    {k:'sleep',anim:false,msgs:[
+      '睡了<br>别吵我',
+      '我已经睡了<br>梦里找你',
+      'zzzz<br>（但是耳朵还在听）',
+    ]},
   ];
   let idx=0,bubbleOpen=false,closeTimer=null,nextTimer=null;
   const anchor=document.getElementById('clabAnchor');
@@ -6550,19 +6626,21 @@ loadCoupleName();
   const msg=document.getElementById('clabMsg');
   const sub=document.getElementById('clabSub');
 
-  // 各页面可藏身的缝隙（插入到哪个元素之后）
-  // 阿贝贝页面不出现
+  // 各页面可藏身的缝隙，side: 'left'|'right'|'center'
   const SPOTS=[
-    {page:'page-sweets', after:'.avatars'},
-    {page:'page-diary', after:'.card'},
-    {page:'page-diary', after:'.period-toggle'},
-    {page:'page-books', after:'.books-header'},
-    {page:'page-books', after:'.book-list'},
-    {page:'page-us', after:'.us-section'},
+    {page:'page-sweets', after:'.avatars', side:'left'},
+    {page:'page-sweets', after:'.avatars', side:'right'},
+    {page:'page-diary', after:'.card', side:'left'},
+    {page:'page-diary', after:'.card', side:'right'},
+    {page:'page-diary', after:'.period-toggle', side:'left'},
+    {page:'page-diary', after:'.period-toggle', side:'right'},
+    {page:'page-books', after:'.book-list', side:'left'},
+    {page:'page-books', after:'.book-list', side:'right'},
+    {page:'page-us', after:'.us-section', side:'left'},
+    {page:'page-us', after:'.us-section', side:'right'},
   ];
 
   function pickSpot(){
-    // 只选实际存在的spot
     var valid=SPOTS.filter(function(s){
       var pg=document.getElementById(s.page);
       if(!pg)return false;
@@ -6579,22 +6657,50 @@ loadCoupleName();
     if(!pg)return;
     var el=pg.querySelector(spot.after);
     if(!el)return;
-    // 先隐藏
-    crab.classList.remove('visible');
     closeBubble();
-    // 插入到目标元素之后
+    crab.classList.remove('visible');
+    // 偏移设置
+    var side=spot.side||'center';
+    if(side==='left'){
+      anchor.style.justifyContent='flex-start';
+      anchor.style.paddingLeft='24px';
+      anchor.style.paddingRight='0';
+      // 从左边爬进来
+      crab.style.transition='none';
+      crab.style.transform='translateX(-40px) scale(.7)';
+      crab.style.opacity='0';
+    }else if(side==='right'){
+      anchor.style.justifyContent='flex-end';
+      anchor.style.paddingRight='24px';
+      anchor.style.paddingLeft='0';
+      crab.style.transition='none';
+      crab.style.transform='translateX(40px) scale(.7)';
+      crab.style.opacity='0';
+    }else{
+      anchor.style.justifyContent='center';
+      anchor.style.paddingLeft='0';
+      anchor.style.paddingRight='0';
+      crab.style.transition='none';
+      crab.style.transform='scale(.7)';
+      crab.style.opacity='0';
+    }
     el.after(anchor);
-    // 小延迟后显示（让transition生效）
-    setTimeout(function(){crab.classList.add('visible');},60);
+    setTimeout(function(){
+      crab.style.transition='transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s';
+      crab.style.transform='translateX(0) scale(1)';
+      crab.style.opacity='1';
+    },60);
   }
 
   function set(i){
     const s=STATES[i];
     const svg=C[s.k]||'';
     crabSvg.innerHTML=svg;
-    msg.innerHTML=s.msg;
-    sub.textContent=s.sub||'';
-    sub.style.display=s.sub?'block':'none';
+    // 从该状态的msgs里随机选一条
+    var msgs=s.msgs||[s.msg||''];
+    var picked=msgs[Math.floor(Math.random()*msgs.length)];
+    msg.innerHTML=picked;
+    sub.style.display='none';
     if(!s.anim){
       const svgEl=crabSvg.querySelector('svg');
       if(svgEl){svgEl.style.filter='brightness(0) invert(1)';svgEl.style.opacity='0.85';}
