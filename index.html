@@ -772,18 +772,17 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 
 /* ── 克劳德捉迷藏螃蟹 ── */
 .clab-anchor{
-  display:block;
-  height:0;overflow:visible;position:relative;z-index:50;
-  pointer-events:none;
+  display:flex;justify-content:center;align-items:center;
+  height:0;max-height:0;overflow:visible;position:relative;z-index:50;
+  pointer-events:none;margin:0;padding:0;
 }
 .clab-crab{
-  position:absolute;
-  top:-32px;
   width:64px;height:64px;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;pointer-events:auto;
   transition:transform .18s cubic-bezier(.34,1.56,.64,1),opacity .3s;
   opacity:0;transform:scale(.7);
+  flex-shrink:0;
 }
 .clab-crab.visible{opacity:1;transform:scale(1)}
 .clab-crab:active{transform:scale(.88)}
@@ -6668,14 +6667,16 @@ loadCoupleName();
     crab.classList.remove('visible');
     var side=spot.side||'left';
     if(side==='left'){
-      crab.style.left='24px';
-      crab.style.right='auto';
+      anchor.style.justifyContent='flex-start';
+      anchor.style.paddingLeft='24px';
+      anchor.style.paddingRight='0';
       crab.style.transition='none';
       crab.style.transform='translateX(-40px) scale(.7)';
       crab.style.opacity='0';
     }else{
-      crab.style.right='24px';
-      crab.style.left='auto';
+      anchor.style.justifyContent='flex-end';
+      anchor.style.paddingRight='24px';
+      anchor.style.paddingLeft='0';
       crab.style.transition='none';
       crab.style.transform='translateX(40px) scale(.7)';
       crab.style.opacity='0';
