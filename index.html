@@ -6658,6 +6658,16 @@ loadCoupleName();
   // 每个页面里认为是"板块/卡片"的selector
   var CARD_SELECTORS=['.card','.jar-area','.avatars','.book-item','.book-list','.us-section','.period-toggle','.fortune-card','.milestone-item','.wish-item','.snack-item','.capsule-item'];
 
+  // 元素到所在页面之间有没有被折叠/隐藏的祖先（页面本身隐藏不算）
+  function foldedInPage(el){
+    var e=el;
+    while(e&&!(e.classList&&e.classList.contains('page'))){
+      if(getComputedStyle(e).display==='none')return true;
+      e=e.parentElement;
+    }
+    return false;
+  }
+
   function gatherSpots(){
     var spots=[];
     PAGE_IDS.forEach(function(pid){
@@ -6665,6 +6675,7 @@ loadCoupleName();
       if(!pg)return;
       CARD_SELECTORS.forEach(function(sel){
         pg.querySelectorAll(sel).forEach(function(el){
+          if(foldedInPage(el))return;
           // 每个元素贡献左右两个藏身点
           spots.push({el:el,side:'left'});
           spots.push({el:el,side:'right'});
@@ -6700,7 +6711,7 @@ loadCoupleName();
   }
   setInterval(function(){
     if(!crabSvg.innerHTML)return; // 还没初始化
-    if(anchor.isConnected&&anchor.closest('.page'))return;
+    if(anchor.isConnected&&anchor.closest('.page')&&!foldedInPage(anchor))return;
     if(!hideIn(STATES[idx].page||curPage))hideIn(STATES[idx].page||null);
   },1000);
 
