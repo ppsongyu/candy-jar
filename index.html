@@ -6693,7 +6693,12 @@ loadCoupleName();
       });
     }
     if(!spots.length)return null;
-    return spots[Math.floor(Math.random()*spots.length)];
+    // 先平均抽页面，再在页面里抽位置（避免书多的书架被抽中太多次）
+    var byPage={};
+    spots.forEach(function(s){var pg=s.el.closest('.page');var id=pg?pg.id:'';(byPage[id]=byPage[id]||[]).push(s);});
+    var pages=Object.keys(byPage);
+    var list=byPage[pages[Math.floor(Math.random()*pages.length)]];
+    return list[Math.floor(Math.random()*list.length)];
   }
 
   function pickState(){
