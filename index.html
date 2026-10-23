@@ -790,13 +790,13 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
   width:64px;height:64px;
   image-rendering:pixelated;
   background-repeat:no-repeat;
-  background-size:300% 100%;
-  animation:crab-sprite .6s steps(1) infinite;
+  background-size:192px 64px;
+  animation:crab-sprite 1.2s steps(1) infinite;
 }
 @keyframes crab-sprite{
   0%{background-position:0 0}
-  33.33%{background-position:-100% 0}
-  66.66%{background-position:-200% 0}
+  33.33%{background-position:-64px 0}
+  66.66%{background-position:-128px 0}
 }
 .clab-bubble{
   position:absolute;
@@ -6686,18 +6686,23 @@ loadCoupleName();
   }
 
   function pickState(){
-    // 过滤掉当前不在对应页面的page限定状态
-    var available=STATES.map(function(_,i){return i;}).filter(function(i){
-      var s=STATES[i];
-      if(!s.page)return true;
-      var pg=document.getElementById(s.page);
-      return pg&&pg.classList.contains('active');
-    });
-    if(!available.length)available=STATES.map(function(_,i){return i;}).filter(function(i){return !STATES[i].page;});
     var next;
-    do{next=available[Math.floor(Math.random()*available.length)];}while(next===idx&&available.length>1);
+    do{next=Math.floor(Math.random()*STATES.length);}while(next===idx&&STATES.length>1);
     return next;
   }
+
+  // 记住螃蟹藏在哪个页面，被重渲染删掉后回到同一页面重新藏
+  var curPage=null;
+  function hideIn(pageFilter){
+    var spot=pickSpot(pageFilter);
+    if(spot)placeAt(spot);
+    return !!spot;
+  }
+  setInterval(function(){
+    if(!crabSvg.innerHTML)return; // 还没初始化
+    if(anchor.isConnected&&anchor.closest('.page'))return;
+    if(!hideIn(STATES[idx].page||curPage))hideIn(STATES[idx].page||null);
+  },1000);
 
   function placeAt(spot){
     if(!spot||!spot.el)return;
@@ -6727,6 +6732,7 @@ loadCoupleName();
       bubble.style.transform='translateX(-4px) translateY(-4px)';
     }
     spot.el.after(anchor);
+    var pg=spot.el.closest('.page');curPage=pg?pg.id:null;
     setTimeout(function(){
       crab.style.transition='transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s';
       crab.style.transform='translateX(0) scale(1)';
@@ -6764,8 +6770,7 @@ loadCoupleName();
     nextTimer=setTimeout(function(){
       idx=pickState();
       set(idx);
-      var pageFilter=STATES[idx].page||null;
-      placeAt(pickSpot(pageFilter));
+      hideIn(STATES[idx].page||null);
       scheduleNext();
     },ms);
   }
@@ -6784,23 +6789,18 @@ loadCoupleName();
 
   // 初始化：等DOM稳定后放置，找不到位置就重试
   function initCrab(retries){
-    var spot=pickSpot();
-    if(!spot&&retries>0){
+    if(!pickSpot()&&retries>0){
       setTimeout(function(){initCrab(retries-1);},500);
       return;
     }
-    // 初始随机不选page限定的状态（可能不在对应页面）
-    var nonPage=STATES.map(function(_,i){return i;}).filter(function(i){return !STATES[i].page;});
-    idx=nonPage[Math.floor(Math.random()*nonPage.length)];
+    idx=Math.floor(Math.random()*STATES.length);
     set(idx);
-    if(spot)placeAt(spot);
+    hideIn(STATES[idx].page||null);
     scheduleNext();
   }
-  // 监听数据加载完成事件，重新落位（解决数据渲染后螃蟹消失的问题）
+  // 数据渲染完成后，在原页面重新藏一次
   document.addEventListener('appReady',function(){
-    var pageFilter=STATES[idx].page||null;
-    var spot=pickSpot(pageFilter);
-    if(spot)placeAt(spot);
+    if(crabSvg.innerHTML)hideIn(STATES[idx].page||curPage);
   });
   setTimeout(function(){initCrab(5);},500);
 })();
