@@ -6699,7 +6699,7 @@ loadCoupleName();
     sub.style.display='none';
     if(!s.anim){
       const svgEl=crabSvg.querySelector('svg');
-      if(svgEl){svgEl.style.filter='brightness(0) invert(1)';svgEl.style.opacity='0.85';}
+      if(svgEl&&svgEl.classList.contains('cr')){svgEl.style.filter='brightness(0) invert(1)';svgEl.style.opacity='0.85';}
     }
   }
 
