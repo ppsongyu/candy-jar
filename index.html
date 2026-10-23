@@ -788,8 +788,8 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .clab-crab svg{width:64px;height:64px}
 .clab-bubble{
   position:absolute;
-  left:50%;transform:translateX(-50%) translateY(-4px);
-  bottom:calc(100% + 6px);
+  left:50%;transform:translateX(-50%) translateY(6px);
+  top:calc(100% + 8px);
   background:var(--bg-card);
   border:1px solid var(--border-light);
   border-radius:20px;
@@ -800,6 +800,7 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
   opacity:0;
   transition:opacity .22s,transform .22s cubic-bezier(.34,1.56,.64,1);
   white-space:normal;
+  z-index:60;
 }
 .clab-bubble.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .clab-bubble-msg{font-size:13px;color:var(--text-primary);line-height:1.65;font-family:'SGH',Georgia,serif;font-weight:300;margin:0;text-align:center}
@@ -6552,14 +6553,12 @@ loadCoupleName();
   // 各页面可藏身的缝隙（插入到哪个元素之后）
   // 阿贝贝页面不出现
   const SPOTS=[
-    {page:'page-sweets', after:'.jar-area'},
     {page:'page-sweets', after:'.avatars'},
     {page:'page-diary', after:'.card'},
     {page:'page-diary', after:'.period-toggle'},
     {page:'page-books', after:'.books-header'},
     {page:'page-books', after:'.book-list'},
-    {page:'page-us', after:'.us-section:nth-child(1)'},
-    {page:'page-us', after:'.us-section:nth-child(2)'},
+    {page:'page-us', after:'.us-section'},
   ];
 
   function pickSpot(){
