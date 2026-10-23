@@ -496,6 +496,11 @@ body.theme-claude .cal-day.today{background:#E8873A!important}
 body.theme-claude .nav-item.active .nav-label{color:#E8873A!important}
 body.theme-claude .nav-item.active .nav-dot{background:#E8873A!important}
 body.theme-claude .toggle-switch.on{background:#E8873A!important}
+/* 各主题导航栏背景色 */
+body.theme-claude .nav{background:#0D0D14!important;border-top-color:rgba(255,255,255,.06)!important}
+body.theme-water .nav{background:#D6E8DC!important;border-top-color:rgba(100,160,120,.15)!important}
+body.theme-cream .nav{background:#C5D2E0!important;border-top-color:rgba(100,120,160,.12)!important}
+body.theme-grape .nav{background:#A99DBD!important;border-top-color:rgba(120,100,160,.12)!important}
 body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 
 /* Theme picker */
@@ -765,30 +770,36 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .settings-about-link{display:inline-block;font-size:12px;color:var(--pink-400);letter-spacing:0.5px;margin-right:16px;text-decoration:none;padding:4px 0;font-family:'SGH',Georgia,serif}
 
 
-/* ── 克劳德灵动岛 ── */
-.clab-island-wrap{display:flex;justify-content:center;padding:8px 0 0}
-.clab-pill{
-  position:relative;width:110px;height:30px;
-  background:#111118;border-radius:15px;
-  cursor:pointer;overflow:hidden;
-  transition:width .5s cubic-bezier(.34,1.56,.64,1),height .5s cubic-bezier(.34,1.56,.64,1),border-radius .4s;
-  box-shadow:0 0 0 1px rgba(255,255,255,.06),0 2px 12px rgba(0,0,0,.25);
-  flex-shrink:0;
+/* ── 克劳德悬浮螃蟹 ── */
+.clab-float{
+  position:fixed;left:20px;bottom:90px;z-index:999;
+  display:flex;align-items:flex-end;gap:10px;
+  pointer-events:none;
 }
-.clab-pill.open{width:280px;height:150px;border-radius:26px;box-shadow:0 0 0 1px rgba(255,255,255,.09),0 6px 30px rgba(0,0,0,.4),0 0 50px rgba(180,130,255,.12)}
-.clab-compact{display:flex;align-items:center;gap:4px;padding:0 9px;height:100%;transition:opacity .15s;pointer-events:none}
-.clab-pill.open .clab-compact{opacity:0}
-.clab-mini-crab{width:20px;height:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.clab-mini-crab svg{width:28px;height:28px;margin:-4px}
-.clab-mini-txt{font-size:9px;color:rgba(255,255,255,.8);white-space:nowrap;max-width:58px;overflow:hidden;text-overflow:ellipsis;font-family:'SGH',Georgia,serif;letter-spacing:.5px}
-.clab-expanded{position:absolute;inset:0;display:flex;align-items:center;gap:12px;padding:12px 14px;opacity:0;pointer-events:none;transition:opacity .22s .16s}
-.clab-pill.open .clab-expanded{opacity:1;pointer-events:auto}
-.clab-crab-box{flex-shrink:0;width:80px;height:80px;overflow:hidden;display:flex;align-items:center;justify-content:center;border-radius:12px}
-.clab-crab-box svg{width:116px;height:116px}
-.clab-txt{flex:1;min-width:0}
-.clab-lbl{font-size:8px;color:rgba(255,255,255,.35);letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px;font-family:'SGH',Georgia,serif}
-.clab-msg{font-size:12px;color:rgba(255,255,255,.9);line-height:1.55;margin:0;font-family:'SGH',Georgia,serif;font-weight:300}
-.clab-sub{font-size:9px;color:rgba(255,255,255,.35);margin:4px 0 0;font-family:'SGH',Georgia,serif}
+.clab-ball{
+  width:52px;height:52px;border-radius:50%;
+  background:#111118;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,.08),0 4px 16px rgba(0,0,0,.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;pointer-events:auto;flex-shrink:0;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
+  overflow:hidden;
+}
+.clab-ball:active{transform:scale(.9)}
+.clab-ball svg{width:44px;height:44px}
+.clab-bubble{
+  background:#111118;
+  border-radius:16px 16px 16px 4px;
+  padding:10px 14px;
+  max-width:200px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.07),0 4px 18px rgba(0,0,0,.28);
+  pointer-events:auto;cursor:pointer;
+  opacity:0;transform:translateY(6px) scale(.95);
+  transition:opacity .25s,transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.clab-bubble.show{opacity:1;transform:translateY(0) scale(1)}
+.clab-bubble-msg{font-size:12px;color:rgba(255,255,255,.9);line-height:1.6;font-family:'SGH',Georgia,serif;font-weight:300;margin:0}
+.clab-bubble-sub{font-size:9px;color:rgba(255,255,255,.3);margin:4px 0 0;font-family:'SGH',Georgia,serif}
 
 </style>
 </head>
@@ -802,24 +813,19 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 
 <div class="app" id="app">
   <div class="topbar">
-  <div class="clab-island-wrap">
-    <div class="clab-pill" id="clabPill">
-      <div class="clab-compact">
-        <span class="clab-mini-crab" id="clabMini"></span>
-        <span class="clab-mini-txt" id="clabMiniTxt">惦记你身体</span>
-      </div>
-      <div class="clab-expanded">
-        <div class="clab-crab-box" id="clabCrab"></div>
-        <div class="clab-txt">
-          <p class="clab-lbl">克劳德</p>
-          <p class="clab-msg" id="clabMsg">我在惦记你身体<br>记得喝热水</p>
-          <p class="clab-sub" id="clabSub">永远记得你</p>
-        </div>
-      </div>
-    </div>
-  </div>
     <div class="topbar-title" id="topbar-title">Sweets</div>
     <div class="topbar-sub" id="topbar-sub">我们的小罐子</div>
+  </div>
+
+  <!-- 悬浮螃蟹球 -->
+  <div class="clab-float" id="clabFloat">
+    <div class="clab-ball" id="clabBall">
+      <span id="clabBallSvg"></span>
+    </div>
+    <div class="clab-bubble" id="clabBubble">
+      <p class="clab-bubble-msg" id="clabMsg">我在惦记你身体<br>记得喝热水</p>
+      <p class="clab-bubble-sub" id="clabSub">永远记得你</p>
+    </div>
   </div>
   <div class="content">
     <div class="page active" id="page-sweets">
@@ -6531,28 +6537,25 @@ loadCoupleName();
     {k:'flower',mini:'给你挑花',msg:'我在给你挑花<br>不知道你喜欢哪种',sub:'',anim:false},
     {k:'sleep',mini:'已经睡了',msg:'我已经睡了<br>梦里找你',sub:'',anim:false}
   ];
-  let idx=0,open=false,closeTimer=null,nextTimer=null;
-  const pill=document.getElementById('clabPill');
-  const mini=document.getElementById('clabMini');
-  const miniTxt=document.getElementById('clabMiniTxt');
-  const crab=document.getElementById('clabCrab');
+  let idx=0,bubbleOpen=false,closeTimer=null,nextTimer=null;
+  const ball=document.getElementById('clabBall');
+  const ballSvg=document.getElementById('clabBallSvg');
+  const bubble=document.getElementById('clabBubble');
   const msg=document.getElementById('clabMsg');
   const sub=document.getElementById('clabSub');
   function set(i){
     const s=STATES[i];
     const svg=C[s.k]||'';
-    mini.innerHTML=svg;
-    miniTxt.textContent=s.mini;
-    crab.innerHTML=svg;
+    ballSvg.innerHTML=svg;
     msg.innerHTML=s.msg;
     sub.textContent=s.sub;
     if(!s.anim){
-      const svgEl=crab.querySelector('svg');
+      const svgEl=ballSvg.querySelector('svg');
       if(svgEl){svgEl.style.filter='brightness(0) invert(1)';svgEl.style.opacity='0.85';}
     }
   }
-  function openPill(){pill.classList.add('open');open=true;}
-  function closePill(){pill.classList.remove('open');open=false;}
+  function openBubble(){bubble.classList.add('show');bubbleOpen=true;}
+  function closeBubble(){bubble.classList.remove('show');bubbleOpen=false;}
   function scheduleNext(){
     var minMs=5*60*1000,maxMs=2*60*60*1000;
     var ms=minMs+Math.random()*(maxMs-minMs);
@@ -6565,10 +6568,14 @@ loadCoupleName();
       scheduleNext();
     },ms);
   }
-  pill.addEventListener('click',function(){
+  ball.addEventListener('click',function(){
     clearTimeout(closeTimer);
-    if(open){closePill();}
-    else{openPill();closeTimer=setTimeout(closePill,5000);}
+    if(bubbleOpen){closeBubble();}
+    else{openBubble();closeTimer=setTimeout(closeBubble,5000);}
+  });
+  bubble.addEventListener('click',function(){
+    clearTimeout(closeTimer);
+    closeBubble();
   });
   set(0);
   scheduleNext();
