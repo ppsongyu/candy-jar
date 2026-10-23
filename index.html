@@ -6742,13 +6742,19 @@ loadCoupleName();
     closeBubble();
   });
 
-  // 初始化：等DOM稳定后放置
-  setTimeout(function(){
+  // 初始化：等DOM稳定后放置，找不到位置就重试
+  function initCrab(retries){
+    var spot=pickSpot();
+    if(!spot&&retries>0){
+      setTimeout(function(){initCrab(retries-1);},500);
+      return;
+    }
     idx=Math.floor(Math.random()*STATES.length);
     set(idx);
-    placeAt(pickSpot());
+    if(spot)placeAt(spot);
     scheduleNext();
-  },300);
+  }
+  setTimeout(function(){initCrab(5);},500);
 })();
 
 </script>
