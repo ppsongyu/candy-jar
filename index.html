@@ -772,11 +772,13 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 
 /* ── 克劳德捉迷藏螃蟹 ── */
 .clab-anchor{
-  display:flex;justify-content:center;align-items:center;
+  display:block;
   height:0;overflow:visible;position:relative;z-index:50;
   pointer-events:none;
 }
 .clab-crab{
+  position:absolute;
+  top:-32px;
   width:64px;height:64px;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;pointer-events:auto;
@@ -6666,16 +6668,14 @@ loadCoupleName();
     crab.classList.remove('visible');
     var side=spot.side||'left';
     if(side==='left'){
-      anchor.style.justifyContent='flex-start';
-      anchor.style.paddingLeft='24px';
-      anchor.style.paddingRight='0';
+      crab.style.left='24px';
+      crab.style.right='auto';
       crab.style.transition='none';
       crab.style.transform='translateX(-40px) scale(.7)';
       crab.style.opacity='0';
     }else{
-      anchor.style.justifyContent='flex-end';
-      anchor.style.paddingRight='24px';
-      anchor.style.paddingLeft='0';
+      crab.style.right='24px';
+      crab.style.left='auto';
       crab.style.transition='none';
       crab.style.transform='translateX(40px) scale(.7)';
       crab.style.opacity='0';
