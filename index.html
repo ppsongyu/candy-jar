@@ -3317,6 +3317,8 @@ function checkAnniversarySplash(){
   renderJarCandies();
   renderTimeCapsules();
   renderMonthStats();
+  // 数据全部渲染完成，通知螃蟹重新落位
+  document.dispatchEvent(new CustomEvent('appReady'));
   // 如果今天已经抽过签，恢复显示结果
   if(fortuneDrawn){
     const today=new Date();
@@ -6794,6 +6796,12 @@ loadCoupleName();
     if(spot)placeAt(spot);
     scheduleNext();
   }
+  // 监听数据加载完成事件，重新落位（解决数据渲染后螃蟹消失的问题）
+  document.addEventListener('appReady',function(){
+    var pageFilter=STATES[idx].page||null;
+    var spot=pickSpot(pageFilter);
+    if(spot)placeAt(spot);
+  });
   setTimeout(function(){initCrab(5);},500);
 })();
 
