@@ -788,8 +788,6 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .clab-crab svg{width:64px;height:64px}
 .clab-bubble{
   position:absolute;
-  left:50%;transform:translateX(-50%) translateY(6px);
-  top:calc(100% + 8px);
   background:var(--bg-card);
   border:1px solid var(--border-light);
   border-radius:20px;
@@ -802,7 +800,7 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
   white-space:normal;
   z-index:60;
 }
-.clab-bubble.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.clab-bubble.show{opacity:1;transform:translateY(0)}
 .clab-bubble-msg{font-size:13px;color:var(--text-primary);line-height:1.65;font-family:'SGH',Georgia,serif;font-weight:300;margin:0;text-align:center}
 .clab-bubble-sub{font-size:10px;color:var(--text-muted);margin:5px 0 0;font-family:'SGH',Georgia,serif;text-align:center;display:block}
 
@@ -6665,6 +6663,7 @@ loadCoupleName();
     closeBubble();
     crab.classList.remove('visible');
     var side=spot.side||'left';
+    curSide=side;
     if(side==='left'){
       anchor.style.justifyContent='flex-start';
       anchor.style.paddingLeft='24px';
@@ -6672,6 +6671,9 @@ loadCoupleName();
       crab.style.transition='none';
       crab.style.transform='translateX(-40px) scale(.7)';
       crab.style.opacity='0';
+      bubble.style.left='100%';bubble.style.right='auto';
+      bubble.style.top='auto';bubble.style.bottom='0';
+      bubble.style.transform='translateX(4px) translateY(-4px)';
     }else{
       anchor.style.justifyContent='flex-end';
       anchor.style.paddingRight='24px';
@@ -6679,6 +6681,9 @@ loadCoupleName();
       crab.style.transition='none';
       crab.style.transform='translateX(40px) scale(.7)';
       crab.style.opacity='0';
+      bubble.style.right='100%';bubble.style.left='auto';
+      bubble.style.top='auto';bubble.style.bottom='0';
+      bubble.style.transform='translateX(-4px) translateY(-4px)';
     }
     spot.el.after(anchor);
     setTimeout(function(){
@@ -6703,7 +6708,12 @@ loadCoupleName();
     }
   }
 
-  function openBubble(){bubble.classList.add('show');bubbleOpen=true;}
+  var curSide='left';
+  function openBubble(){
+    if(curSide==='left'){bubble.style.transform='translateX(4px) translateY(0)';}
+    else{bubble.style.transform='translateX(-4px) translateY(0)';}
+    bubble.classList.add('show');bubbleOpen=true;
+  }
   function closeBubble(){bubble.classList.remove('show');bubbleOpen=false;}
 
   function scheduleNext(){
