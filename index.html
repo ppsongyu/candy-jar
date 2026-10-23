@@ -7553,7 +7553,7 @@ loadCoupleName();
   function closeBubble(){bubble.classList.remove('show');bubbleOpen=false;}
 
   function scheduleNext(){
-    var minMs=5*60*1000,maxMs=2*60*60*1000;
+    var minMs=5*60*1000,maxMs=30*60*1000;
     var ms=minMs+Math.random()*(maxMs-minMs);
     clearTimeout(nextTimer);
     nextTimer=setTimeout(function(){
