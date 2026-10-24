@@ -6721,8 +6721,22 @@ loadCoupleName();
   try{ const saved=localStorage.getItem(WEATHER_CITY_KEY); if(saved) currentCity=saved; }catch(e){}
 
   // geocoding: city name → lat/lon using Open-Meteo geocoding API
+  // 常用城市直接写坐标，少一次网络请求
+  const CITY_COORDS={
+    '深圳':{lat:22.5431,lon:114.0579,name:'深圳'},'北京':{lat:39.9042,lon:116.4074,name:'北京'},
+    '上海':{lat:31.2304,lon:121.4737,name:'上海'},'广州':{lat:23.1291,lon:113.2644,name:'广州'},
+    '成都':{lat:30.5728,lon:104.0668,name:'成都'},'杭州':{lat:30.2741,lon:120.1551,name:'杭州'},
+    '武汉':{lat:30.5928,lon:114.3055,name:'武汉'},'重庆':{lat:29.5630,lon:106.5516,name:'重庆'}
+  };
+  // 带超时的fetch，网卡住时不会一直转圈
+  async function fetchT(url,ms){
+    const ctl=new AbortController();const t=setTimeout(function(){ctl.abort();},ms||10000);
+    try{return await fetch(url,{signal:ctl.signal});}finally{clearTimeout(t);}
+  }
+
   async function geocode(city){
-    const r=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=zh');
+    if(CITY_COORDS[city]) return CITY_COORDS[city];
+    const r=await fetchT('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=zh');
     const d=await r.json();
     if(!d.results||!d.results.length) throw new Error('city not found');
     return {lat:d.results[0].latitude, lon:d.results[0].longitude, name:d.results[0].name};
@@ -6741,8 +6755,9 @@ loadCoupleName();
     const url='https://api.open-meteo.com/v1/forecast?latitude='+geo.lat+'&longitude='+geo.lon
       +'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,wind_direction_10m'
       +'&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3';
-    const r=await fetch(url);
+    const r=await fetchT(url);
     const d=await r.json();
+    if(!d.current||!d.daily) throw new Error('bad weather data');
     const result={geo,data:d};
 
     // cache it
@@ -6810,6 +6825,11 @@ loadCoupleName();
       const result=await fetchWeather(currentCity);
       renderWeather(result);
     }catch(e){
+      // 网络不行时先显示上次的天气，总比一直转圈好
+      try{
+        const cache=JSON.parse(localStorage.getItem(WEATHER_CACHE_KEY)||'{}');
+        if(cache.city===currentCity&&cache.data){renderWeather(cache.data);return;}
+      }catch(e2){}
       renderError('获取天气失败');
     }
   };
