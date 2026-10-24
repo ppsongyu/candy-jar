@@ -1660,6 +1660,19 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
           <div style="font-size:10px;color:var(--text-muted);text-align:center;line-height:1.6;padding-bottom:4px">建议每周导出一次，防止数据丢失</div>
         </div>
       </div>
+      <div class="settings-block">
+        <div class="settings-block-head" onclick="toggleSettingsBlock('书架')">
+          <span>书架</span><span class="settings-block-arrow" id="settings-arrow-书架">›</span>
+        </div>
+        <div class="settings-block-body" id="settings-body-书架">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;line-height:1.6">填入 Google Books API Key，加书时可自动搜封面和作者</div>
+          <div style="display:flex;gap:6px">
+            <input id="gb-api-key-input" class="add-input" style="flex:1;font-size:11px" placeholder="粘贴 API Key" value="">
+            <button class="add-confirm" onclick="saveGBKey()" style="border-radius:10px;padding:0 12px;flex-shrink:0">保存</button>
+          </div>
+          <div id="gb-key-status" style="font-size:10px;color:var(--text-muted);margin-top:4px"></div>
+        </div>
+      </div>
       <div class="settings-block settings-about">
         <div class="settings-about-title">关于</div>
         <div class="settings-about-line">a little nest for our hearts</div>
@@ -2247,21 +2260,23 @@ function searchBookInfo(){
   const btn=document.getElementById('book-search-btn');
   btn.textContent='…';btn.disabled=true;
   _bookSearchCoverImg='';
-  fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1&fields=title,author_name,cover_i,first_publish_year`)
+  const GB_KEY=localStorage.getItem('gb_api_key')||'';
+  if(!GB_KEY){const res=document.getElementById('book-search-result');btn.textContent='搜';btn.disabled=false;res.style.display='flex';res.innerHTML='<span style="font-size:12px;color:var(--text-muted)">请先在设置→书架里填入 API Key～</span>';return;}
+  fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(title)}&maxResults=1&key=${GB_KEY}`)
     .then(r=>r.json())
     .then(data=>{
       btn.textContent='搜';btn.disabled=false;
       const res=document.getElementById('book-search-result');
-      if(!data.docs||!data.docs.length){res.style.display='flex';res.innerHTML='<span style="font-size:12px;color:var(--text-muted)">没找到，可以手动填作者～</span>';return;}
-      const d=data.docs[0];
-      const author=(d.author_name&&d.author_name[0])||'';
-      const coverId=d.cover_i;
-      const coverUrl=coverId?`https://covers.openlibrary.org/b/id/${coverId}-M.jpg`:'';
+      if(!data.items||!data.items.length){res.style.display='flex';res.innerHTML='<span style="font-size:12px;color:var(--text-muted)">没找到，可以手动填作者～</span>';return;}
+      const info=data.items[0].volumeInfo;
+      const author=(info.authors&&info.authors[0])||'';
+      const coverUrl=(info.imageLinks&&(info.imageLinks.thumbnail||info.imageLinks.smallThumbnail))||'';
+      const cleanCover=coverUrl.replace('http://','https://');
       if(author)document.getElementById('new-book-author').value=author;
-      if(coverUrl)_bookSearchCoverImg=coverUrl;
+      if(cleanCover)_bookSearchCoverImg=cleanCover;
       res.style.display='flex';
-      res.innerHTML=(coverUrl?`<img src="${coverUrl}" style="width:32px;height:44px;object-fit:cover;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">`:'')
-        +`<div style="font-size:12px;line-height:1.6"><div style="color:var(--text-primary)">${d.title||title}</div><div style="color:var(--text-muted)">${author||'作者未知'}</div>${d.first_publish_year?`<div style="color:var(--text-muted)">${d.first_publish_year}</div>`:''}</div>`;
+      res.innerHTML=(cleanCover?`<img src="${cleanCover}" style="width:32px;height:44px;object-fit:cover;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">`:'')
+        +`<div style="font-size:12px;line-height:1.6"><div style="color:var(--text-primary)">${info.title||title}</div><div style="color:var(--text-muted)">${author||'作者未知'}</div>${info.publishedDate?`<div style="color:var(--text-muted)">${info.publishedDate.slice(0,4)}</div>`:''}</div>`;
     })
     .catch(()=>{btn.textContent='搜';btn.disabled=false;
       const res=document.getElementById('book-search-result');res.style.display='flex';res.innerHTML='<span style="font-size:12px;color:var(--text-muted)">搜索失败，手动填吧～</span>';
@@ -2284,16 +2299,20 @@ function fetchBookCover(){
   if(!book)return;
   const btn=document.querySelector('.book-detail-author span');
   if(btn){btn.textContent='搜索中…';btn.style.pointerEvents='none';}
-  fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&limit=1&fields=cover_i,author_name`)
+  const GB_KEY=localStorage.getItem('gb_api_key')||'';
+  if(!GB_KEY){if(btn){btn.textContent='需先填Key';setTimeout(()=>{btn.textContent='补封面';btn.style.pointerEvents='';},1500);}return;}
+  fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(book.title)}&maxResults=1&key=${GB_KEY}`)
     .then(r=>r.json())
     .then(data=>{
-      if(!data.docs||!data.docs.length||!data.docs[0].cover_i){
+      if(!data.items||!data.items.length){
         if(btn){btn.textContent='没找到';setTimeout(()=>{btn.textContent='补封面';btn.style.pointerEvents='';},1500);}
         return;
       }
-      const d=data.docs[0];
-      book.coverImg=`https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`;
-      if(!book.author&&d.author_name&&d.author_name[0])book.author=d.author_name[0];
+      const info=data.items[0].volumeInfo;
+      const coverUrl=(info.imageLinks&&(info.imageLinks.thumbnail||info.imageLinks.smallThumbnail))||'';
+      if(!coverUrl){if(btn){btn.textContent='没找到';setTimeout(()=>{btn.textContent='补封面';btn.style.pointerEvents='';},1500);}return;}
+      book.coverImg=coverUrl.replace('http://','https://');
+      if(!book.author&&info.authors&&info.authors[0])book.author=info.authors[0];
       saveApp();
       renderBookDetail();
     })
@@ -4758,6 +4777,17 @@ function openSettingsDrawer(){
     d.classList.toggle('active', (d.dataset.theme||'')===t);
   });
   checkNightMode();
+  const keyInput=document.getElementById('gb-api-key-input');
+  if(keyInput){const saved=localStorage.getItem('gb_api_key')||'';keyInput.value=saved?'••••••••••••••••••••':'';}
+}
+function saveGBKey(){
+  const val=document.getElementById('gb-api-key-input').value.trim();
+  if(!val)return;
+  if(val.startsWith('•'))return;
+  localStorage.setItem('gb_api_key',val);
+  document.getElementById('gb-api-key-input').value='••••••••••••••••••••';
+  document.getElementById('gb-key-status').textContent='已保存 ✓';
+  setTimeout(()=>{document.getElementById('gb-key-status').textContent='';},2000);
 }
 function closeSettingsDrawer(){
   document.getElementById('settings-mask').classList.remove('show');
