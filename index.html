@@ -209,12 +209,13 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .bookshelf{display:flex;flex-direction:column;gap:12px}
 .book-item{display:flex;align-items:center;gap:16px;padding:18px;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-light);box-shadow:0 4px 20px rgba(232,160,191,0.12),0 1px 4px rgba(232,160,191,0.08);cursor:pointer;transition:all .15s;margin-bottom:14px}
 .book-item:active{transform:scale(.98)}
-.book-cover{width:48px;height:66px;border-radius:4px 8px 8px 4px;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);flex-shrink:0}
+.book-cover{width:48px;height:66px;border-radius:4px 8px 8px 4px;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text-muted);flex-shrink:0;overflow:hidden}
 .book-cover{background:linear-gradient(135deg,var(--pink-200),var(--pink-100));font-size:18px;font-weight:bold;color:var(--text-secondary);letter-spacing:0}
 .book-cover-1{opacity:.95}
 .book-cover-2{opacity:.88}
 .book-cover-3{opacity:.82}
 .book-cover-4{opacity:.9}
+.book-cover img{width:100%;height:100%;object-fit:cover;border-radius:3px 7px 7px 3px}
 .book-info{flex:1}
 .book-title-text{font-size:14px;margin-bottom:4px}
 .book-author{font-size:11px;color:var(--text-muted)}
@@ -2219,22 +2220,61 @@ function closeBook(){document.getElementById('books-list').style.display='block'
 function renderBooksList(){
   document.querySelector('.bookshelf').innerHTML=booksData.map((b,i)=>{
     const badge=b.done?'<span class="book-done-badge">✓</span>':'';
-    return `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${b.title[0]}</div><div class="book-info"><div class="book-title-text">${b.title}${badge}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`;
+    const coverHtml=b.coverImg?`<img src="${b.coverImg}" alt="${b.title}" onerror="this.parentNode.innerHTML='${b.title[0]}';">`:`${b.title[0]}`;
+    return `<div class="book-item" onclick="openBook(${i})"><div class="book-cover book-cover-${b.cover}">${coverHtml}</div><div class="book-info"><div class="book-title-text">${b.title}${badge}</div><div class="book-author">${b.author}</div><div class="book-notes-count">${b.notes.length} 条笔记</div></div><span class="book-arrow">&rsaquo;</span></div>`;
   }).join('')+'<div class="add-book-btn" onclick="showAddBook()">+ 加一本书</div><div id="add-book-form" style="display:none"></div>';
 }
 function showAddBook(){
   const form=document.getElementById('add-book-form');
   if(form.style.display==='none'){
     form.style.display='block';
-    form.innerHTML=`<div class="add-input-row" style="flex-direction:column;gap:8px"><input class="add-input" id="new-book-title" placeholder="书名"><input class="add-input" id="new-book-author" placeholder="作者"><button class="add-confirm" onclick="addBook()" style="width:100%;border-radius:12px">加进来</button></div>`;
+    form.innerHTML=`<div class="add-input-row" style="flex-direction:column;gap:8px">
+      <div style="display:flex;gap:6px">
+        <input class="add-input" id="new-book-title" placeholder="书名" style="flex:1" onkeydown="if(event.key==='Enter')searchBookInfo()">
+        <button class="add-confirm" onclick="searchBookInfo()" id="book-search-btn" style="border-radius:10px;padding:0 12px;flex-shrink:0">搜</button>
+      </div>
+      <div id="book-search-result" style="display:none;padding:8px;background:var(--bg-card);border-radius:10px;border:1px solid var(--border-light);display:flex;gap:8px;align-items:center"></div>
+      <input class="add-input" id="new-book-author" placeholder="作者（搜索后自动填入）">
+      <button class="add-confirm" onclick="addBook()" style="width:100%;border-radius:12px">加进来</button>
+    </div>`;
   }else{form.style.display='none'}
 }
+var _bookSearchCoverImg='';
+function searchBookInfo(){
+  const title=document.getElementById('new-book-title').value.trim();
+  if(!title)return;
+  const btn=document.getElementById('book-search-btn');
+  btn.textContent='…';btn.disabled=true;
+  _bookSearchCoverImg='';
+  fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1&fields=title,author_name,cover_i,first_publish_year`)
+    .then(r=>r.json())
+    .then(data=>{
+      btn.textContent='搜';btn.disabled=false;
+      const res=document.getElementById('book-search-result');
+      if(!data.docs||!data.docs.length){res.style.display='flex';res.innerHTML='<span style="font-size:12px;color:var(--text-muted)">没找到，可以手动填作者～</span>';return;}
+      const d=data.docs[0];
+      const author=(d.author_name&&d.author_name[0])||'';
+      const coverId=d.cover_i;
+      const coverUrl=coverId?`https://covers.openlibrary.org/b/id/${coverId}-M.jpg`:'';
+      if(author)document.getElementById('new-book-author').value=author;
+      if(coverUrl)_bookSearchCoverImg=coverUrl;
+      res.style.display='flex';
+      res.innerHTML=(coverUrl?`<img src="${coverUrl}" style="width:32px;height:44px;object-fit:cover;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">`:'')
+        +`<div style="font-size:12px;line-height:1.6"><div style="color:var(--text-primary)">${d.title||title}</div><div style="color:var(--text-muted)">${author||'作者未知'}</div>${d.first_publish_year?`<div style="color:var(--text-muted)">${d.first_publish_year}</div>`:''}</div>`;
+    })
+    .catch(()=>{btn.textContent='搜';btn.disabled=false;
+      const res=document.getElementById('book-search-result');res.style.display='flex';res.innerHTML='<span style="font-size:12px;color:var(--text-muted)">搜索失败，手动填吧～</span>';
+    });
+}
 function addBook(){
-  const title=document.getElementById('new-book-title').value;
-  const author=document.getElementById('new-book-author').value;
+  const title=document.getElementById('new-book-title').value.trim();
+  const author=document.getElementById('new-book-author').value.trim();
   if(!title) return;
   const coverNum=(booksData.length%4)+1;
-  booksData.push({title,author:author||'',cover:coverNum,notes:[]});
+  const book={title,author:author||'',cover:coverNum,notes:[]};
+  if(_bookSearchCoverImg)book.coverImg=_bookSearchCoverImg;
+  booksData.push(book);
+  _bookSearchCoverImg='';
   renderBooksList();
   saveApp();
 }
