@@ -7552,17 +7552,60 @@ loadCoupleName();
   }
   function closeBubble(){bubble.classList.remove('show');bubbleOpen=false;}
 
-  function scheduleNext(){
+  // 用真实时间戳控制状态切换，不怕后台冻住
+  var CRAB_LS_KEY='crab_next_change';
+  var CRAB_IDX_KEY='crab_state_idx';
+
+  function saveNextChangeTime(){
     var minMs=5*60*1000,maxMs=30*60*1000;
     var ms=minMs+Math.random()*(maxMs-minMs);
+    try{localStorage.setItem(CRAB_LS_KEY,String(Date.now()+ms));}catch(e){}
+    return ms;
+  }
+
+  function checkAndMaybeChange(){
+    var stored=0;
+    try{stored=Number(localStorage.getItem(CRAB_LS_KEY))||0;}catch(e){}
+    if(Date.now()>=stored){
+      idx=pickState();
+      set(idx);
+      hideIn(STATES[idx].page||null);
+      try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
+      saveNextChangeTime();
+    }
+  }
+
+  function restoreSavedState(){
+    try{
+      var savedIdx=Number(localStorage.getItem(CRAB_IDX_KEY));
+      if(!isNaN(savedIdx)&&savedIdx>=0&&savedIdx<STATES.length){
+        idx=savedIdx;
+        set(idx);
+        return true;
+      }
+    }catch(e){}
+    return false;
+  }
+
+  function scheduleNext(){
     clearTimeout(nextTimer);
+    var minMs=5*60*1000,maxMs=30*60*1000;
+    var ms=minMs+Math.random()*(maxMs-minMs);
+    // 页面打开期间仍用setTimeout，眼皮底下也会换
     nextTimer=setTimeout(function(){
       idx=pickState();
       set(idx);
       hideIn(STATES[idx].page||null);
+      try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
+      saveNextChangeTime();
       scheduleNext();
     },ms);
   }
+
+  // 页面从后台恢复时检查真实时间
+  document.addEventListener('visibilitychange',function(){
+    if(!document.hidden){checkAndMaybeChange();}
+  });
 
   crab.addEventListener('click',function(e){
     e.stopPropagation();
@@ -7582,8 +7625,23 @@ loadCoupleName();
       setTimeout(function(){initCrab(retries-1);},500);
       return;
     }
-    idx=Math.floor(Math.random()*STATES.length);
-    set(idx);
+    // 先检查真实时间，决定要不要换状态
+    var stored=0;
+    try{stored=Number(localStorage.getItem(CRAB_LS_KEY))||0;}catch(e){}
+    if(stored&&Date.now()<stored){
+      // 时间还没到，恢复上次的状态
+      if(!restoreSavedState()){
+        idx=Math.floor(Math.random()*STATES.length);
+        set(idx);
+        try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
+      }
+    }else{
+      // 时间到了或第一次，随机新状态
+      idx=Math.floor(Math.random()*STATES.length);
+      set(idx);
+      try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
+      saveNextChangeTime();
+    }
     hideIn(STATES[idx].page||null);
     scheduleNext();
   }
