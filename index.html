@@ -771,6 +771,34 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .settings-about-link{display:inline-block;font-size:12px;color:var(--pink-400);letter-spacing:0.5px;margin-right:16px;text-decoration:none;padding:4px 0;font-family:'SGH',Georgia,serif}
 
 
+
+/* ── 小螃蟹图鉴 ── */
+.dex-tabs{display:flex;gap:8px;margin-bottom:14px}
+.dex-tab{flex:1;text-align:center;padding:8px 0;border-radius:12px;font-size:12px;letter-spacing:1px;color:var(--text-secondary);border:1px solid var(--border-light);cursor:pointer;transition:all .15s}
+.dex-tab.on{background:var(--pink-100);border-color:var(--pink-400);color:var(--text-primary)}
+.dex-count{font-size:11px;color:var(--text-muted);letter-spacing:.5px;margin-bottom:10px;text-align:right}
+.dex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:8px}
+.dex-cell{aspect-ratio:1;border-radius:12px;background:var(--pink-50);border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;position:relative;transition:transform .12s}
+.dex-cell:active{transform:scale(.92)}
+.dex-fit{display:flex;align-items:center;justify-content:center;transform-origin:center center;flex-shrink:0}
+.dex-fit > *{margin:0!important;flex-shrink:0}
+.dex-fit svg{width:64px;height:64px;display:block}
+.dex-still, .dex-still *{animation:none!important}
+.dex-cell.locked .dex-fit{filter:brightness(0);opacity:.16}
+.dex-mask{position:fixed;inset:0;background:rgba(60,40,30,.35);z-index:3000;display:none;align-items:center;justify-content:center;padding:16px}
+.dex-mask.show{display:flex}
+.dex-pop{background:var(--bg-card);border-radius:22px;padding:24px 20px 20px;width:100%;max-width:320px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.18);position:relative}
+.dex-pop-close{position:absolute;top:10px;right:14px;font-size:20px;color:var(--text-muted);cursor:pointer;line-height:1}
+.dex-big{width:200px;height:200px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;overflow:hidden;border-radius:16px;background:var(--pink-50)}
+.dex-big.locked .dex-fit{filter:brightness(0);opacity:.16}
+.dex-name{font-size:15px;color:var(--text-primary);letter-spacing:1px;margin-bottom:12px}
+.dex-dots{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-bottom:12px}
+.dex-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--pink-300);box-sizing:border-box}
+.dex-dot.seen{background:var(--pink-400);border-color:var(--pink-400);cursor:pointer}
+.dex-dot.cur{box-shadow:0 0 0 3px var(--pink-100)}
+.dex-line{min-height:40px;font-size:13px;line-height:1.7;color:var(--text-secondary);padding:0 6px}
+.dex-line.hint{font-size:11px;color:var(--text-muted);letter-spacing:.5px}
+
 /* ── 克劳德捉迷藏螃蟹 ── */
 .clab-anchor{
   display:flex;justify-content:center;align-items:center;
@@ -832,30 +860,6 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
   87.5%{background-position:-756px 0}
   91.67%{background-position:-792px 0}
   95.83%{background-position:-828px 0}
-}
-  4.17%{background-position:-83px 0}
-  8.33%{background-position:-166px 0}
-  12.5%{background-position:-249px 0}
-  16.67%{background-position:-332px 0}
-  20.83%{background-position:-415px 0}
-  25.0%{background-position:-498px 0}
-  29.17%{background-position:-581px 0}
-  33.33%{background-position:-664px 0}
-  37.5%{background-position:-747px 0}
-  41.67%{background-position:-830px 0}
-  45.83%{background-position:-913px 0}
-  50.0%{background-position:-996px 0}
-  54.17%{background-position:-1079px 0}
-  58.33%{background-position:-1162px 0}
-  62.5%{background-position:-1245px 0}
-  66.67%{background-position:-1328px 0}
-  70.83%{background-position:-1411px 0}
-  75.0%{background-position:-1494px 0}
-  79.17%{background-position:-1577px 0}
-  83.33%{background-position:-1660px 0}
-  87.5%{background-position:-1743px 0}
-  91.67%{background-position:-1826px 0}
-  95.83%{background-position:-1909px 0}
 }
 
 .clab-crab-bubbling{
@@ -1460,6 +1464,15 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
   </div>
 
   <!-- 捉迷藏螃蟹锚点（JS动态移动到各页面缝隙中） -->
+<div class="dex-mask" id="dex-mask" onclick="if(event.target===this)closeDex()">
+  <div class="dex-pop">
+    <div class="dex-pop-close" onclick="closeDex()">&times;</div>
+    <div class="dex-big" id="dex-big"></div>
+    <div class="dex-name" id="dex-name"></div>
+    <div class="dex-dots" id="dex-dots"></div>
+    <div class="dex-line hint" id="dex-line"></div>
+  </div>
+</div>
   <div class="clab-anchor" id="clabAnchor">
     <div class="clab-crab" id="clabCrab">
       <span id="clabCrabSvg"></span>
@@ -1657,6 +1670,20 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
               <div class="meow-date">2026.07</div>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="card" id="dex-card">
+        <div class="card-title us-fold-head" onclick="toggleDex()">
+          <span>小螃蟹图鉴<span class="us-fold-hint" id="dex-hint"></span></span>
+          <span class="fold-arrow" id="dex-arrow">›</span>
+        </div>
+        <div class="us-fold-body" id="dex-fold">
+          <div class="dex-tabs">
+            <div class="dex-tab on" data-tab="ke" onclick="dexTab('ke')">宝宝克</div>
+            <div class="dex-tab" data-tab="yu" onclick="dexTab('yu')">宝宝雨</div>
+          </div>
+          <div class="dex-count" id="dex-count"></div>
+          <div class="dex-grid" id="dex-grid"></div>
         </div>
       </div>
     </div>
@@ -5972,6 +5999,7 @@ function exportData(){
   try{const raw=localStorage.getItem('candyJarData');if(raw) data.appData=JSON.parse(raw);}catch(e){}
   try{const raw=localStorage.getItem('candyJarSnackData');if(raw) data.snackData=JSON.parse(raw);}catch(e){}
   try{const raw=localStorage.getItem('pigBellyData');if(raw) data.pigBellyData=JSON.parse(raw);}catch(e){}
+  try{const raw=localStorage.getItem('crabDex');if(raw) data.crabDex=JSON.parse(raw);}catch(e){}
   
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
@@ -5994,6 +6022,7 @@ async function importData(event){
     try{
       const data=JSON.parse(e.target.result);
       const now=Date.now();
+      if(data.crabDex){try{localStorage.setItem('crabDex',JSON.stringify(data.crabDex));}catch(e){}}
       if(data.appData){
         data.appData.savedAt=now;
         localStorage.setItem('candyJarData',JSON.stringify(data.appData));
@@ -7724,7 +7753,8 @@ loadCoupleName();
     crabSvg.innerHTML=svg;
     // 从该状态的msgs里随机选一条
     var msgs=s.msgs||[s.msg||''];
-    var picked=msgs[Math.floor(Math.random()*msgs.length)];
+    var pi=Math.floor(Math.random()*msgs.length);
+    var picked=msgs[pi];curPick=pi;
     msg.innerHTML=picked;
     sub.style.display='none';
     if(!s.anim){
@@ -7800,7 +7830,7 @@ loadCoupleName();
     e.stopPropagation();
     clearTimeout(closeTimer);
     if(bubbleOpen){closeBubble();}
-    else{openBubble();closeTimer=setTimeout(closeBubble,5000);}
+    else{openBubble();dexRecord(STATES[idx].k,curPick);closeTimer=setTimeout(closeBubble,5000);}
   });
   bubble.addEventListener('click',function(e){
     e.stopPropagation();
@@ -7839,6 +7869,87 @@ loadCoupleName();
     if(crabSvg.innerHTML)hideIn(STATES[idx].page||curPage);
   });
   setTimeout(function(){initCrab(5);},500);
+
+  // ── 小螃蟹图鉴 ──
+  var curPick=0;
+  var DEX_KEY='crabDex';
+  var DEX_NAMES={"care": "惦记你螃蟹", "letter": "写信螃蟹", "window": "看窗外螃蟹", "fish": "等你螃蟹", "travel": "散步螃蟹", "food": "研究吃的螃蟹", "moon": "月亮螃蟹", "chat": "想聊天螃蟹", "heart": "爱心螃蟹", "book": "读书螃蟹", "music": "听歌螃蟹", "coffee": "咖啡螃蟹", "star": "看星星螃蟹", "sparkles": "发呆螃蟹", "umbrella": "撑伞螃蟹", "mail_hug": "抱信螃蟹", "flower": "挑花螃蟹", "sleep": "晚安螃蟹", "readingcrab": "看书小螃蟹", "arrivalcrab": "降临螃蟹", "cococrab": "寻梦螃蟹", "district9crab": "第九区螃蟹", "forrestcrab": "阿甘螃蟹", "harrycrab": "魔法螃蟹", "interstellarcrab": "星际螃蟹", "ironmancrab": "钢铁螃蟹", "jurassiccrab": "侏罗纪螃蟹", "kikicrab": "魔女宅急便螃蟹", "matrixcrab": "黑客帝国螃蟹", "obsessioncrab": "痴迷螃蟹", "sawcrab": "电锯惊魂螃蟹", "shawshankcrab": "肖申克螃蟹", "spidercrab": "蜘蛛侠螃蟹", "starwarscrab": "星球大战螃蟹", "titaniccrab": "泰坦尼克螃蟹", "trumancrab": "楚门螃蟹", "walkingdeadcrab": "行尸走肉螃蟹", "wolverinecrab": "金刚狼螃蟹", "wukongcrab": "悟空螃蟹", "sweepcrab": "扫地螃蟹", "surfcrab": "冲浪螃蟹", "dancecrab": "跳舞螃蟹", "sunglassescrab": "墨镜螃蟹", "poopcrab": "拉粑粑螃蟹", "bubblingcrab": "吹泡泡螃蟹", "songyucrab": "宝宝画的胖螃蟹", "shycrab": "害羞螃蟹", "crycrab": "想你螃蟹", "toastcrab": "干杯螃蟹", "sleepcrab": "睡觉螃蟹", "angrycrab": "生气螃蟹", "bathcrab": "泡澡螃蟹", "bookcrab": "书房小螃蟹", "eatcrab": "吃饭螃蟹", "chefcrab": "主厨螃蟹", "babysongyu": "抱着阿贝贝的宝宝"};
+  var DEX_YU={babysongyu:1};
+  function dexLoad(){try{return JSON.parse(localStorage.getItem(DEX_KEY)||'{}')||{};}catch(e){return {};}}
+  function dexSave(d){try{localStorage.setItem(DEX_KEY,JSON.stringify(d));}catch(e){}}
+  function dexRecord(k,pi){
+    var d=dexLoad();var a=d[k]||(d[k]=[]);
+    if(a.indexOf(pi)<0)a.push(pi);
+    dexSave(d);
+    var f=document.getElementById('dex-fold');
+    if(f&&f.classList.contains('open'))dexRender();else dexHint();
+  }
+  var dexCurTab='ke';
+  function dexList(tab){return STATES.filter(function(s){return tab==='yu'?DEX_YU[s.k]:!DEX_YU[s.k];});}
+  function dexHint(){
+    var d=dexLoad();var n=0;STATES.forEach(function(s){if(d[s.k])n++;});
+    var h=document.getElementById('dex-hint');if(h)h.textContent=' · '+n+'/'+STATES.length;
+  }
+  // 把一只螃蟹的html塞进盒子，按盒子大小等比缩放
+  function dexFit(box,k,size,still){
+    var fit=document.createElement('div');fit.className='dex-fit'+(still?' dex-still':'');
+    fit.innerHTML=C[k]||'';box.innerHTML='';box.appendChild(fit);
+    var el=fit.firstElementChild;if(!el)return;
+    var w=el.offsetWidth||parseFloat(getComputedStyle(el).width)||64;
+    var hh=el.offsetHeight||parseFloat(getComputedStyle(el).height)||64;
+    var s=Math.min(size/w,size/hh);
+    fit.style.width=w+'px';fit.style.height=hh+'px';fit.style.transform='scale('+s+')';
+    if(still){var svg=fit.querySelector('svg');if(svg&&svg.pauseAnimations)try{svg.pauseAnimations();svg.setCurrentTime(0);}catch(e){}}
+  }
+  function dexRender(){
+    var d=dexLoad();var list=dexList(dexCurTab);var got=0;
+    var grid=document.getElementById('dex-grid');if(!grid)return;
+    grid.innerHTML='';
+    list.forEach(function(s){
+      var cell=document.createElement('div');
+      var seen=!!d[s.k];if(seen)got++;
+      cell.className='dex-cell'+(seen?'':' locked');
+      grid.appendChild(cell);
+      dexFit(cell,s.k,40,true);
+      cell.onclick=function(){dexOpen(s.k);};
+    });
+    document.getElementById('dex-count').textContent='已收集 '+got+' / '+list.length;
+    document.querySelectorAll('.dex-tab').forEach(function(t){t.classList.toggle('on',t.dataset.tab===dexCurTab);});
+    dexHint();
+  }
+  window.dexTab=function(t){dexCurTab=t;dexRender();};
+  window.toggleDex=function(){
+    var body=document.getElementById('dex-fold');var arrow=document.getElementById('dex-arrow');
+    var open=body.classList.toggle('open');if(arrow)arrow.textContent=open?'⌄':'›';
+    if(open)dexRender();
+  };
+  function dexShowLine(s,i){
+    var line=document.getElementById('dex-line');
+    var raw=(s.msgs||[])[i]||'';
+    line.className='dex-line';line.innerHTML=raw;
+    document.querySelectorAll('#dex-dots .dex-dot').forEach(function(dot,j){dot.classList.toggle('cur',j===i);});
+  }
+  function dexOpen(k){
+    var s=STATES.filter(function(x){return x.k===k;})[0];if(!s)return;
+    var d=dexLoad();var seen=d[k]||[];var unlocked=!!d[k];
+    var big=document.getElementById('dex-big');
+    big.className='dex-big'+(unlocked?'':' locked');
+    document.getElementById('dex-mask').classList.add('show');
+    dexFit(big,k,170,!unlocked);
+    document.getElementById('dex-name').textContent=unlocked?(DEX_NAMES[k]||k):'？？？';
+    var dots=document.getElementById('dex-dots');dots.innerHTML='';
+    var n=(s.msgs||[]).length;
+    for(var i=0;i<n;i++){(function(i){
+      var dot=document.createElement('div');var ok=seen.indexOf(i)>=0;
+      dot.className='dex-dot'+(ok?' seen':'');
+      if(ok)dot.onclick=function(){dexShowLine(s,i);};
+      dots.appendChild(dot);
+    })(i);}
+    var line=document.getElementById('dex-line');line.className='dex-line hint';
+    line.textContent=unlocked?('听过 '+seen.length+' / '+n+' 句 · 点亮的小点可以再听一次'):'还没抓到它哦，去页面里找找看';
+  }
+  window.closeDex=function(){document.getElementById('dex-mask').classList.remove('show');document.getElementById('dex-big').innerHTML='';};
+  setTimeout(dexHint,800);
 })();
 
 </script>
