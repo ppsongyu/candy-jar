@@ -2174,7 +2174,8 @@ function renderBookDetail(){
   }else{notesHtml='<div class="timeline-empty">还没有笔记<br>读到好句子就记下来吧</div>';}
   const doneLabel=book.done?'标记为在读':'标记为读完';
   const doneBadge=book.done?'<span class="book-done-badge">✓ 已读完</span>':'';
-  detail.innerHTML=`<div class="book-detail-header"><div class="book-detail-back" onclick="closeBook()">&lsaquo;</div><div class="book-detail-info"><div class="book-detail-title">${book.title}${doneBadge}</div><div class="book-detail-author">${book.author}</div></div></div>
+  const addCoverBtn=book.coverImg?'':'<span onclick="fetchBookCover()" style="font-size:10px;color:var(--text-muted);cursor:pointer;margin-left:6px;padding:2px 6px;border:1px solid var(--border-light);border-radius:6px">补封面</span>';
+  detail.innerHTML=`<div class="book-detail-header"><div class="book-detail-back" onclick="closeBook()">&lsaquo;</div><div class="book-detail-info"><div class="book-detail-title">${book.title}${doneBadge}</div><div class="book-detail-author" style="display:flex;align-items:center">${book.author}${addCoverBtn}</div></div></div>
   <div style="display:flex;gap:8px;margin-bottom:16px">
     <div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-light);border-radius:10px;font-size:11px;color:var(--text-secondary);cursor:pointer" onclick="toggleBookDone()">${doneLabel}</div>
     <div style="flex:1;text-align:center;padding:8px;border:1px solid var(--border-light);border-radius:10px;font-size:11px;color:var(--pink-500);cursor:pointer" onclick="deleteBook()">删除这本书</div>
@@ -2277,6 +2278,26 @@ function addBook(){
   _bookSearchCoverImg='';
   renderBooksList();
   saveApp();
+}
+function fetchBookCover(){
+  const book=booksData[currentBookIdx];
+  if(!book)return;
+  const btn=document.querySelector('.book-detail-author span');
+  if(btn){btn.textContent='搜索中…';btn.style.pointerEvents='none';}
+  fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&limit=1&fields=cover_i,author_name`)
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data.docs||!data.docs.length||!data.docs[0].cover_i){
+        if(btn){btn.textContent='没找到';setTimeout(()=>{btn.textContent='补封面';btn.style.pointerEvents='';},1500);}
+        return;
+      }
+      const d=data.docs[0];
+      book.coverImg=`https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg`;
+      if(!book.author&&d.author_name&&d.author_name[0])book.author=d.author_name[0];
+      saveApp();
+      renderBookDetail();
+    })
+    .catch(()=>{if(btn){btn.textContent='失败了';setTimeout(()=>{btn.textContent='补封面';btn.style.pointerEvents='';},1500);}});
 }
 
 // MILESTONES
