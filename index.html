@@ -3786,17 +3786,18 @@ function shakeJar(){
 
 // ===== 摇手机摇罐子 =====
 // 第一次点罐子时向 iPhone 要"运动与方向"权限；之后晃手机=摇罐子，手机歪一歪糖会往低的那边滚
-let motionOn=false,motionAsked=false,lastShakeAt=0,tiltX=0;
+let motionOn=false,motionAsked=false,lastShakeAt=0,tiltX=0,motionHist=[];
 function jarMotionReady(){return document.getElementById('page-sweets')?.classList.contains('active')&&!document.querySelector('.overlay.show,.candy-detail-mask.show,.lk-sheet.show,.settings-drawer.show');}
 function onJarMotion(e){
   const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;
   if(!jarMotionReady())return;
   // 晃动力度：优先用去掉重力的加速度，没有就用"总加速度偏离重力多少"
-  const l=e.acceleration;let force;
-  if(l&&l.x!=null)force=Math.hypot(l.x,l.y,l.z);
-  else force=Math.abs(Math.hypot(a.x,a.y,a.z)-9.8);
-  const now=Date.now();
-  if(force>7&&now-lastShakeAt>500){lastShakeAt=now;shakeJar();if(navigator.vibrate)try{navigator.vibrate(15);}catch(_){}}
+  const l=e.acceleration;const now=Date.now();
+  const f1=(l&&l.x!=null)?Math.hypot(l.x,l.y,l.z):0;
+  // 第二种：跟 0.12 秒前的读数比，变化大就算晃
+  motionHist.push({t:now,x:a.x,y:a.y,z:a.z});while(motionHist.length&&now-motionHist[0].t>120)motionHist.shift();
+  const o=motionHist[0];const f2=o?Math.hypot(a.x-o.x,a.y-o.y,a.z-o.z):0;
+  if((f1>5||f2>9)&&now-lastShakeAt>500){lastShakeAt=now;shakeJar();if(navigator.vibrate)try{navigator.vibrate(15);}catch(_){}}
   // 歪手机：糖往低的一边挪一点（iOS 和安卓 x 方向相反）
   const sign=/iPhone|iPad|iPod/.test(navigator.userAgent)?1:-1;
   tiltX=tiltX*0.8+Math.max(-9,Math.min(9,a.x*sign*1.4))*0.2;
