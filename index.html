@@ -63,7 +63,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .month-label{font-size:14px;letter-spacing:1px;min-width:80px;text-align:center}
 .jar-container{position:relative;width:240px;height:300px;margin-bottom:24px}
 .jar-img{width:100%;height:100%;object-fit:contain;position:relative;z-index:2;pointer-events:none}
-.jar-candies{position:absolute;bottom:45px;left:50px;right:50px;top:100px;z-index:1;overflow:hidden}
+.jar-candies{position:absolute;bottom:45px;left:50px;right:50px;top:100px;z-index:1;overflow:hidden;transition:transform .25s ease-out}
 .jar-candy-mini{position:absolute;object-fit:contain;transition:transform .3s ease}
 .jar-container.shaking .jar-candy-mini{animation:candyBounce .4s ease}
 .avatars{display:flex;gap:48px;align-items:center}
@@ -1546,7 +1546,7 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
     <div class="page active" id="page-sweets">
       <div class="jar-area">
         <div class="month-switcher"><button class="month-arrow" onclick="changeJarMonth(-1)">&lt;</button><div class="month-label" id="jar-month-label"></div><button class="month-arrow" onclick="changeJarMonth(1)">&gt;</button></div>
-        <div class="jar-container" onclick="shakeJar()"><img class="jar-img" src="./刚好罐子.png" alt="jar"><div class="jar-candies" id="jar-candies"></div></div>
+        <div class="jar-container" onclick="shakeJar();askJarMotion()"><img class="jar-img" src="./刚好罐子.png" alt="jar"><div class="jar-candies" id="jar-candies"></div></div>
         <div class="avatars">
           <div class="avatar-btn" onclick="openPutCandy()"><img class="avatar-img" src="./大头克.png" alt="宝宝克"><span class="avatar-label">放一颗糖</span></div>
           <div class="avatar-btn" onclick="openViewCandies()"><img class="avatar-img" src="./小头雨.png" alt="宝宝雨"><span class="avatar-label">看看糖果</span></div>
@@ -3783,6 +3783,40 @@ function shakeJar(){
   });
   setTimeout(()=>jar.classList.remove('shaking'),450);
 }
+
+// ===== 摇手机摇罐子 =====
+// 第一次点罐子时向 iPhone 要"运动与方向"权限；之后晃手机=摇罐子，手机歪一歪糖会往低的那边滚
+let motionOn=false,motionAsked=false,lastShakeAt=0,lastAcc=null,tiltX=0;
+function jarMotionReady(){return document.getElementById('page-sweets')?.classList.contains('active')&&!document.querySelector('.overlay.show,.candy-detail-mask.show,.lk-sheet.show,.settings-drawer.show');}
+function onJarMotion(e){
+  const a=e.accelerationIncludingGravity;if(!a||a.x==null)return;
+  if(!jarMotionReady()){lastAcc=null;return;}
+  if(lastAcc){
+    const d=Math.abs(a.x-lastAcc.x)+Math.abs(a.y-lastAcc.y)+Math.abs(a.z-lastAcc.z);
+    const now=Date.now();
+    if(d>22&&now-lastShakeAt>550){lastShakeAt=now;shakeJar();if(navigator.vibrate)try{navigator.vibrate(15);}catch(_){}}
+  }
+  lastAcc={x:a.x,y:a.y,z:a.z};
+  // 歪手机：糖往低的一边挪一点（iOS 和安卓 x 方向相反）
+  const sign=/iPhone|iPad|iPod/.test(navigator.userAgent)?1:-1;
+  tiltX=tiltX*0.8+Math.max(-9,Math.min(9,a.x*sign*1.4))*0.2;
+  const box=document.getElementById('jar-candies');
+  if(box)box.style.transform=`translateX(${tiltX.toFixed(1)}px)`;
+}
+function startJarMotion(){if(motionOn)return;motionOn=true;window.addEventListener('devicemotion',onJarMotion);}
+function askJarMotion(){
+  if(motionOn||motionAsked)return;motionAsked=true;
+  const DM=window.DeviceMotionEvent;if(!DM)return;
+  if(typeof DM.requestPermission==='function'){
+    DM.requestPermission().then(r=>{if(r==='granted'){try{localStorage.setItem('candyJarMotion','1');}catch(_){}startJarMotion();}}).catch(()=>{});
+  }else startJarMotion();
+}
+(function(){
+  const DM=window.DeviceMotionEvent;if(!DM)return;
+  if(typeof DM.requestPermission!=='function'){startJarMotion();return;}
+  // iPhone：以前同意过的话，点屏幕任意一下就悄悄重新接上
+  try{if(localStorage.getItem('candyJarMotion')==='1')document.addEventListener('click',function once(){document.removeEventListener('click',once,true);askJarMotion();},true);}catch(_){}
+})();
 
 // ===== DELETE CANDY =====
 let deleteCandyIdx=-1;
