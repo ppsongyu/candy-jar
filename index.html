@@ -106,9 +106,9 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .series-item .series-coming{font-size:10px;color:#BBB;display:block;margin-top:4px;letter-spacing:1px}
 .series-back-btn{display:inline-flex;align-items:center;gap:4px;background:none;border:none;color:var(--text-muted);font-family:'SGH',Georgia,'Noto Serif SC',serif;font-size:12px;cursor:pointer;padding:4px 0;margin-bottom:4px}
 
-.write-area{position:relative;width:100%;height:360px;margin:8px 0}
+.write-area{position:relative;width:min(100%,380px,calc((100vh - 290px) * 0.725));aspect-ratio:400/552;height:auto;margin:8px auto}
 .write-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.write-textarea{position:absolute;top:20%;left:15%;right:10%;bottom:22%;background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;border:none;outline:none;resize:none;font-family:'SGH',Georgia,serif;font-size:14px;color:var(--text-primary);line-height:1.8;z-index:2;overflow-y:auto}
+.write-textarea{position:absolute;top:20%;left:15%;right:10%;bottom:22%;background:rgba(255,255,255,0.5);border-radius:12px;padding:12px;border:none;outline:none;resize:none;font-family:'SGH',Georgia,serif;font-size:14px;color:var(--text-primary);line-height:1.8;z-index:2;overflow-y:auto;font-size:15px}
 .write-textarea::-webkit-scrollbar{width:0}
 .write-textarea::placeholder{color:var(--text-muted)}
 
@@ -125,9 +125,9 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 /* View candy detail - note style */
 .candy-detail-mask{position:fixed;inset:0;background:rgba(74,55,40,0.2);z-index:70;display:none;align-items:center;justify-content:center;padding:20px}
 .candy-detail-mask.show{display:flex}
-.candy-detail{position:relative;width:280px;height:400px;animation:popIn .2s ease}
+.candy-detail{position:relative;width:min(90vw,380px,calc(80vh * 0.725));aspect-ratio:400/552;height:auto;animation:popIn .2s ease}
 .candy-detail-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.candy-detail-text{position:absolute;top:20%;left:15%;right:10%;bottom:22%;overflow-y:auto;font-size:14px;color:var(--text-primary);line-height:1.8;z-index:2}
+.candy-detail-text{position:absolute;top:20%;left:15%;right:10%;bottom:22%;overflow-y:auto;font-size:15px;color:var(--text-primary);line-height:1.8;z-index:2}
 .candy-detail-text span{white-space:pre-wrap;word-break:break-word;background:rgba(255,255,255,0.7);padding:2px 6px;border-radius:4px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .candy-detail-text::-webkit-scrollbar{width:0}
 .candy-detail-meta{position:absolute;bottom:8%;right:12%;font-size:10px;color:var(--pink-400);z-index:2}
@@ -2233,7 +2233,7 @@ function showCandyDetail(idx){
   document.getElementById('candy-detail-inner').innerHTML=`
     <img class="candy-detail-candy" src="${c.candy}">
     <img class="candy-detail-bg" src="${c.note}">
-    <div class="candy-detail-text"><span>${String(c.text||'').replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]))}</span></div>
+    <div class="candy-detail-text">${String(c.text||'').replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch])).split('\n').map(l=>l.trim()?`<span>${l}</span>`:'').join('<br>')}</div>
     <div class="candy-detail-meta"><span style="background:rgba(255,255,255,0.7);padding:2px 6px;border-radius:4px">${c.date} · ${c.author}</span></div>`;
   document.getElementById('candy-detail-mask').classList.add('show');
 }
