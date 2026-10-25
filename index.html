@@ -873,6 +873,12 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .clab-crab:active{transform:scale(.88)}
 .clab-crab svg{width:64px;height:64px}
 .clab-crab svg.cr{transform:scale(.8);transform-origin:50% 90%}
+/* 统一捉迷藏螃蟹大小：带场景的大螃蟹缩到和普通螃蟹差不多，不再被挤扁（只影响页面里躲着的那只，图鉴不受影响） */
+#clabCrabSvg{flex-shrink:0;display:flex;align-items:center;justify-content:center}
+#clabCrabSvg>*{flex-shrink:0}
+#clabCrabSvg .clab-crab-book,#clabCrabSvg .clab-crab-eat,#clabCrabSvg .clab-crab-chef,#clabCrabSvg .clab-crab-trip,#clabCrabSvg .clab-baby{zoom:.5;margin-top:20px}
+#clabCrabSvg .clab-crab-bath{zoom:.5;margin-top:-20px}
+#clabCrabSvg .clab-crab-bubbling{zoom:.5;margin-top:20px}
 .clab-crab-sprite{
   width:36px;height:36px;margin-top:18px;
   image-rendering:pixelated;
