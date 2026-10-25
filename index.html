@@ -4975,6 +4975,39 @@ function lkApply(){
   st.textContent=css;
   document.body.classList.toggle('cl-on',!lkIsEmpty(L));
   lkApplyWp();
+  lkThemeColor();
+}
+// 顶上状态栏颜色：有壁纸就取壁纸最上边的颜色（按浓淡和底色混合），只改底色就用底色
+const LK_THEME_COLORS={'theme-claude':'#0D0D14','theme-water':'#E4EDE8','theme-cream':'#CFD9E6','theme-grape':'#B6A9C8','':'#FFF8FA'};
+let lkTopColor={id:null,c:null};
+function lkThemeColor(){
+  let mc=document.querySelector('meta[name="theme-color"]');
+  if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
+  const theme=localStorage.getItem('candyJarTheme')||'';
+  const base=lkLook.bg||LK_THEME_COLORS[theme]||'#FFF8FA';
+  let out=lkLook.bg||null;
+  if(lkLook.wp&&lkTopColor.id===lkLook.wp&&lkTopColor.c){
+    const a=lkLook.wpA,w=lkTopColor.c,bb=lkParse(base).c;
+    const mix=i=>Math.round(parseInt(w.slice(1+i*2,3+i*2),16)*a+parseInt(bb.slice(1+i*2,3+i*2),16)*(1-a));
+    out='#'+[0,1,2].map(i=>mix(i).toString(16).padStart(2,'0')).join('');
+  }
+  mc.content=out||LK_THEME_COLORS[theme]||'#FFF8FA';
+}
+function lkSampleTop(url,id){
+  const img=new Image();
+  img.onload=()=>{
+    try{
+      const W=48,H=Math.max(1,Math.round(img.naturalHeight*W/img.naturalWidth));
+      const cv=document.createElement('canvas');cv.width=W;cv.height=H;
+      const cx=cv.getContext('2d');cx.drawImage(img,0,0,W,H);
+      const rows=Math.max(1,Math.round(H*0.02));
+      const d=cx.getImageData(0,0,W,rows).data;let r=0,g=0,b=0,n=0;
+      for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1];b+=d[i+2];n++;}
+      lkTopColor={id,c:'#'+[r,g,b].map(x=>Math.round(x/n).toString(16).padStart(2,'0')).join('')};
+      lkThemeColor();
+    }catch(e){}
+  };
+  img.src=url;
 }
 
 // ---- 壁纸 (IndexedDB) ----
@@ -4994,6 +5027,7 @@ async function lkApplyWp(){
     if(lkWpUrl)URL.revokeObjectURL(lkWpUrl);
     lkWpUrl=URL.createObjectURL(blob);lkWpShownId=id;
     el.style.backgroundImage=`url("${lkWpUrl}")`;el.style.display='block';
+    if(lkTopColor.id!==id)lkSampleTop(lkWpUrl,id);
   }catch(e){console.warn('wallpaper load fail',e);}
 }
 function lkCompress(file){
@@ -5106,9 +5140,12 @@ function lkSet(kind,id,field,val){
 }
 function lkUnset(kind,id){delete (kind==='g'?lkLook.g:lkLook.t)[id];lkSave();lkApply();lkRender();}
 function lkSetBg(v,el){lkLook.bg=v;lkApply();if(v===null){lkSave();lkRender();return;}lkSaveSoon();const r=el&&el.closest('.lk-row');if(r){r.querySelector('.lk-name').classList.remove('off');r.querySelector('.lk-undo').classList.add('on');}}
-function lkSetWpA(v){lkLook.wpA=Math.max(0,Math.min(1,Number(v)/100));const el=document.getElementById('cl-wallpaper');if(el)el.style.opacity=lkLook.wpA;const p=document.getElementById('lk-wpa');if(p)p.textContent=Math.round(lkLook.wpA*100)+'%';lkSaveSoon();}
+function lkSetWpA(v){lkLook.wpA=Math.max(0,Math.min(1,Number(v)/100));const el=document.getElementById('cl-wallpaper');if(el)el.style.opacity=lkLook.wpA;const p=document.getElementById('lk-wpa');if(p)p.textContent=Math.round(lkLook.wpA*100)+'%';lkThemeColor();lkSaveSoon();}
 let lkSaveT=null;
-function lkSaveSoon(){clearTimeout(lkSaveT);lkSaveT=setTimeout(lkSave,300);}
+function lkSaveSoon(){clearTimeout(lkSaveT);lkSaveT=setTimeout(()=>{lkSaveT=null;lkSave();},300);}
+function lkFlush(){if(lkSaveT){clearTimeout(lkSaveT);lkSaveT=null;lkSave();}}
+window.addEventListener('pagehide',lkFlush);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')lkFlush();});
 
 function lkSaveScheme(){
   const inp=document.getElementById('lk-scheme-name');const name=(inp.value||'').trim();
@@ -6353,6 +6390,7 @@ function setTheme(theme){
   let mc=document.querySelector('meta[name="theme-color"]');
   if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
   mc.content=themeColors[theme]||'#FFF8FA';
+  if(typeof lkThemeColor==='function')lkThemeColor();
 }
 (function loadTheme(){
   const t=localStorage.getItem('candyJarTheme')||'';
@@ -6361,6 +6399,7 @@ function setTheme(theme){
   let mc=document.querySelector('meta[name="theme-color"]');
   if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
   mc.content=themeColors[t]||'#FFF8FA';
+  if(typeof lkThemeColor==='function')lkThemeColor();
   setTimeout(()=>{
     document.querySelectorAll('.theme-dot').forEach(d=>{
       d.classList.toggle('active',d.dataset.theme===t);
