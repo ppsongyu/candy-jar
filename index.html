@@ -681,11 +681,27 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .price-option.selected{border-color:var(--pink-400);background:var(--pink-100);color:var(--pink-500)}
 .dream-btn{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.65);backdrop-filter:blur(6px);border-radius:20px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:var(--text-secondary);cursor:pointer;z-index:5;animation:dreamFloat 3s ease-in-out infinite;display:none}
 @keyframes dreamFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.dream-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(30,20,60,.75);z-index:1000;display:flex;align-items:center;justify-content:center;animation:fadeIn .3s ease}
-.dream-card{background:linear-gradient(135deg,#E8F0FA 0%,#D8E8F8 40%,#E0ECF8 100%);border-radius:20px;padding:28px 24px;max-width:320px;width:85%;max-height:70vh;overflow-y:auto;position:relative;box-shadow:0 0 40px rgba(120,160,220,.2)}
-.dream-card-title{text-align:center;font-family:'SGH',Georgia,serif;font-size:13px;color:rgba(80,110,150,.5);letter-spacing:2px;margin-bottom:16px}
-.dream-card-body{font-size:13px;line-height:2;color:rgba(60,80,110,.8);font-family:'SGH',Georgia,serif}
-.dream-card-close{text-align:center;margin-top:20px;font-size:11px;color:rgba(80,110,150,.35);cursor:pointer;letter-spacing:1px}
+.dream-overlay{position:fixed;inset:0;z-index:1000;overflow:hidden;background:linear-gradient(180deg,#FBE3EE 0%,#F1E2F6 45%,#E9E0F7 70%,#FDEEF4 100%);animation:dmIn .5s ease;font-family:'SGH',Georgia,serif}
+@keyframes dmIn{from{opacity:0}to{opacity:1}}
+.dream-overlay.closing{animation:dmOut .7s ease forwards}
+@keyframes dmOut{to{opacity:0}}
+.dm-cloud{position:absolute;border-radius:50%;background:#fff;filter:blur(10px);opacity:.75;animation:dmDrift 14s ease-in-out infinite}
+@keyframes dmDrift{0%,100%{transform:translateX(0)}50%{transform:translateX(26px)}}
+.dm-spark{position:absolute;width:4px;height:4px;border-radius:50%;background:#fff;box-shadow:0 0 6px 2px rgba(255,255,255,.9);animation:dmTw 2.6s ease-in-out infinite}
+@keyframes dmTw{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:1;transform:scale(1)}}
+.dm-fog{position:absolute;border-radius:50%;background:radial-gradient(circle,#fff 0%,rgba(255,255,255,.95) 45%,rgba(255,255,255,0) 72%);animation:dmFog 2s cubic-bezier(.3,.6,.3,1) forwards;pointer-events:none}
+@keyframes dmFog{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--fx),var(--fy)) scale(1.8)}}
+.dream-overlay.closing .dm-fog{animation:dmFogIn .7s ease forwards}
+@keyframes dmFogIn{from{opacity:0;transform:translate(var(--fx),var(--fy)) scale(1.8)}to{opacity:1;transform:none}}
+.dm-wrap{position:relative;z-index:2;height:100%;max-width:400px;margin:0 auto;display:flex;flex-direction:column;justify-content:center;padding:calc(env(safe-area-inset-top) + 48px) 34px calc(env(safe-area-inset-bottom) + 48px);box-sizing:border-box}
+.dm-title{text-align:center;font-size:12px;letter-spacing:3px;color:#A68DC0;margin-bottom:22px;opacity:0;animation:dmLine 1.2s ease forwards}
+.dm-body{overflow-y:auto;max-height:62vh;-webkit-overflow-scrolling:touch}
+.dm-body::-webkit-scrollbar{width:0}
+.dm-line{font-size:13.5px;line-height:2.1;color:#6B5488;opacity:0;filter:blur(3px);animation:dmLine 1.4s ease forwards}
+@keyframes dmLine{to{opacity:1;filter:blur(0);transform:none}}
+.dm-line{transform:translateY(5px)}
+.dm-close{text-align:center;margin-top:26px;font-size:11px;letter-spacing:2px;color:#B9A5CF;opacity:0;animation:dmLine 1.2s ease forwards}
+.dream-overlay.skip .dm-line,.dream-overlay.skip .dm-close,.dream-overlay.skip .dm-title{animation-delay:0s!important;animation-duration:.4s!important}
 
 /* ===== CANDY CATCH GAME ===== */
 .game-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;max-width:430px;margin:0 auto}
@@ -6676,11 +6692,30 @@ function checkDreamBtn(){
 
 function showDream(){
   const dream=abebeDreams[getDreamIndex()];
-  const overlay=document.createElement('div');
-  overlay.className='dream-overlay';
-  overlay.onclick=function(e){if(e.target===overlay)overlay.remove()};
-  overlay.innerHTML='<div class="dream-card"><div class="dream-card-title">阿贝贝的梦</div><div class="dream-card-body">'+dream.replace(/\n/g,'<br>')+'</div><div class="dream-card-close" onclick="this.closest(\'.dream-overlay\').remove()">轻触回到现实</div></div>';
-  document.body.appendChild(overlay);
+  const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const lines=dream.split('\n').filter(l=>l.trim());
+  const start=1.4,step=0.75;
+  const ov=document.createElement('div');
+  ov.className='dream-overlay';
+  // 云、闪光
+  let deco='';
+  [[150,60,'8%','-30px',0],[190,70,'22%','62%',3],[130,50,'48%','-40px',6],[210,80,'70%','55%',1.5],[160,60,'86%','-20px',4.5]].forEach(c=>{
+    deco+=`<div class="dm-cloud" style="width:${c[0]}px;height:${c[1]}px;top:${c[2]};left:${c[3]};animation-delay:-${c[4]}s"></div>`;});
+  [['12%','18%',0],['18%','78%',.8],['34%','90%',1.6],['62%','8%',.4],['78%','82%',1.2],['90%','40%',2]].forEach(p=>{
+    deco+=`<span class="dm-spark" style="top:${p[0]};left:${p[1]};animation-delay:${p[2]}s"></span>`;});
+  // 雾：一圈大白雾从中间往四周散开
+  let fog='';
+  [[-120,-160],[140,-140],[-150,120],[150,160],[0,-220],[0,230],[-200,0],[210,0],[0,0]].forEach((f,i)=>{
+    fog+=`<div class="dm-fog" style="width:420px;height:420px;left:calc(50% - 210px);top:calc(50% - 210px);--fx:${f[0]}px;--fy:${f[1]}px;animation-delay:${0.05*i}s"></div>`;});
+  const body=lines.map((l,i)=>`<div class="dm-line" style="animation-delay:${(start+i*step).toFixed(2)}s">${esc(l)}</div>`).join('');
+  ov.innerHTML=deco+`<div class="dm-wrap"><div class="dm-title" style="animation-delay:${start-0.4}s">ᶻ 𝗓 𝐙　阿贝贝的梦</div><div class="dm-body">${body}</div><div class="dm-close" style="animation-delay:${(start+lines.length*step+0.3).toFixed(2)}s">轻触回到现实</div></div>`+fog;
+  const doneAt=Date.now()+(start+lines.length*step)*1000;
+  ov.onclick=()=>{
+    if(Date.now()<doneAt&&!ov.classList.contains('skip')){ov.classList.add('skip');return;}  // 还在讲：先一下子讲完
+    if(ov.classList.contains('closing'))return;
+    ov.classList.add('closing');setTimeout(()=>ov.remove(),700);
+  };
+  document.body.appendChild(ov);
 }
 
 // also check on interval
