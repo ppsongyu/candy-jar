@@ -1502,6 +1502,7 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .lk-empty{font-size:11px;color:#B5A08A}
 .lk-save-row{display:flex;gap:8px;margin-top:8px}
 .lk-input{flex:1;min-width:0;padding:8px 12px;border:1px solid #EADBD2;border-radius:12px;font-family:inherit;font-size:12px;color:#4A3728;background:#fff;outline:none}
+.lk-hint{font-size:10px;color:#B5A08A;margin:4px 0 0;line-height:1.5}
 .lk-msg{font-size:11px;color:#D4789E;text-align:center;min-height:16px;margin-top:8px}
 .lk-confirm{margin-top:8px;padding:12px;border-radius:14px;background:#FFF3F6;font-size:12px;text-align:center;line-height:1.6}
 .lk-confirm .lk-save-row{margin-top:10px}
@@ -4934,11 +4935,14 @@ let lkLook=lkLoad();
 let lkWpUrl=null;
 
 function lkLoad(){try{const v=JSON.parse(localStorage.getItem(LK_KEY)||'null');if(v&&typeof v==='object')return lkNorm(v);}catch(e){}return lkNorm({});}
-function lkNorm(v){return {bg:v.bg||null,wp:v.wp||null,wpA:(typeof v.wpA==='number')?v.wpA:1,g:Object.assign({},v.g||{}),t:Object.assign({},v.t||{})};}
+function lkNorm(v){return {bg:v.bg||null,wp:v.wp||null,wpA:(typeof v.wpA==='number')?v.wpA:1,blur:(typeof v.blur==='number')?v.blur:0,pw:Object.assign({},v.pw||{}),g:Object.assign({},v.g||{}),t:Object.assign({},v.t||{})};}
 function lkSave(){try{localStorage.setItem(LK_KEY,JSON.stringify(lkLook));}catch(e){lkMsg('存不下了，手机空间可能满了');}}
 function lkSchemes(){try{const v=JSON.parse(localStorage.getItem(LK_SCHEMES)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
 function lkSetSchemes(list){try{localStorage.setItem(LK_SCHEMES,JSON.stringify(list));}catch(e){lkMsg('方案存不下了');}}
-function lkIsEmpty(l){return !l.bg&&!l.wp&&!Object.keys(l.g).length&&!Object.keys(l.t).length;}
+function lkIsEmpty(l){return !l.bg&&!l.wp&&!l.blur&&!Object.keys(l.pw).length&&!Object.keys(l.g).length&&!Object.keys(l.t).length;}
+const LK_PAGES=[{id:'sweets',name:'糖罐子'},{id:'diary',name:'日历'},{id:'books',name:'读书'},{id:'abebe',name:'阿贝贝'},{id:'us',name:'我们'}];
+function lkCurPage(){const a=document.querySelector('.page.active');return a?a.id.replace('page-',''):'sweets';}
+function lkCurWp(){return lkLook.pw[lkCurPage()]||lkLook.wp||null;}
 
 function lkRgba(o){const h=o.c.replace('#','');const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return `rgba(${r},${g},${b},${Math.round(o.a*100)/100})`;}
 let lkCtx=null;
@@ -4963,6 +4967,7 @@ function lkApply(){
     const sel=gr.sel.split(',').map(s=>LK_P+s.trim()).join(',');
     css+=`${sel}{background:${lkRgba(o)}!important}`;
     if(gr.id==='topbar'||gr.id==='nav')css+=`${sel}{border-color:transparent!important}`;
+    if(L.blur>0&&o.a<0.99&&['card','topbar','nav','popup'].includes(gr.id))css+=`${sel}{-webkit-backdrop-filter:blur(${L.blur}px)!important;backdrop-filter:blur(${L.blur}px)!important}`;
   });
   const vars=[];
   if(L.t.main)vars.push(`--text-primary:${lkRgba(L.t.main)}!important`);
@@ -4979,15 +4984,16 @@ function lkApply(){
 }
 // 顶上状态栏颜色：有壁纸就取壁纸最上边的颜色（按浓淡和底色混合），只改底色就用底色
 const LK_THEME_COLORS={'theme-claude':'#0D0D14','theme-water':'#E4EDE8','theme-cream':'#CFD9E6','theme-grape':'#B6A9C8','':'#FFF8FA'};
-let lkTopColor={id:null,c:null};
+const lkTopColors={};
 function lkThemeColor(){
   let mc=document.querySelector('meta[name="theme-color"]');
   if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
   const theme=localStorage.getItem('candyJarTheme')||'';
   const base=lkLook.bg||LK_THEME_COLORS[theme]||'#FFF8FA';
   let out=lkLook.bg||null;
-  if(lkLook.wp&&lkTopColor.id===lkLook.wp&&lkTopColor.c){
-    const a=lkLook.wpA,w=lkTopColor.c,bb=lkParse(base).c;
+  const cw=lkCurWp();
+  if(cw&&lkTopColors[cw]){
+    const a=lkLook.wpA,w=lkTopColors[cw],bb=lkParse(base).c;
     const mix=i=>Math.round(parseInt(w.slice(1+i*2,3+i*2),16)*a+parseInt(bb.slice(1+i*2,3+i*2),16)*(1-a));
     out='#'+[0,1,2].map(i=>mix(i).toString(16).padStart(2,'0')).join('');
   }
@@ -5003,7 +5009,7 @@ function lkSampleTop(url,id){
       const rows=Math.max(1,Math.round(H*0.02));
       const d=cx.getImageData(0,0,W,rows).data;let r=0,g=0,b=0,n=0;
       for(let i=0;i<d.length;i+=4){r+=d[i];g+=d[i+1];b+=d[i+2];n++;}
-      lkTopColor={id,c:'#'+[r,g,b].map(x=>Math.round(x/n).toString(16).padStart(2,'0')).join('')};
+      lkTopColors[id]='#'+[r,g,b].map(x=>Math.round(x/n).toString(16).padStart(2,'0')).join('');
       lkThemeColor();
     }catch(e){}
   };
@@ -5017,17 +5023,18 @@ let lkWpShownId=null;
 async function lkApplyWp(){
   let el=document.getElementById('cl-wallpaper');
   if(!el){el=document.createElement('div');el.id='cl-wallpaper';document.body.insertBefore(el,document.body.firstChild);}
-  const id=lkLook.wp;
+  const id=lkCurWp();
   el.style.opacity=lkLook.wpA;
   if(!id){el.style.display='none';el.style.backgroundImage='';if(lkWpUrl){URL.revokeObjectURL(lkWpUrl);lkWpUrl=null;}lkWpShownId=null;return;}
-  if(lkWpShownId===id&&lkWpUrl){el.style.display='block';return;}
+  if(lkWpShownId===id&&lkWpUrl){el.style.display='block';lkThemeColor();return;}
   try{
     const blob=await lkIdb('readonly',s=>s.get(id));
-    if(!blob||lkLook.wp!==id)return;
+    if(!blob||lkCurWp()!==id)return;
     if(lkWpUrl)URL.revokeObjectURL(lkWpUrl);
     lkWpUrl=URL.createObjectURL(blob);lkWpShownId=id;
     el.style.backgroundImage=`url("${lkWpUrl}")`;el.style.display='block';
-    if(lkTopColor.id!==id)lkSampleTop(lkWpUrl,id);
+    if(!lkTopColors[id])lkSampleTop(lkWpUrl,id);
+    lkThemeColor();
   }catch(e){console.warn('wallpaper load fail',e);}
 }
 function lkCompress(file){
@@ -5044,7 +5051,7 @@ function lkCompress(file){
     img.src=url;
   });
 }
-async function lkPickWp(ev){
+async function lkPickWp(ev,page){
   const f=ev.target.files&&ev.target.files[0];ev.target.value='';
   if(!f)return;
   lkMsg('壁纸处理中…');
@@ -5052,17 +5059,20 @@ async function lkPickWp(ev){
     const blob=await lkCompress(f);
     const id='wp'+Date.now();
     await lkIdb('readwrite',s=>s.put(blob,id));
-    lkLook.wp=id;lkSave();lkApply();lkGc();lkRender();lkMsg('壁纸换好啦');
+    if(page)lkLook.pw[page]=id;else lkLook.wp=id;
+    lkSave();lkApply();lkGc();lkRender();lkMsg(page?'这一页的壁纸换好啦':'壁纸换好啦');
   }catch(e){console.warn(e);lkMsg('这张图没放进去，换一张试试');}
 }
-function lkRemoveWp(){lkLook.wp=null;lkSave();lkApply();lkGc();lkRender();}
+function lkRemoveWp(page){if(page)delete lkLook.pw[page];else lkLook.wp=null;lkSave();lkApply();lkGc();lkRender();}
 async function lkGc(){
   try{
-    const keep=new Set([lkLook.wp,...lkSchemes().map(s=>s.look&&s.look.wp)].filter(Boolean));
+    const ids=l=>l?[l.wp,...Object.values(l.pw||{})]:[];
+    const keep=new Set([...ids(lkLook),...lkSchemes().flatMap(s=>ids(s.look))].filter(Boolean));
     const keys=await lkIdb('readonly',s=>s.getAllKeys());
     const dead=(keys||[]).filter(k=>!keep.has(k));
     if(dead.length)await lkIdb('readwrite',s=>{dead.forEach(k=>s.delete(k));return null;});
   }catch(e){}
+  lkRefreshBackup();
 }
 
 // ---- 默认值：读当前主题本来的样子 ----
@@ -5116,8 +5126,15 @@ function lkRender(){
   h+=`</div><div class="lk-save-row"><input class="lk-input" id="lk-scheme-name" maxlength="12" placeholder="给这套起个名字"><button class="lk-btn main" style="flex:0 0 72px" onclick="lkSaveScheme()">存为方案</button></div><div id="lk-confirm-slot"></div>`;
   h+=`<div class="lk-sec">背景</div>`;
   h+=`<div class="lk-row"><div class="lk-name${L.bg?'':' off'}">底色</div><input type="color" class="lk-color" value="${L.bg||D.bg}" oninput="lkSetBg(this.value,this)"><div style="flex:1"></div><div class="lk-undo${L.bg?' on':''}" onclick="lkSetBg(null)">↺</div></div>`;
-  h+=`<div class="lk-row"><div class="lk-name${L.wp?'':' off'}">壁纸</div><div class="lk-wp-btns"><label class="lk-btn">${L.wp?'换一张':'上传图片'}<input type="file" accept="image/*" style="display:none" onchange="lkPickWp(event)"></label>${L.wp?'<div class="lk-btn" onclick="lkRemoveWp()">不要壁纸</div>':''}</div></div>`;
-  if(L.wp)h+=`<div class="lk-row"><div class="lk-name">壁纸浓淡</div><input type="range" class="lk-range" min="0" max="100" value="${Math.round(L.wpA*100)}" oninput="lkSetWpA(this.value)"><div class="lk-pct" id="lk-wpa">${Math.round(L.wpA*100)}%</div><div class="lk-undo"></div></div>`;
+  h+=`<div class="lk-row"><div class="lk-name${L.wp?'':' off'}">总壁纸</div><div class="lk-wp-btns"><label class="lk-btn">${L.wp?'换一张':'上传图片'}<input type="file" accept="image/*" style="display:none" onchange="lkPickWp(event)"></label>${L.wp?'<div class="lk-btn" onclick="lkRemoveWp()">不要壁纸</div>':''}</div></div>`;
+  const anyWp=L.wp||Object.keys(L.pw).length;
+  if(anyWp)h+=`<div class="lk-row"><div class="lk-name">壁纸浓淡</div><input type="range" class="lk-range" min="0" max="100" value="${Math.round(L.wpA*100)}" oninput="lkSetWpA(this.value)"><div class="lk-pct" id="lk-wpa">${Math.round(L.wpA*100)}%</div><div class="lk-undo"></div></div>`;
+  h+=`<div class="lk-row"><div class="lk-name${L.blur?'':' off'}">毛玻璃</div><input type="range" class="lk-range" min="0" max="20" value="${L.blur}" oninput="lkSetBlur(this.value)"><div class="lk-pct" id="lk-blur">${L.blur}</div><div class="lk-undo"></div></div>`;
+  h+=`<div class="lk-hint">毛玻璃只对调成半透明的卡片、顶栏、导航、弹窗起作用</div>`;
+  h+=`<div class="lk-sec">每页单独的壁纸 · 没设的用总壁纸</div>`;
+  const cur=lkCurPage();
+  LK_PAGES.forEach(pg=>{const has=!!L.pw[pg.id];
+    h+=`<div class="lk-row"><div class="lk-name${has?'':' off'}">${pg.name}${pg.id===cur?' ·':''}</div><div class="lk-wp-btns"><label class="lk-btn">${has?'换一张':'上传'}<input type="file" accept="image/*" style="display:none" onchange="lkPickWp(event,'${pg.id}')"></label>${has?`<div class="lk-btn" onclick="lkRemoveWp('${pg.id}')">用总壁纸</div>`:''}</div></div>`;});
   h+=`<div class="lk-sec">板块底色 · 颜色和透明度</div>`;
   LK_GROUPS.forEach(g=>{h+=lkRowHtml('g',g.id,g.name,L.g[g.id],D.g[g.id]);});
   h+=`<div class="lk-sec">字</div>`;
@@ -5141,6 +5158,7 @@ function lkSet(kind,id,field,val){
 function lkUnset(kind,id){delete (kind==='g'?lkLook.g:lkLook.t)[id];lkSave();lkApply();lkRender();}
 function lkSetBg(v,el){lkLook.bg=v;lkApply();if(v===null){lkSave();lkRender();return;}lkSaveSoon();const r=el&&el.closest('.lk-row');if(r){r.querySelector('.lk-name').classList.remove('off');r.querySelector('.lk-undo').classList.add('on');}}
 function lkSetWpA(v){lkLook.wpA=Math.max(0,Math.min(1,Number(v)/100));const el=document.getElementById('cl-wallpaper');if(el)el.style.opacity=lkLook.wpA;const p=document.getElementById('lk-wpa');if(p)p.textContent=Math.round(lkLook.wpA*100)+'%';lkThemeColor();lkSaveSoon();}
+function lkSetBlur(v){lkLook.blur=Math.max(0,Math.min(20,Math.round(Number(v))));const p=document.getElementById('lk-blur');if(p){p.textContent=lkLook.blur;const n=p.parentElement.querySelector('.lk-name');if(n)n.classList.toggle('off',!lkLook.blur);}lkApply();lkSaveSoon();}
 let lkSaveT=null;
 function lkSaveSoon(){clearTimeout(lkSaveT);lkSaveT=setTimeout(()=>{lkSaveT=null;lkSave();},300);}
 function lkFlush(){if(lkSaveT){clearTimeout(lkSaveT);lkSaveT=null;lkSave();}}
@@ -5167,6 +5185,34 @@ function lkAskDelScheme(i){const s=lkSchemes()[i];if(!s)return;lkConfirm(`删掉
 function lkAskReset(){lkConfirm('回到主题原来的样子吗？<br>壁纸和调过的颜色都会清掉，存好的方案还在。','恢复',()=>{lkLook=lkNorm({});lkSave();lkApply();lkGc();lkRender();lkMsg('恢复好了');});}
 
 lkApply();
+// 切换页面时换成这一页的壁纸
+(function(){const ob=new MutationObserver(()=>{if(lkLook.wp||Object.keys(lkLook.pw).length)lkApplyWp();});
+  document.querySelectorAll('.page').forEach(pg=>ob.observe(pg,{attributes:true,attributeFilter:['class']}));})();
+// ---- 备份：导出时带上外观、方案和壁纸 ----
+let lkBackupWps={};
+async function lkRefreshBackup(){
+  try{
+    const keys=await lkIdb('readonly',s=>s.getAllKeys())||[];const out={};
+    for(const k of keys){
+      const blob=await lkIdb('readonly',s=>s.get(k));if(!blob)continue;
+      out[k]=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.onerror=()=>r(null);fr.readAsDataURL(blob);});
+      if(!out[k])delete out[k];
+    }
+    lkBackupWps=out;
+  }catch(e){}
+}
+function lkBackupData(){return {look:lkLook,schemes:lkSchemes(),wallpapers:lkBackupWps};}
+async function lkRestoreBackup(d){
+  if(!d||typeof d!=='object')return;
+  if(d.wallpapers&&typeof d.wallpapers==='object'){
+    for(const [k,url] of Object.entries(d.wallpapers)){
+      try{const blob=await (await fetch(url)).blob();await lkIdb('readwrite',s=>s.put(blob,k));}catch(e){}
+    }
+  }
+  try{if(d.look)localStorage.setItem(LK_KEY,JSON.stringify(lkNorm(d.look)));}catch(e){}
+  try{if(Array.isArray(d.schemes))localStorage.setItem(LK_SCHEMES,JSON.stringify(d.schemes));}catch(e){}
+}
+setTimeout(lkRefreshBackup,3000);
 
 // ===== SETTINGS DRAWER =====
 function openSettingsDrawer(){
@@ -6304,6 +6350,7 @@ function exportData(){
   try{const raw=localStorage.getItem('candyJarSnackData');if(raw) data.snackData=JSON.parse(raw);}catch(e){}
   try{const raw=localStorage.getItem('pigBellyData');if(raw) data.pigBellyData=JSON.parse(raw);}catch(e){}
   try{const raw=localStorage.getItem('crabDex');if(raw) data.crabDex=JSON.parse(raw);}catch(e){}
+  try{if(typeof lkBackupData==='function') data.lookData=lkBackupData();}catch(e){}
   
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
@@ -6327,6 +6374,7 @@ async function importData(event){
       const data=JSON.parse(e.target.result);
       const now=Date.now();
       if(data.crabDex){try{localStorage.setItem('crabDex',JSON.stringify(data.crabDex));}catch(e){}}
+      if(data.lookData&&typeof lkRestoreBackup==='function'){try{await lkRestoreBackup(data.lookData);}catch(e){}}
       if(data.appData){
         data.appData.savedAt=now;
         localStorage.setItem('candyJarData',JSON.stringify(data.appData));
