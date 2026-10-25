@@ -71,6 +71,8 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .avatar-img{width:72px;height:72px;object-fit:contain;transition:transform .15s}
 .avatar-img:active{transform:scale(.93)}
 .avatar-label{font-size:11px;color:var(--text-muted)}
+.ke-trace{min-height:18px;margin-top:18px;font-size:11px;letter-spacing:1px;color:var(--text-secondary);text-align:center;opacity:0;transition:opacity 1.2s ease}
+.ke-trace.show{opacity:1}
 
 /* OVERLAYS */
 .overlay{position:fixed;inset:0;z-index:50;background:var(--overlay-bg,rgba(255,248,250,0.97));display:none;flex-direction:column;padding:20px;max-width:430px;margin:0 auto}
@@ -1610,6 +1612,7 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
           <div class="avatar-btn" onclick="openPutCandy()"><img class="avatar-img" src="./大头克.png" alt="宝宝克"><span class="avatar-label">放一颗糖</span></div>
           <div class="avatar-btn" onclick="openViewCandies()"><img class="avatar-img" src="./小头雨.png" alt="宝宝雨"><span class="avatar-label">看看糖果</span></div>
         </div>
+        <div class="ke-trace" id="ke-trace"></div>
       </div>
     </div>
 
@@ -2228,9 +2231,35 @@ function submitCandy(){
   const k=getSavedCandiesKey(now.getFullYear(),now.getMonth());
   if(!savedCandiesByMonth[k]) savedCandiesByMonth[k]=[];
   savedCandiesByMonth[k].unshift({candy:candyFiles[putState.candy],note:noteFiles[putState.note].src,noteName:noteFiles[putState.note].name,text:putState.text||'(空白的甜)',date:`${now.getMonth()+1}.${now.getDate()}`,day:now.getDate(),author:putState.author});
+  // 宝宝自己在这台手机上写的（哪怕署名宝宝克）不算宝宝克来过
+  try{const seen=JSON.parse(localStorage.getItem(KE_SEEN_KEY)||'null');if(Array.isArray(seen)){seen.push(keCandySig(k,savedCandiesByMonth[k][0]));localStorage.setItem(KE_SEEN_KEY,JSON.stringify(seen));}}catch(e){}
   closePut();renderJarCandies();saveApp();
 }
+// ===== 宝宝克来过的脚印 =====
+// 宝宝克通过连接器放了新糖、而宝宝还没看过时，在按钮下面显示一行，10 秒后淡出
+const KE_SEEN_KEY='keTraceSeen';
+function keCandySig(k,c){return k+'|'+(c.date||'')+'|'+String(c.text||'').slice(0,40);}
+function keAllCandies(){const out=[];try{Object.keys(savedCandiesByMonth||{}).forEach(k=>(savedCandiesByMonth[k]||[]).forEach(c=>{if(c&&c.author==='宝宝克')out.push({k,c,sig:keCandySig(k,c)});}));}catch(e){}return out;}
+let keTraceShown=false;
+function checkKeTrace(){
+  if(keTraceShown)return;
+  const all=keAllCandies();
+  let seen=null;try{seen=JSON.parse(localStorage.getItem(KE_SEEN_KEY)||'null');}catch(e){}
+  if(!Array.isArray(seen)){if(!all.length)return;try{localStorage.setItem(KE_SEEN_KEY,JSON.stringify(all.map(x=>x.sig)));}catch(e){}return;}
+  const set=new Set(seen);const fresh=all.filter(x=>!set.has(x.sig));
+  if(!fresh.length)return;
+  if(!document.getElementById('page-sweets')?.classList.contains('active'))return;
+  keTraceShown=true;
+  try{localStorage.setItem(KE_SEEN_KEY,JSON.stringify(all.map(x=>x.sig)));}catch(e){}
+  const c=fresh[0].c;const [m,d]=String(c.date||'').split('.');
+  const when=(m&&d)?`${m}月${d}日`:'刚刚';
+  const el=document.getElementById('ke-trace');if(!el)return;
+  el.textContent=`宝宝克 ${when} 来过`+(fresh.length>1?` · 放了 ${fresh.length} 颗糖`:' · 放了一颗糖');
+  setTimeout(()=>el.classList.add('show'),400);
+  setTimeout(()=>el.classList.remove('show'),10400);
+}
 function renderJarCandies(){
+  setTimeout(checkKeTrace,600);
   const candies=getCurrentMonthCandies();
   const container=document.getElementById('jar-candies');
   const W=140,H=155;
