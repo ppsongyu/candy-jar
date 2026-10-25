@@ -536,6 +536,9 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .cv-face-txt{width:44px;height:44px;border-radius:10px;border:1.5px dashed var(--border-light);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-secondary);cursor:pointer;text-align:center;line-height:1.3}
 .cv-face-txt.on{border-color:var(--pink-400);border-style:solid}
 .cv-ava{cursor:pointer}
+.abebe-action{position:relative}
+.cv-dot{position:absolute;top:3px;right:3px;width:9px;height:9px;border-radius:50%;background:var(--pink-400);border:1.5px solid var(--bg-card);animation:cvDotPop .3s ease}
+@keyframes cvDotPop{from{transform:scale(0)}to{transform:scale(1)}}
 .cv-title{font-size:15px;letter-spacing:2px;color:var(--text-primary)}
 .cv-close{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--text-muted);cursor:pointer;padding:2px 8px}
 .cv-log{flex:1;overflow-y:auto;padding:14px 14px 8px;-webkit-overflow-scrolling:touch}
@@ -3229,13 +3232,24 @@ function cvItemHtml(it,old){
   return `<div class="cv-row ${me?'me':'ab'}${o}"><img class="cv-ava" src="${me?cvMeAva():cvAbAva()}"${me?'':' onclick="cvEditAva()"'}><div class="cv-msg">${cvEsc(it.text)}</div></div>`;
 }
 function cvScroll(){const l=document.getElementById('cv-log');if(l)requestAnimationFrame(()=>{l.scrollTop=l.scrollHeight;});}
+// 好几天没聊天：聊天按钮冒小圆点，点进去阿贝贝先说一句想你
+function cvLastChatAt(){try{const l=JSON.parse(localStorage.getItem('abebeChatLast')||'null');const it=l&&l.items&&l.items[0];if(it&&it.t)return it.t;}catch(e){}return 0;}
+function cvUnreadDays(){const t=cvLastChatAt();if(!t)return 99;return Math.floor((Date.now()-t)/86400000);}
+function cvMissLine(d){
+  if(d>=99)return '你终于点开我啦！我有好多好多话想跟你说';
+  if(d>=7)return `已经${d}天没跟我聊天了……我每天都在这里等你，耳朵都等耷拉了`;
+  if(d>=4)return `${d}天没聊天啦，我把想说的话都攒起来了，攒了满满一兜`;
+  return '你好几天没来找我聊天了……我还以为你把我忘了';
+}
 function cvStart(){
   const log=document.getElementById('cv-log');clearTimeout(cvTypingTimer);
   cvRefreshHead();cvCloseEdit();
+  const missDays=cvUnreadDays();
   let last=null;try{last=JSON.parse(localStorage.getItem('abebeChatLast')||'null');}catch(e){}
   log.innerHTML=(last&&Array.isArray(last.items)?last.items.map(it=>cvItemHtml(it,true)).join(''):'');
   cvSession={items:[{k:'time',t:Date.now()}]};
   log.insertAdjacentHTML('beforeend',cvItemHtml(cvSession.items[0]));
+  if(missDays>=2)cvPush({k:'ab',text:cvMissLine(missDays)});
   cvScroll();
 }
 function cvPush(it){
@@ -3373,6 +3387,7 @@ function closeChat(){
   document.getElementById('chat-overlay').classList.remove('show');
   clearTimeout(cvTypingTimer);cvSave();
   chatState.active=false;
+  if(typeof renderAbebeActions==='function')renderAbebeActions();
 }
 
 // ===== SUPABASE CONFIG =====
@@ -4948,7 +4963,7 @@ function renderAbebeActions(){
   btns+=`<div class="abebe-action" onclick="abebeAction('groom')"><div class="abebe-action-text">梳毛</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('kiss')"><div class="abebe-action-text">亲亲</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('daze')"><div class="abebe-action-text">发呆</div></div>`;
-  btns+=`<div class="abebe-action" onclick="openChat()"><div class="abebe-action-text">聊天</div></div>`;
+  btns+=`<div class="abebe-action" onclick="openChat()"><div class="abebe-action-text">聊天</div>${(typeof cvUnreadDays==='function'&&cvUnreadDays()>=2)?'<span class="cv-dot"></span>':''}</div>`;
   if(h>=20||h<6) btns+=`<div class="abebe-action" onclick="abebeAction('goodnight')"><div class="abebe-action-text">哄睡觉</div></div>`;
   if(h>=5&&h<12) btns+=`<div class="abebe-action" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
   
