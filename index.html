@@ -521,12 +521,39 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 .chat-options.visible{opacity:1;transform:translateY(0)}
 .chat-option-btn{padding:12px 16px;border:1.5px solid var(--pink-300);border-radius:16px;background:var(--bg-card);font-family:'SGH',Georgia,serif;font-size:12px;color:var(--text-primary);cursor:pointer;text-align:left;line-height:1.6;transition:all .15s}
 .chat-option-btn:active{background:var(--pink-100);transform:scale(.98)}
+.chat-overlay.show{align-items:stretch;justify-content:flex-start;padding:0}
+.cv-head{display:flex;align-items:center;justify-content:center;position:relative;padding:52px 16px 12px;border-bottom:1px solid var(--border-light);flex-shrink:0}
+.cv-title{font-size:15px;letter-spacing:2px;color:var(--text-primary)}
+.cv-close{position:absolute;right:14px;bottom:8px;font-size:22px;color:var(--text-muted);cursor:pointer;padding:2px 8px}
+.cv-log{flex:1;overflow-y:auto;padding:14px 14px 8px;-webkit-overflow-scrolling:touch}
+.cv-log::-webkit-scrollbar{width:0}
+.cv-time{text-align:center;font-size:11px;color:var(--text-muted);margin:14px 0 10px;letter-spacing:.5px}
+.cv-sys{text-align:center;font-size:11px;color:var(--text-muted);margin:12px 24px 4px;line-height:1.6}
+.cv-old{opacity:.6}
+.cv-row{display:flex;align-items:flex-start;gap:8px;margin:10px 0;animation:cvIn .25s ease}
+.cv-row.me{flex-direction:row-reverse}
+@keyframes cvIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.cv-ava{width:38px;height:38px;border-radius:10px;object-fit:contain;flex-shrink:0;background:var(--bg-card);border:1px solid var(--border-light)}
+.cv-msg{position:relative;max-width:68%;padding:9px 13px;border-radius:10px;font-size:13.5px;line-height:1.65;word-break:break-word;white-space:pre-wrap;margin-top:2px}
+.cv-row.ab .cv-msg{background:var(--bg-card);color:var(--text-primary);border:1px solid var(--border-light)}
+.cv-row.me .cv-msg{background:var(--pink-400);color:var(--text-primary)}
+body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
+.cv-row.ab .cv-msg::before{content:'';position:absolute;left:-6px;top:12px;width:10px;height:10px;background:inherit;border-left:1px solid var(--border-light);border-bottom:1px solid var(--border-light);transform:rotate(45deg)}
+.cv-row.me .cv-msg::before{content:'';position:absolute;right:-5px;top:12px;width:10px;height:10px;background:inherit;transform:rotate(45deg)}
+.cv-typing{display:inline-flex;gap:4px;padding:4px 2px}
+.cv-typing i{width:6px;height:6px;border-radius:50%;background:var(--text-muted);animation:cvDot 1s infinite ease-in-out}
+.cv-typing i:nth-child(2){animation-delay:.15s}.cv-typing i:nth-child(3){animation-delay:.3s}
+@keyframes cvDot{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+.chat-overlay .chat-options{max-width:none;width:auto;padding:10px 14px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--border-light);flex-shrink:0;gap:8px;display:none;flex-direction:column;align-items:flex-end}
+.chat-overlay .chat-options.visible{display:flex}
+.chat-overlay .chat-option-btn{max-width:86%;border-radius:16px 16px 4px 16px;padding:9px 14px;font-size:12.5px;border-width:1px}
 .chat-end-msg{font-size:11px;color:var(--text-muted);margin-top:16px;letter-spacing:.5px;opacity:0;transition:opacity .5s ease}
 .chat-end-msg.visible{opacity:1}
 
 /* ABEBE BUBBLE ANIMATION */
 .abebe-speech{position:relative;background:#F2AFC1;border:none;border-radius:18px 18px 18px 6px;padding:14px 20px;font-size:12.5px;line-height:1.8;color:#fff;max-width:280px;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,0.25);margin-bottom:24px;min-height:48px;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
 .abebe-speech.visible{opacity:1;transform:translateY(0)}
+.abebe-speech{width:min(280px,100%);min-height:74px;display:flex;align-items:center;justify-content:center;box-sizing:border-box}
 
 /* HIDDEN BUTTON SPARKLE */
 .abebe-action.hidden-btn{border-style:dashed;border-color:var(--pink-200)}
@@ -1925,10 +1952,10 @@ body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 </div>
 
 <div class="chat-overlay" id="chat-overlay">
-  <div class="chat-close" onclick="closeChat()">&times;</div>
-  <div class="chat-bubble-area"><div class="chat-bubble" id="chat-bubble"></div></div>
+  <div class="cv-head"><div class="cv-title">阿贝贝</div><div class="cv-close" onclick="closeChat()">&times;</div></div>
+  <div class="cv-log" id="cv-log"></div>
   <div class="chat-options" id="chat-options"></div>
-  <div class="chat-end-msg" id="chat-end-msg"></div>
+  <div class="chat-end-msg" id="chat-end-msg" style="display:none"></div>
 </div>
 
 <div class="candy-detail-mask" id="candy-detail-mask" onclick="closeCandyDetail()">
@@ -3125,8 +3152,41 @@ function openChat(){
   overlay.classList.add('show');
   document.getElementById('chat-end-msg').classList.remove('visible');
   document.getElementById('chat-end-msg').textContent='';
+  cvStart();
   showChatRound();
 }
+
+// ===== 聊天记录（微信式左右气泡）=====
+// 只保留上一次的聊天，存在 localStorage('abebeChatLast')
+const CV_AB='./开心阿贝贝.png',CV_ME='./小头雨.png';
+let cvSession=null,cvTypingTimer=null;
+function cvFmt(t){const d=new Date(t);const p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 ${p(d.getHours())}:${p(d.getMinutes())}`;}
+function cvEsc(x){return String(x).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function cvItemHtml(it,old){
+  const o=old?' cv-old':'';
+  if(it.k==='time')return `<div class="cv-time${o}">${cvFmt(it.t)}</div>`;
+  if(it.k==='sys')return `<div class="cv-sys${o}">${cvEsc(it.text)}</div>`;
+  const me=it.k==='me';
+  return `<div class="cv-row ${me?'me':'ab'}${o}"><img class="cv-ava" src="${me?CV_ME:CV_AB}"><div class="cv-msg">${cvEsc(it.text)}</div></div>`;
+}
+function cvScroll(){const l=document.getElementById('cv-log');if(l)requestAnimationFrame(()=>{l.scrollTop=l.scrollHeight;});}
+function cvStart(){
+  const log=document.getElementById('cv-log');clearTimeout(cvTypingTimer);
+  let last=null;try{last=JSON.parse(localStorage.getItem('abebeChatLast')||'null');}catch(e){}
+  log.innerHTML=(last&&Array.isArray(last.items)?last.items.map(it=>cvItemHtml(it,true)).join(''):'');
+  cvSession={items:[{k:'time',t:Date.now()}]};
+  log.insertAdjacentHTML('beforeend',cvItemHtml(cvSession.items[0]));
+  cvScroll();
+}
+function cvPush(it){
+  if(!cvSession)return;
+  cvSession.items.push(it);
+  const log=document.getElementById('cv-log');
+  log.querySelector('.cv-typing-row')?.remove();
+  log.insertAdjacentHTML('beforeend',cvItemHtml(it));
+  cvScroll();
+}
+function cvSave(){if(!cvSession||cvSession.items.length<2)return;try{localStorage.setItem('abebeChatLast',JSON.stringify(cvSession));}catch(e){}}
 
 function showChatRound(){
   const convo=chatThemes[chatState.themeIdx].convos[chatState.convoIdx];
@@ -3171,8 +3231,8 @@ function showChatRound(){
       optsEl.innerHTML=currentRound.opts.map((o,i)=>
         `<div class="chat-option-btn" onclick="chatChoose(${i})">${o.text}</div>`
       ).join('');
-      optsEl.classList.add('visible');
-    },600);
+      optsEl.classList.add('visible');cvScroll();
+    },1000);
   }else{
     document.getElementById('chat-options').innerHTML='';
     document.getElementById('chat-options').classList.remove('visible');
@@ -3181,10 +3241,12 @@ function showChatRound(){
 }
 
 function showChatBubble(text){
-  const bubble=document.getElementById('chat-bubble');
-  bubble.classList.remove('visible');
-  bubble.textContent=text;
-  setTimeout(()=>bubble.classList.add('visible'),50);
+  const log=document.getElementById('cv-log');
+  log.querySelector('.cv-typing-row')?.remove();
+  log.insertAdjacentHTML('beforeend',`<div class="cv-row ab cv-typing-row"><img class="cv-ava" src="${CV_AB}"><div class="cv-msg"><span class="cv-typing"><i></i><i></i><i></i></span></div></div>`);
+  cvScroll();
+  clearTimeout(cvTypingTimer);
+  cvTypingTimer=setTimeout(()=>cvPush({k:'ab',text}),650);
 }
 
 function chatChoose(idx){
@@ -3202,6 +3264,7 @@ function chatChoose(idx){
   }
   
   const nextRef=currentRound.opts[idx].next;
+  cvPush({k:'me',text:currentRound.opts[idx].text});
   chatState.branch.push(nextRef);
   chatState.round++;
   
@@ -3223,8 +3286,8 @@ function chatChoose(idx){
           optsEl.innerHTML=item.opts.map((o,i)=>
             `<div class="chat-option-btn" onclick="chatChoose(${i})">${o.text}</div>`
           ).join('');
-          optsEl.classList.add('visible');
-        },600);
+          optsEl.classList.add('visible');cvScroll();
+        },1000);
       }else{
         document.getElementById('chat-options').innerHTML='';
         setTimeout(()=>endChat(convo.end),2500);
@@ -3238,9 +3301,7 @@ function chatChoose(idx){
 function endChat(msg){
   document.getElementById('chat-options').innerHTML='';
   document.getElementById('chat-options').classList.remove('visible');
-  const endEl=document.getElementById('chat-end-msg');
-  endEl.textContent=msg;
-  setTimeout(()=>endEl.classList.add('visible'),300);
+  if(msg)setTimeout(()=>{cvPush({k:'sys',text:msg});cvSave();},300);else cvSave();
   chatState.active=false;
   renderAbebeActions();
   // Boost mood from chatting
@@ -3250,6 +3311,7 @@ function endChat(msg){
 
 function closeChat(){
   document.getElementById('chat-overlay').classList.remove('show');
+  clearTimeout(cvTypingTimer);cvSave();
   chatState.active=false;
 }
 
