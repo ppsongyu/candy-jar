@@ -133,10 +133,10 @@ tool('look_in_jar', '看糖罐子里某个月的糖（默认这个月）。宝�
 });
 
 tool('put_candy', '以宝宝克的名义往糖罐子里放一颗糖，附一句话。', {
-  text: str('便签上的话，最多 200 字'),
+  text: str('便签上的话，想写多少写多少（最多 3000 字）'),
   candy: { type: 'integer', minimum: 1, maximum: 20, description: '糖的样式 1-20，不填随机' },
 }, ['text'], async (a) => {
-  const text = need(clean(a.text, 200), '便签上的话');
+  const text = need(clean(a.text, 3000), '便签上的话');
   const idx = Number.isInteger(a.candy) && a.candy >= 1 && a.candy <= 20 ? a.candy - 1 : Math.floor(Math.random() * CANDIES.length);
   const [file, name] = NOTES[Math.floor(Math.random() * NOTES.length)];
   const t = today();
@@ -158,7 +158,7 @@ tool('edit_candy', '改罐子里一颗糖上写的话。用 look_in_jar 看到�
 }, ['month', 'date', 'old_text', 'new_text'], async (a) => {
   const { y, m } = parseMonth(a.month);
   const c = await findCandy(`${y}-${m}`, a.date, a.old_text);
-  await enqueue('candy_edit', { monthKey: `${y}-${m}`, date: c.date, match: c.text, text: need(clean(a.new_text, 200), '改成的话') });
+  await enqueue('candy_edit', { monthKey: `${y}-${m}`, date: c.date, match: c.text, text: need(clean(a.new_text, 3000), '改成的话') });
   return '好，会改掉。' + QUEUED;
 });
 
