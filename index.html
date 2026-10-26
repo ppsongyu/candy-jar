@@ -5158,9 +5158,11 @@ const LK_TEXTS=[
 const LK_LINES=[
   {id:'line',name:'边框线'},
   {id:'accent',name:'点缀色'},
+  {id:'accenttext',name:'点缀字'},
   {id:'shadow',name:'卡片阴影'},
   {id:'soft',name:'淡底色'},
   {id:'bubble',name:'阿贝贝说话'},
+  {id:'bubbletext',name:'阿贝贝说话的字'},
   {id:'track',name:'阿贝贝进度条'}
 ];
 let lkLook=lkLoad();
@@ -5209,7 +5211,9 @@ function lkApply(){
   if(vars.length)css+=`html body.cl-on{${vars.join(';')}}`;
   const P=a=>a.split(',').map(x=>LK_P+x.trim()).join(',');
   if(L.t.line)css+=`${P('.mood-face:not(.selected),.abebe-action:not(.done),.add-book-btn,.dex-tab:not(.on)')}{border-color:${lkRgba(L.t.line)}!important}`;
-  if(L.t.soft){const c=lkRgba(L.t.soft);css+=`${P('.cal-day.has-mood,.dex-tab.on,.mood-face.selected,.abebe-action:active')}{background:${c}!important}${P('.book-cover')}{background:${c}!important}`;}
+  if(L.t.soft){const c=lkRgba(L.t.soft);css+=`${P('.cal-day.has-mood,.dex-tab.on,.mood-face.selected,.abebe-action:active,.view-filter-btn.selected')}{background:${c}!important}${P('.book-cover')}{background:${c}!important}`;}
+  if(L.t.accenttext)css+=`${P('.nav-item.active .nav-label,.view-filter-btn.selected,.cal-day.weekend')}{color:${lkRgba(L.t.accenttext)}!important}`;
+  if(L.t.bubbletext)css+=`${P('.abebe-speech')}{color:${lkRgba(L.t.bubbletext)}!important}`;
   if(L.t.bubble)css+=`${P('.abebe-speech,.abebe-speech::after')}{background:${lkRgba(L.t.bubble)}!important}`;
   if(L.t.track)css+=`${P('.abebe-status-track')}{background:linear-gradient(90deg,${lkRgba({c:L.t.track.c,a:L.t.track.a*0.15})},${lkRgba({c:L.t.track.c,a:L.t.track.a*0.55})},${lkRgba(L.t.track)})!important}`;
   if(L.t.shadow){
@@ -5339,6 +5343,8 @@ function lkDefaults(){
   d.t.soft=lkParse(v('--pink-100'));
   const sp=document.getElementById('abebe-speech');d.t.bubble=sp?lkParse(getComputedStyle(sp).backgroundColor):lkParse('#F2AFC1');if(d.t.bubble.a===0)d.t.bubble=lkParse('#F2AFC1');
   d.t.track=lkParse(v('--pink-500'));
+  d.t.accenttext=lkParse(v('--pink-500'));
+  d.t.bubbletext=sp?lkParse(getComputedStyle(sp).color):{c:'#ffffff',a:1};
   if(was)b.classList.add('cl-on');
   return d;
 }
@@ -5391,7 +5397,7 @@ function lkRender(){
   LK_TEXTS.forEach(t=>{h+=lkRowHtml('t',t.id,t.name,L.t[t.id],D.t[t.id]);});
   h+=`<div class="lk-sec">线和点缀</div>`;
   LK_LINES.forEach(t=>{h+=lkRowHtml('t',t.id,t.name,L.t[t.id],D.t[t.id]);});
-  h+=`<div class="lk-hint">点缀色管今天的日期、选中的导航、小圆点这些；淡底色管有心情的日期、书的封面、图鉴选中的那栏；阴影透明度拉到0就是没有阴影</div>`;
+  h+=`<div class="lk-hint">点缀色管今天的日期、小圆点这些；点缀字管选中的导航字、「全部」这类选中的字、周末日期；淡底色管有心情的日期、书的封面、图鉴选中的那栏；阴影透明度拉到0就是没有阴影</div>`;
   h+=`<div class="lk-msg" id="lk-msg"></div>`;
   h+=`<div class="lk-save-row" style="margin-top:4px"><div class="lk-btn" onclick="lkAskReset()">恢复原样</div><div class="lk-btn main" onclick="closeLookEditor()">完成</div></div>`;
   body.innerHTML=h;
