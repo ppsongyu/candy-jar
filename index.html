@@ -5154,6 +5154,11 @@ const LK_TEXTS=[
   {id:'sub',name:'浅色小字'},
   {id:'btntext',name:'按钮上的字'}
 ];
+const LK_LINES=[
+  {id:'line',name:'边框线'},
+  {id:'accent',name:'点缀色'},
+  {id:'shadow',name:'卡片阴影'}
+];
 let lkLook=lkLoad();
 let lkWpUrl=null;
 
@@ -5189,13 +5194,20 @@ function lkApply(){
     const o=L.g[gr.id];if(!o)return;
     const sel=gr.sel.split(',').map(s=>LK_P+s.trim()).join(',');
     css+=`${sel}{background:${lkRgba(o)}!important}`;
-    if(gr.id==='topbar'||gr.id==='nav')css+=`${sel}{border-color:transparent!important}`;
+    if(gr.id==='topbar')css+=`${sel}{border-color:transparent!important}`;
     if(L.blur>0&&o.a<0.99&&['card','topbar','nav','popup'].includes(gr.id))css+=`${sel}{-webkit-backdrop-filter:blur(${L.blur}px)!important;backdrop-filter:blur(${L.blur}px)!important}`;
   });
   const vars=[];
   if(L.t.main)vars.push(`--text-primary:${lkRgba(L.t.main)}!important`);
   if(L.t.sub){vars.push(`--text-secondary:${lkRgba(L.t.sub)}!important`);vars.push(`--text-muted:${lkRgba({c:L.t.sub.c,a:L.t.sub.a*0.75})}!important`);}
+  if(L.t.line)vars.push(`--border-light:${lkRgba(L.t.line)}!important`);
+  if(L.t.accent){vars.push(`--pink-400:${lkRgba(L.t.accent)}!important`);vars.push(`--pink-500:${lkRgba(L.t.accent)}!important`);}
   if(vars.length)css+=`html body.cl-on{${vars.join(';')}}`;
+  if(L.t.shadow){
+    const sel=LK_GROUPS.find(g=>g.id==='card').sel.split(',').concat(['.nav']).map(s=>LK_P+s.trim()).join(',');
+    const sh=L.t.shadow.a<0.01?'none':`0 4px 20px ${lkRgba(L.t.shadow)},0 1px 4px ${lkRgba({c:L.t.shadow.c,a:L.t.shadow.a*0.6})}`;
+    css+=`${sel}{box-shadow:${sh}!important}`;
+  }
   if(L.t.btntext){
     const sel=LK_GROUPS.find(g=>g.id==='btn').sel.split(',').map(s=>LK_P+s.trim()).join(',');
     css+=`${sel}{color:${lkRgba(L.t.btntext)}!important}`;
@@ -5312,6 +5324,7 @@ function lkDefaults(){
   d.g.btn=lkParse(v('--pink-400'));
   d.g.input=lkParse(v('--bg-card'));
   d.t.main=lkParse(v('--text-primary'));d.t.sub=lkParse(v('--text-secondary'));d.t.btntext={c:'#ffffff',a:1};
+  d.t.line=lkParse(v('--border-light'));d.t.accent=lkParse(v('--pink-400'));d.t.shadow=lkParse(v('--shadow-pink')||'rgba(232,160,191,0.12)');
   if(was)b.classList.add('cl-on');
   return d;
 }
@@ -5362,6 +5375,9 @@ function lkRender(){
   LK_GROUPS.forEach(g=>{h+=lkRowHtml('g',g.id,g.name,L.g[g.id],D.g[g.id]);});
   h+=`<div class="lk-sec">字</div>`;
   LK_TEXTS.forEach(t=>{h+=lkRowHtml('t',t.id,t.name,L.t[t.id],D.t[t.id]);});
+  h+=`<div class="lk-sec">线和点缀</div>`;
+  LK_LINES.forEach(t=>{h+=lkRowHtml('t',t.id,t.name,L.t[t.id],D.t[t.id]);});
+  h+=`<div class="lk-hint">点缀色管今天的日期、选中的导航、小圆点这些；阴影透明度拉到0就是没有阴影</div>`;
   h+=`<div class="lk-msg" id="lk-msg"></div>`;
   h+=`<div class="lk-save-row" style="margin-top:4px"><div class="lk-btn" onclick="lkAskReset()">恢复原样</div><div class="lk-btn main" onclick="closeLookEditor()">完成</div></div>`;
   body.innerHTML=h;
