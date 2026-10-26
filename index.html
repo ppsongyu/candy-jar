@@ -38,15 +38,15 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 .splash-tap{position:absolute;bottom:60px;font-size:11px;color:var(--pink-300);letter-spacing:2px;animation:breathe 2s ease-in-out infinite}
 @keyframes breathe{0%,100%{opacity:.4}50%{opacity:1}}
 
-.app{display:flex;flex-direction:column;height:100vh;opacity:0;transition:opacity .6s}
+.app{position:relative;display:flex;flex-direction:column;height:100vh;opacity:0;transition:opacity .6s}
 .app.visible{opacity:1}
 .topbar{padding:20px 24px 14px;text-align:center}
 .topbar-title{font-size:16px;letter-spacing:2px;font-weight:300}
 .topbar-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
-.content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
+.content{flex:1;overflow-y:auto;padding:0 20px 104px;-webkit-overflow-scrolling:touch}
 .content::-webkit-scrollbar{width:0}
 
-.nav{display:flex;justify-content:space-around;padding:14px 0 28px;background:var(--bg-card);border-top:1px solid var(--border-light);flex-shrink:0}
+.nav{position:absolute;left:16px;right:16px;bottom:18px;z-index:30;display:flex;justify-content:space-around;padding:14px 4px 13px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:30px;box-shadow:0 8px 28px rgba(74,55,40,.10),0 2px 6px rgba(74,55,40,.05)}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;user-select:none}
 .nav-label{font-size:11px;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;transition:color .2s}
 .nav-item.active .nav-label{color:var(--pink-500)}
@@ -496,10 +496,10 @@ body.theme-claude .nav-item.active .nav-label{color:#E8873A!important}
 body.theme-claude .nav-item.active .nav-dot{background:#E8873A!important}
 body.theme-claude .toggle-switch.on{background:#E8873A!important}
 /* 各主题导航栏背景色 */
-body.theme-claude .nav{background:#0D0D14!important;border-top-color:rgba(255,255,255,.06)!important}
-body.theme-water .nav{background:#D6E8DC!important;border-top-color:rgba(100,160,120,.15)!important}
-body.theme-cream .nav{background:#C5D2E0!important;border-top-color:rgba(100,120,160,.12)!important}
-body.theme-grape .nav{background:#A99DBD!important;border-top-color:rgba(120,100,160,.12)!important}
+body.theme-claude .nav{background:#0D0D14!important;border-color:rgba(255,255,255,.06)!important}
+body.theme-water .nav{background:#D6E8DC!important;border-color:rgba(100,160,120,.15)!important}
+body.theme-cream .nav{background:#C5D2E0!important;border-color:rgba(100,120,160,.12)!important}
+body.theme-grape .nav{background:#A99DBD!important;border-color:rgba(120,100,160,.12)!important}
 body.theme-claude .theme-dot-inner{border:2px solid #E8873A}
 
 /* Theme picker */
@@ -802,7 +802,7 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .weather-city-btn-cancel{background:var(--pink-50);color:var(--text-secondary)}
 .weather-city-btn-ok{background:var(--pink-400);color:#fff}
 
-.us-settings-fab{position:fixed;right:18px;bottom:78px;z-index:40;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border-light);background:var(--bg-card);box-shadow:0 4px 16px var(--shadow-pink);display:none;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:0}
+.us-settings-fab{position:fixed;right:18px;bottom:88px;z-index:40;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border-light);background:var(--bg-card);box-shadow:0 4px 16px var(--shadow-pink);display:none;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:0}
 .us-settings-fab .hamburger-line{display:block;width:18px;height:2px;background:var(--pink-400);border-radius:1px}
 .settings-mask{position:fixed;inset:0;background:rgba(74,55,40,0.25);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s}
 .settings-mask.show{opacity:1;pointer-events:auto}
@@ -5019,7 +5019,7 @@ function renderAbebeActions(){
   if(h>=5&&h<12) btns+=`<div class="abebe-action" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
   
   // Hidden buttons
-  const hiddenBtns=getTodayHiddenBtns();
+  const hiddenBtns=[]; // 盲盒按钮松雨说不要了
   hiddenBtns.forEach(hb=>{
     btns+=`<div class="abebe-action hidden-btn" onclick="abebeAction('${hb.id}')"><div class="abebe-action-text">${hb.text}</div></div>`;
   });
@@ -5163,7 +5163,7 @@ function lkSave(){try{localStorage.setItem(LK_KEY,JSON.stringify(lkLook));}catch
 function lkSchemes(){try{const v=JSON.parse(localStorage.getItem(LK_SCHEMES)||'[]');return Array.isArray(v)?v:[];}catch(e){return [];}}
 function lkSetSchemes(list){try{localStorage.setItem(LK_SCHEMES,JSON.stringify(list));}catch(e){lkMsg('方案存不下了');}}
 function lkIsEmpty(l){return !l.bg&&!l.wp&&!l.blur&&!Object.keys(l.pw).length&&!Object.keys(l.g).length&&!Object.keys(l.t).length;}
-const LK_PAGES=[{id:'sweets',name:'糖罐子'},{id:'diary',name:'日历'},{id:'books',name:'读书'},{id:'abebe',name:'阿贝贝'},{id:'us',name:'我们'}];
+const LK_PAGES=[{id:'sweets',name:'糖罐子'},{id:'diary',name:'日历'},{id:'books',name:'读书'},{id:'abebe',name:'阿贝贝'},{id:'us',name:'Bond'}];
 function lkCurPage(){const a=document.querySelector('.page.active');return a?a.id.replace('page-',''):'sweets';}
 function lkCurWp(){return lkLook.pw[lkCurPage()]||lkLook.wp||null;}
 
@@ -6634,7 +6634,7 @@ function checkBackupReminder(){
   if(now-last<7*86400000||now<snooze||document.getElementById('backup-reminder')) return;
   const tip=document.createElement('div');
   tip.id='backup-reminder';
-  tip.style.cssText='position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 48px);max-width:340px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.12);padding:14px 16px;z-index:9000;font-size:13px;color:var(--text-primary);text-align:center;line-height:1.6';
+  tip.style.cssText='position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);width:calc(100% - 48px);max-width:340px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.12);padding:14px 16px;z-index:9000;font-size:13px;color:var(--text-primary);text-align:center;line-height:1.6';
   tip.innerHTML='<div>'+(last?'好几天没备份啦':'还没有备份过哦')+'，存一份糖罐子吧 🍬</div>'+
     '<div style="display:flex;gap:10px;margin-top:10px">'+
     '<div class="add-milestone-btn" style="flex:1;margin-top:0" onclick="snoozeBackupReminder()">晚点再说</div>'+
