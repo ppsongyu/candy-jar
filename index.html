@@ -40,7 +40,7 @@ body{font-family:'SGH',Georgia,'Noto Serif SC',serif;background:var(--bg-base);c
 
 .app{display:flex;flex-direction:column;height:100vh;opacity:0;transition:opacity .6s}
 .app.visible{opacity:1}
-.topbar{padding:52px 24px 16px;text-align:center}
+.topbar{padding:20px 24px 14px;text-align:center}
 .topbar-title{font-size:16px;letter-spacing:2px;font-weight:300}
 .topbar-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
 .content{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch}
@@ -1921,7 +1921,7 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
     <div class="nav-item" onclick="switchTab('diary')"><div class="nav-dot"></div><span class="nav-label">Diary</span></div>
     <div class="nav-item" onclick="switchTab('books')"><div class="nav-dot"></div><span class="nav-label">Books</span></div>
     <div class="nav-item" onclick="switchTab('abebe')"><div class="nav-dot"></div><span class="nav-label">Abebe</span></div>
-    <div class="nav-item" onclick="switchTab('us')"><div class="nav-dot"></div><span class="nav-label">Us</span></div>
+    <div class="nav-item" onclick="switchTab('us')"><div class="nav-dot"></div><span class="nav-label">Bond</span></div>
   </nav>
 </div>
 
@@ -2148,7 +2148,7 @@ function enterApp(){
   document.getElementById('cal-month-label').textContent=calYear+' 年 '+(calMonth+1)+' 月';
 }
 
-const tabInfo={sweets:{title:'Sweets',sub:'我们的小罐子'},diary:{title:'Diary',sub:'一起过的日子'},books:{title:'Books',sub:'读过的字和想说的话'},abebe:{title:'Abebe',sub:'阿贝贝的小窝'},us:{title:'Us',sub:'关于我们'}};
+const tabInfo={sweets:{title:'Sweets',sub:'我们的小罐子'},diary:{title:'Diary',sub:'一起过的日子'},books:{title:'Books',sub:'读过的字和想说的话'},abebe:{title:'Abebe',sub:'阿贝贝的小窝'},us:{title:'Bond',sub:'关于我们'}};
 
 function switchTab(tab){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
