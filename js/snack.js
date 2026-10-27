@@ -74,9 +74,29 @@ function renderCoinDisplay(){
 // Shop
 let pendingSnackId='';
 
+// 小卖部是一条小街：先选店（shopStore=null 时显示街），再进店买东西
+let shopStore=null;
 function openSnackShop(){
+  shopStore=null;
   document.getElementById('overlay-shop').classList.add('show');
   renderShop();
+}
+function snackStoreOf(s){
+  if(s.shop) return s.shop;
+  const st=SNACK_STREET.find(x=>x.ids.includes(s.id));
+  return st?st.id:'za';
+}
+function enterSnackStore(id){
+  shopStore=id;
+  document.getElementById('shop-add-form').style.display='none';
+  renderShop();
+  document.getElementById('shop-content').scrollTop=0;
+}
+function leaveSnackStore(){
+  shopStore=null;
+  document.getElementById('shop-add-form').style.display='none';
+  renderShop();
+  document.getElementById('shop-content').scrollTop=0;
 }
 function closeSnackShop(){
   document.getElementById('overlay-shop').classList.remove('show');
@@ -90,7 +110,7 @@ function getAllSnacks(){
       id:s.id,name:s.name,price:s.price,img:s.img||'',
       story:s.story||'',repeatLines:s.repeatLines||[],
       dadWords:s.dadWords||'',dadBlock:s.dadBlock||'',
-      rating:s.rating||0,weeklyLimit:0,timeAllow:null
+      rating:s.rating||0,weeklyLimit:0,timeAllow:null,shop:s.shop||'za'
     }));
   return [...snackShop,...custom];
 }
@@ -132,7 +152,32 @@ function renderShop(){
   const visible=all.filter(s=>!s.weekendOnly||isWeekend);
   
   const grid=document.getElementById('shop-grid');
-  grid.innerHTML=visible.map(s=>{
+  const bar=document.getElementById('shop-store-bar');
+  const addBtn=document.querySelector('#overlay-shop .shop-add-btn');
+  if(!shopStore){
+    // 小街：九家店
+    bar.style.display='none';
+    addBtn.style.display='none';
+    grid.className='shop-grid shop-street';
+    grid.innerHTML=SNACK_STREET.map(st=>{
+      const items=visible.filter(x=>snackStoreOf(x)===st.id);
+      const cover=all.find(x=>x.id===st.cover);
+      const waiting=items.reduce((n,x)=>n+((snackData.stock[x.id]||0)>0?1:0),0);
+      return '<div class="shop-item shop-store" onclick="enterSnackStore(\''+st.id+'\')">'
+        +'<div class="shop-item-img">'+(cover&&cover.img?'<img class="shop-item-placeholder" src="'+cover.img+'">':'')
+        +(waiting?'<div class="shop-item-stock">'+waiting+' 样待喂</div>':'')+'</div>'
+        +'<div class="shop-store-name">'+st.name+'</div>'
+        +'<div class="shop-store-count">'+items.length+' 样</div>'
+      +'</div>';
+    }).join('');
+    return;
+  }
+  const store=SNACK_STREET.find(x=>x.id===shopStore)||{name:'杂货铺'};
+  bar.style.display='flex';
+  addBtn.style.display='';
+  document.getElementById('shop-store-name').textContent=store.name;
+  grid.className='shop-grid';
+  grid.innerHTML=visible.filter(s=>snackStoreOf(s)===shopStore).map(s=>{
     const price=getSeasonalPrice(s);
     const canAfford=balance>=price;
     const noStory=!s.story;
@@ -431,6 +476,7 @@ function submitNewSnack(){
     id:id,
     name:name,
     price:newSnackPrice,
+    shop:shopStore||'za',
     story:'',
     repeatLines:[]
   });

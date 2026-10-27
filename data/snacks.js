@@ -650,3 +650,16 @@ const snackShop=[
   },
 
 ];
+
+// 小卖部的九家店：按顺序排成三行三列的小街；cover 是店门口摆的那样零食
+const SNACK_STREET=[
+  {id:'fan',name:'饭饭店',cover:'claypot_rice',ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu']},
+  {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer']},
+  {id:'tian',name:'甜点店',cover:'souffle',ids:['strawberry_cake_roll','souffle','rose_tangyuan','bo_zai_gao','qingtuan_lao','egg_yolk_pastry','pineapple_cake','xi_bing','mooncake_box','donut','fruit_sandwich','matcha_icecream','strawberry_fondue','peach_blossom_cake','squirrel_cookies','choco_cream_bucket','treasure_box']},
+  {id:'yin',name:'饮品店',cover:'matcha_boba',ids:['strawberry_milk','fresh_milk','yibao_water','apple_juice','mango_sago','tapioca_soup','bayberry_drink','watermelon_drink','guava_drink','strawberry_matcha','matcha_boba','snowman_cocoa','vodka_cocktail','baileys','kitty_beer']},
+  {id:'guo',name:'水果摊',cover:'chuyan_strawberry',ids:['raspberry','chuyan_strawberry','pineapple_fruit','durian','cucumber','corn_bag']},
+  {id:'ling',name:'零食铺',cover:'jasmine_seeds',ids:['jasmine_seeds','miao_jiao_cui','sweet_potato_fries','grape_jelly','doublemint']},
+  {id:'mei',name:'小香兔子',cover:'chanel_n5',ids:['eyeshadow','floral_cream','chanel_n5']},
+  {id:'yao',name:'药店',cover:'banlangen',ids:['banlangen','tylenol_medicine']},
+  {id:'za',name:'杂货铺',cover:'pink_bunny',ids:['mosquito_coil','cat_food_k01','pingpong_paddle','answer_book','little_prince','pink_bunny','firecracker_fish']}
+];
