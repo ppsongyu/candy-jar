@@ -101,6 +101,7 @@ function leaveSnackStore(){
 }
 function closeSnackShop(){
   document.getElementById('overlay-shop').classList.remove('show');
+  refreshAbebeStatus();
 }
 
 function getAllSnacks(){
@@ -481,6 +482,11 @@ function confirmBuySnack(){
 }
 
 // Feed from stock
+// 喂完、关掉小卖部、看完故事，都让阿贝贝页的状态栏马上跟上
+function refreshAbebeStatus(){
+  if(typeof getTummy==='function') abebeState.food=Math.round(getTummy());
+  if(typeof renderAbebeStatus==='function') renderAbebeStatus();
+}
 function feedSnack(id){
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
@@ -493,10 +499,9 @@ function feedSnack(id){
   }
   snackData.stock[id]--;
   if(amt>0) setTummy(getTummy()+amt);
-  abebeState.food=Math.round(getTummy());
-  
   // 吃了东西兔兔心也开心一点
   abebeState.mood=Math.min(100,abebeState.mood+5);
+  refreshAbebeStatus();
   
   const totalFed=(snackData.purchaseCount[id]||1)-(snackData.stock[id]||0);
   
@@ -531,6 +536,7 @@ function showStory(name,text){
 function closeStory(){
   document.getElementById('story-mask').classList.remove('show');
   document.getElementById('story-bubble').classList.remove('visible');
+  refreshAbebeStatus();
 }
 
 function showRepeatLine(text){

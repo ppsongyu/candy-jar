@@ -244,6 +244,7 @@ async function claudeInboxSync(){
   restoreTodayCheckins();renderCalendar();renderMilestones();renderWishlist();
   renderBooksList();renderJarCandies();renderTimeCapsules();renderMonthStats();
   if(typeof renderCoinDisplay==='function') renderCoinDisplay();
+  if(typeof refreshAbebeStatus==='function') refreshAbebeStatus();
   saveApp();
 }
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible') claudeInboxSync();});
