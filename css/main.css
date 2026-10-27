@@ -1613,3 +1613,8 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .shop-stamp{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--pink-300,var(--pink-400));box-sizing:border-box}
 .shop-stamp.on{background:var(--pink-400);border-color:var(--pink-400)}
 .shop-stamp-tip{color:var(--text-muted);font-size:10px}
+
+/* 阿贝贝页左上角：消息图标（点进去聊天） */
+.abebe-msg-btn{position:absolute;top:10px;left:12px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:5;transition:transform .15s}
+.abebe-msg-btn:active{transform:scale(.92)}
+.abebe-msg-btn .cv-dot{top:2px;right:2px}

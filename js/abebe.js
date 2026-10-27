@@ -269,7 +269,12 @@ function renderAbebeActions(){
   btns+=`<div class="abebe-action" onclick="abebeAction('groom')"><div class="abebe-action-text">梳毛</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('kiss')"><div class="abebe-action-text">亲亲</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('daze')"><div class="abebe-action-text">发呆</div></div>`;
-  btns+=`<div class="abebe-action" onclick="openChat()"><div class="abebe-action-text">聊天</div>${(typeof cvUnreadDays==='function'&&cvUnreadDays()>=2)?'<span class="cv-dot"></span>':''}</div>`;
+  // 聊天在左上角的消息图标里；两天以上没聊就冒小圆点
+  const msgBtn=document.getElementById('abebe-msg-btn');
+  if(msgBtn){
+    const old=msgBtn.querySelector('.cv-dot'); if(old) old.remove();
+    if(typeof cvUnreadDays==='function'&&cvUnreadDays()>=2) msgBtn.insertAdjacentHTML('beforeend','<span class="cv-dot"></span>');
+  }
   if(h>=20||h<6) btns+=`<div class="abebe-action" onclick="abebeAction('goodnight')"><div class="abebe-action-text">哄睡觉</div></div>`;
   if(h>=5&&h<12) btns+=`<div class="abebe-action" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
   
