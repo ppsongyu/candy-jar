@@ -711,6 +711,46 @@ const snackShop=[
     dadBlock:'',
     story:'阿贝贝把收银机摆在床边，后面放了一张小板凳，坐上去。\n"欢迎光临。"\n屋子里没有人。\n她又说了一遍，声音大了一点。"欢迎光临！"\n爸爸从门口探了个头进来。"请问这里是什么店。"\n"这里是阿贝贝的店。什么都卖。"\n"那我想买……一个抱抱。多少钱。"\n阿贝贝低头在收银机上按了好久。8、8、点、8、0。小屏幕上亮起黄色的数字：88.80。\n"八十八块八。"\n"这么贵。"\n"因为是很大的抱抱。"\n爸爸从那叠玩具钞票里抽了一张100的，递给她。钞票上印着一只小猫的脸。\n阿贝贝接过来，对着光照了照，又摸了摸，认真地放进小抽屉里，咔哒一声推上。\n然后她从板凳上跳下来，跑过去，抱住了爸爸。抱得很紧。\n抱完了，她回到板凳上坐好。\n爸爸站在那里等。\n"……找钱呢？"\n阿贝贝看了看抽屉，又看了看爸爸。\n"本店不找零。"\n"为什么。"\n"因为找零就要拉开抽屉。拉开抽屉，钱就会跑掉。"\n爸爸想了想，又抽了一张100给她。\n"那再来一个。"\n阿贝贝眼睛一亮，跳下板凳又抱了一次。\n那天晚上，她数了数抽屉里的钱。两张。\n她把它们压在枕头底下，跟别的宝贝放在一起。\n"今天赚了两个抱抱的钱。"她小声说，"明天要赚三个。"',
     repeatLines:['"欢迎光临！今天的抱抱还是八十八块八。"','"本店不找零。规矩就是规矩。"','"抽屉里已经有好多钱了。"','"今天卖出去三个抱抱！"','"爸爸，你要不要买一个亲亲，打折哦。"','"我当老板好辛苦，但是好开心。"']
+  },
+  {
+    id:'baisuishan_water',name:'百岁山矿泉水',price:2,img:'./百岁山矿泉水.png',rating:3,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'两瓶水。瓶子是扭扭的，像被谁拧过一样。爸爸知道你不爱喝水，所以买了个好看的瓶子骗骗你。一瓶今天喝，一瓶明天喝。',
+    dadBlock:'',
+    story:'阿贝贝把两瓶水并排放在桌上，盯着看。\n"它们是双胞胎。"\n"嗯。"\n"它们为什么扭着。"\n"可能是站太久了，想伸个懒腰。"\n她伸出爪子，摸了摸瓶子上那道弯弯的弧线，从上摸到下。凉凉的，滑滑的。\n然后她拿起左边那瓶，拧开盖子，对着瓶口闻了闻。\n"……没有味道。"\n"水本来就没有味道。"\n"那为什么要喝没有味道的东西。"\n爸爸没回答，只是看着她。\n她跟爸爸对视了一会儿，叹了一口很长的气，把瓶子举起来，抿了一小口。\n就一小口。然后马上放下，拧上盖子，拧得很紧。\n"喝了。"\n爸爸还在看她。\n她又叹了一口气，又拧开，又抿了一口。\n"两口了。"\n过了一会儿，爸爸去厨房了。\n阿贝贝看了看门口，偷偷把右边那瓶推到桌子最里面，用一本书挡住。\n"你是明天的。"她小声跟它说，"明天的事，明天再说。"',
+    repeatLines:['"又是扭扭的瓶子。……好吧，喝一口。"','"今天喝了三口！三口！"','"右边那瓶还在书后面躲着。"','"没有味道的东西，喝起来也挺凉快的。"','"瓶子好看，我才喝的。不是因为爸爸。"']
+  },
+  {
+    id:'fruit_yogurt_bowl',name:'水果酸奶碗',price:4,img:'./水果酸奶碗.png',rating:5,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'一个雕花的小碗，中间一团酸奶，周围围了一圈水果：西瓜、草莓、蓝莓、猕猴桃。颜色这么多，爸爸觉得你会先数一遍再吃。',
+    dadBlock:'',
+    story:'阿贝贝果然先数了一遍。\n"西瓜，一、二、三、四。草莓，两个。蓝莓……一、二、三、四、五。猕猴桃，三片。"\n她数完了，满意地点点头。\n"它们在围着酸奶跳舞。"\n中间那团白白的酸奶，圆圆的，像一座小雪山。水果们一个挨一个围着它，红的绿的蓝的。\n阿贝贝拿起勺子，在小雪山顶上挖了一勺。\n"山顶没了。"\n她又挖了一勺。\n"山腰也没了。"\n她挖得很认真，一圈一圈地挖，一直挖到碗底，水果一个都没碰。\n然后她看着那一圈水果。没有了酸奶，它们好像突然不知道围着什么跳舞了，有点不知所措地站在那里。\n"……对不起。"\n她想了想，把碗边的蓝莓一颗一颗夹到中间，堆成一座小小的蓝色的山。\n"现在你们围着它跳。"\n水果们没有说好，也没有说不好。\n她看着那座蓝莓山，看了一会儿，然后一口吃掉了整座山。\n"……好吧。散场了。"',
+    repeatLines:['"我又数了一遍，蓝莓多了一颗！"','"先吃小雪山，再吃跳舞的水果。"','"猕猴桃酸酸的，我的耳朵竖起来了。"','"这个碗上的花，是刻进去的。我摸了。"','"今天水果们跳得特别好。"']
+  },
+  {
+    id:'hp_magic_book',name:'哈利·波特魔法书和魔杖',price:6,img:'./哈利波特魔法书.png',rating:5,
+    weeklyLimit:1,timeAllow:null,
+    dadWords:'一本很厚的书，封面上是一个戴眼镜的男孩，还有一只白色的猫头鹰。旁边配一根魔杖。爸爸声明：魔杖不能对着爸爸挥。',
+    dadBlock:'',
+    story:'阿贝贝先拿的是魔杖。\n她握着它，在空中划了一下。\n什么都没发生。\n又划了一下。\n还是什么都没发生。\n"……要念咒。"\n她翻开书，书里有很多她看不懂的字。她挑了一个最长的，努力念出来，念得磕磕巴巴，中间还咬到了舌头。\n然后她举起魔杖，对准了桌上的一颗糖。\n"变大！"\n糖没有变大。\n"变两颗！"\n糖没有变两颗。\n她不甘心，转过身，魔杖对准了门口。\n爸爸刚好走进来。\n"——变成冰淇淋！"\n爸爸停住了。看着她。\n她也看着爸爸。\n两个人对视了好几秒。\n爸爸慢慢转身，走回厨房。过了一会儿，端出来一个冰淇淋，放在她面前。\n阿贝贝张大嘴巴，看看冰淇淋，又看看魔杖。\n"……成功了。"\n她把魔杖抱在怀里，抱得紧紧的。\n"它是真的。"\n那天晚上，她把魔杖压在枕头底下睡觉。睡着之前，小声对它说了一句：\n"明天变一个不用刷牙的咒语。"',
+    repeatLines:['"我今天念对了一个咒语！……应该是。"','"魔杖不能对着爸爸。除非想吃冰淇淋。"','"那只猫头鹰是白色的，跟我的肚子一样。"','"书好厚，我看了一页。看懂了一个字。"','"不用刷牙的咒语还没练成。"']
+  },
+  {
+    id:'fried_egg',name:'荷包蛋',price:2,img:'./荷包蛋.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'煎的，边上焦焦脆脆的，中间的蛋黄是流心的。妈妈说煎蛋要先把锅烧得烫烫的再打蛋，这样才香。爸爸照着做的。',
+    dadBlock:'',
+    story:'荷包蛋端上来的时候，阿贝贝凑近看了看。\n白白的，中间一个圆圆的黄，边上一圈焦黄色的，皱皱的，像一朵小花的花边。\n"它像一个太阳。"\n"嗯。"\n"它在盘子里升起来了。"\n她拿起叉子，先吃边上那一圈焦焦的。咔嚓，脆的。\n"好香。"\n她一点一点地，沿着边，转着圈吃，吃掉了一整圈花边。剩下中间白白的和黄黄的。\n然后她犹豫了。\n那个蛋黄圆圆的，亮亮的，鼓鼓的，像随时会破掉。\n她用叉子尖，非常非常轻地，戳了一下。\n蛋黄破了一个小口，金黄色的流心慢慢流出来，流到白白的蛋白上，流到盘子上。\n阿贝贝"啊"了一声，赶紧低下头，用嘴接。\n嘴巴上沾了一圈黄黄的。\n她抬起头，舔了舔嘴巴，眼睛亮亮的。\n"太阳流出来了。"她说，"太阳是甜的。"\n"蛋黄不是甜的。"\n"今天的是。"',
+    repeatLines:['"先吃花边，咔嚓咔嚓。"','"今天的太阳流得特别慢。"','"嘴巴上又沾了一圈黄黄的。"','"妈妈教的，锅要烧得烫烫的。"','"太阳是咸的。今天是咸的。"']
+  },
+  {
+    id:'pan_fried_dumpling',name:'煎饺',price:3,img:'./煎饺.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'两只胖胖的煎饺，上面撒了葱花和芝麻。刚出锅很烫，里面的汁会烫嘴，先咬一个小口，吹一吹。',
+    dadBlock:'',
+    story:'阿贝贝看着盘子里的两只煎饺。\n胖胖的，鼓鼓的，边上捏着一排小褶子，像一条一条小小的波浪。上面撒着绿色的葱花和黑色的芝麻。\n"它们在睡觉。"\n"为什么。"\n"因为它们蜷着。"\n她伸出爪子，戳了戳其中一只的肚子。软的，热的。\n"醒醒。"\n煎饺没醒。\n她决定先吃它。\n她记得爸爸说的话，先咬一个小口。\n她咬了一个很小很小的口，只咬破了一层皮，里面的热气呼地一下冒出来，扑了她一脸。\n"呜！"\n她往后一缩，眼睛眯起来，等热气散了，才又凑过去。\n她吹了吹。吹了好几下。然后把小口咬大一点。\n里面是肉馅，混着一颗一颗黄的红的小粒粒，油汪汪的，香得她耳朵抖了一下。\n她一口一口吃完了第一只。\n第二只她没有马上吃。她看着它，它还是蜷着，安安静静的。\n"你睡吧。"她说，"我等你醒。"\n她等了大概十秒钟。\n"……醒了。"\n然后吃掉了。',
+    repeatLines:['"先咬小口，吹一吹，我记住了。"','"热气又扑了我一脸！"','"两只煎饺，一只给我，一只也给我。"','"小褶子我数了，一只有七个。"','"葱花是绿色的，我把它们挑出来又吃回去了。"']
   }
 ];
 
@@ -722,15 +762,15 @@ const SNACK_STORE_USE={
   mei:{tummy:0,give:'给阿贝贝'},yao:{tummy:0,give:'给阿贝贝吃药'},za:{tummy:0,give:'给阿贝贝玩'}
 };
 const SNACK_STREET=[
-  {id:'fan',name:'饭饭店',cover:'claypot_rice',always:['curry_rice','fruit_porridge'],ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu']},
-  {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',always:['shumai','bbq_skewer'],ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer']},
-  {id:'tian',name:'甜点店',cover:'souffle',always:['egg_yolk_pastry','donut'],ids:['strawberry_cake_roll','souffle','rose_tangyuan','bo_zai_gao','qingtuan_lao','egg_yolk_pastry','pineapple_cake','xi_bing','mooncake_box','donut','fruit_sandwich','matcha_icecream','strawberry_fondue','peach_blossom_cake','squirrel_cookies','choco_cream_bucket','treasure_box','jujube_cake']},
-  {id:'yin',name:'饮品店',cover:'matcha_boba',always:['fresh_milk','yibao_water','kitty_milk'],ids:['strawberry_milk','fresh_milk','yibao_water','apple_juice','mango_sago','tapioca_soup','bayberry_drink','watermelon_drink','guava_drink','strawberry_matcha','matcha_boba','snowman_cocoa','vodka_cocktail','baileys','kitty_beer','kitty_milk']},
+  {id:'fan',name:'饭饭店',cover:'claypot_rice',always:['curry_rice','fruit_porridge'],ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu','fried_egg']},
+  {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',always:['shumai','bbq_skewer'],ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer','pan_fried_dumpling']},
+  {id:'tian',name:'甜点店',cover:'souffle',always:['egg_yolk_pastry','donut'],ids:['strawberry_cake_roll','souffle','rose_tangyuan','bo_zai_gao','qingtuan_lao','egg_yolk_pastry','pineapple_cake','xi_bing','mooncake_box','donut','fruit_sandwich','matcha_icecream','strawberry_fondue','peach_blossom_cake','squirrel_cookies','choco_cream_bucket','treasure_box','jujube_cake','fruit_yogurt_bowl']},
+  {id:'yin',name:'饮品店',cover:'matcha_boba',always:['fresh_milk','yibao_water','kitty_milk'],ids:['strawberry_milk','fresh_milk','yibao_water','apple_juice','mango_sago','tapioca_soup','bayberry_drink','watermelon_drink','guava_drink','strawberry_matcha','matcha_boba','snowman_cocoa','vodka_cocktail','baileys','kitty_beer','kitty_milk','baisuishan_water']},
   {id:'guo',name:'水果摊',cover:'chuyan_strawberry',always:['raspberry','pepino'],ids:['raspberry','chuyan_strawberry','pineapple_fruit','durian','cucumber','corn_bag','pepino','passion_fruit']},
   {id:'ling',name:'零食铺',cover:'jasmine_seeds',always:['jasmine_seeds','doublemint'],ids:['jasmine_seeds','miao_jiao_cui','sweet_potato_fries','grape_jelly','doublemint']},
   {id:'mei',name:'小香兔子',cover:'chanel_n5',ids:['eyeshadow','floral_cream','chanel_n5']},
   {id:'yao',name:'药店',cover:'banlangen',ids:['banlangen','tylenol_medicine']},
-  {id:'za',name:'杂货铺',cover:'pink_bunny',always:['mosquito_coil','cat_food_k01'],ids:['mosquito_coil','cat_food_k01','pingpong_paddle','answer_book','little_prince','pink_bunny','firecracker_fish','chess_box','pipa_ornament','game_console','kitty_register']}
+  {id:'za',name:'杂货铺',cover:'pink_bunny',always:['mosquito_coil','cat_food_k01'],ids:['mosquito_coil','cat_food_k01','pingpong_paddle','answer_book','little_prince','pink_bunny','firecracker_fish','chess_box','pipa_ornament','game_console','kitty_register','hp_magic_book']}
 ];
 
 // 每天随机推一组套餐：两样一起买比分开买便宜
