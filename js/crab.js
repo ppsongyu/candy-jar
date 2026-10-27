@@ -114,9 +114,13 @@
     },60);
   }
 
+  var rareNow=false;
+  // 换新状态时，稀有月份里有一点点机会变成金螃蟹
+  function setNew(i){rareNow=eggRareActive()&&Math.random()<0.06;set(i);}
   function set(i){
-    const s=STATES[i];
-    const svg=C[s.k]||'';
+    const s=rareNow?CRAB_RARE:STATES[i];
+    const svg=C[rareNow?CRAB_RARE.art:s.k]||'';
+    crab.classList.toggle('rare',rareNow);
     crabSvg.innerHTML=svg;
     // 从该状态的msgs里随机选一条
     var msgs=s.msgs||[s.msg||''];
@@ -154,7 +158,7 @@
     try{stored=Number(localStorage.getItem(CRAB_LS_KEY))||0;}catch(e){}
     if(Date.now()>=stored){
       idx=pickState();
-      set(idx);
+      setNew(idx);
       hideIn(STATES[idx].page||null);
       try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
       saveNextChangeTime();
@@ -180,7 +184,7 @@
     // 页面打开期间仍用setTimeout，眼皮底下也会换
     nextTimer=setTimeout(function(){
       idx=pickState();
-      set(idx);
+      setNew(idx);
       hideIn(STATES[idx].page||null);
       try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
       saveNextChangeTime();
@@ -197,7 +201,7 @@
     e.stopPropagation();
     clearTimeout(closeTimer);
     if(bubbleOpen){closeBubble();}
-    else{openBubble();dexRecord(STATES[idx].k,curPick);closeTimer=setTimeout(closeBubble,5000);}
+    else{openBubble();dexRecord(rareNow?CRAB_RARE.k:STATES[idx].k,curPick);closeTimer=setTimeout(closeBubble,5000);}
   });
   bubble.addEventListener('click',function(e){
     e.stopPropagation();
@@ -224,7 +228,7 @@
     }else{
       // 时间到了或第一次，随机新状态
       idx=Math.floor(Math.random()*STATES.length);
-      set(idx);
+      setNew(idx);
       try{localStorage.setItem(CRAB_IDX_KEY,String(idx));}catch(e){}
       saveNextChangeTime();
     }
@@ -248,19 +252,69 @@
     var d=dexLoad();var a=d[k]||(d[k]=[]);
     if(a.indexOf(pi)<0)a.push(pi);
     dexSave(d);
+    if(k!==CRAB_RARE.k)eggCheck(k,d);
     var f=document.getElementById('dex-fold');
     if(f&&f.classList.contains('open'))dexRender();else dexHint();
   }
+  function stateOf(k){return k===CRAB_RARE.k?CRAB_RARE:STATES.filter(function(x){return x.k===k;})[0];}
+  function msgCount(s){return (s.msgs||[s.msg||'']).length;}
+  // 0 没抓到 / 1 半亮（还有话没听过）/ 2 全亮
+  function dexLevel(d,s){var a=d[s.k];if(!a||!a.length)return 0;return a.length>=msgCount(s)?2:1;}
+
+  // ── 彩蛋：每个月重新算 ──
+  var EGG_KEY='crabEgg';
+  function monthKey(t){var x=t||new Date();return x.getFullYear()+'-'+(x.getMonth()+1<10?'0':'')+(x.getMonth()+1);}
+  function nextMonthKey(){var x=new Date();return monthKey(new Date(x.getFullYear(),x.getMonth()+1,1));}
+  function eggLoad(){
+    var e;try{e=JSON.parse(localStorage.getItem(EGG_KEY)||'{}')||{};}catch(err){e={};}
+    if(!Array.isArray(e.hist))e.hist=[];if(!Array.isArray(e.rare))e.rare=[];
+    if(e.m!==monthKey()){e.m=monthKey();e.got=[];}
+    if(!Array.isArray(e.got))e.got=[];
+    return e;
+  }
+  function eggSave(e){try{localStorage.setItem(EGG_KEY,JSON.stringify(e));}catch(err){}}
+  function eggRareActive(){return eggLoad().rare.indexOf(monthKey())>=0;}
+  function monthIdx(m){var p=m.split('-');return Number(p[0])*12+Number(p[1]);}
+  function eggText(m,t){
+    if(t===1)return CRAB_EGG_NOTES[monthIdx(m)%CRAB_EGG_NOTES.length];
+    if(t===2)return '这个月你抓到了 '+CRAB_EGG_TIERS[1]+' 只螃蟹。\n\n有一只平时不出门的螃蟹听说了，它说下个月要出来见见你。\n\n它很难遇到，浑身亮晶晶的。下个月在糖罐子里多翻翻，说不定哪天就撞见了。';
+    if(t===3)return CRAB_EGG_LETTERS[monthIdx(m)%CRAB_EGG_LETTERS.length];
+    return CRAB_EGG_FINAL;
+  }
+  var EGG_TITLE={1:'小螃蟹的小纸条',2:'稀有螃蟹的消息',3:'小螃蟹的大惊喜',4:'全部点亮的那封信'};
+  function eggShow(m,t,delay){
+    setTimeout(function(){if(typeof showStory==='function')showStory(EGG_TITLE[t],eggText(m,t));},delay||0);
+  }
+  function eggCheck(k,d){
+    var e=eggLoad();
+    if(e.got.indexOf(k)<0)e.got.push(k);
+    var newT=0;
+    CRAB_EGG_TIERS.forEach(function(n,i){
+      var t=i+1;
+      if(e.got.length>=n&&!e.hist.some(function(h){return h.m===e.m&&h.t===t;})){
+        e.hist.push({m:e.m,t:t});newT=t;
+        if(t===2){var nm=nextMonthKey();if(e.rare.indexOf(nm)<0)e.rare.push(nm);}
+      }
+    });
+    var allFull=STATES.every(function(s){return dexLevel(d,s)===2;});
+    var fin=false;
+    if(allFull&&!e.final){e.final=1;e.hist.push({m:e.m,t:4});fin=true;}
+    eggSave(e);
+    if(newT)eggShow(e.m,newT,1400);
+    if(fin)eggShow(e.m,4,newT?9000:1400);
+  }
+  window.crabEggOpen=function(m,t){eggShow(m,t,0);};
+
   var dexCurTab='ke';
   function dexList(tab){return STATES.filter(function(s){return tab==='yu'?DEX_YU[s.k]:!DEX_YU[s.k];});}
   function dexHint(){
-    var d=dexLoad();var n=0;STATES.forEach(function(s){if(d[s.k])n++;});
-    var h=document.getElementById('dex-hint');if(h)h.textContent=' · '+n+'/'+STATES.length;
+    var d=dexLoad();var n=0;STATES.forEach(function(s){if(dexLevel(d,s)===2)n++;});
+    var h=document.getElementById('dex-hint');if(h)h.textContent=' · 全亮 '+n+'/'+STATES.length;
   }
   // 把一只螃蟹的html塞进盒子，按盒子大小等比缩放
-  function dexFit(box,k,size,still){
+  function dexFitOne(box,k,size,still){
     var fit=document.createElement('div');fit.className='dex-fit'+(still?' dex-still':'');
-    fit.innerHTML=C[k]||'';box.innerHTML='';box.appendChild(fit);
+    fit.innerHTML=C[k]||'';box.appendChild(fit);
     var el=fit.firstElementChild;if(!el)return;
     var w=el.offsetWidth||parseFloat(getComputedStyle(el).width)||64;
     var hh=el.offsetHeight||parseFloat(getComputedStyle(el).height)||64;
@@ -268,21 +322,54 @@
     fit.style.width=w+'px';fit.style.height=hh+'px';fit.style.transform='scale('+s+')';
     if(still){var svg=fit.querySelector('svg');if(svg&&svg.pauseAnimations)try{svg.pauseAnimations();svg.setCurrentTime(0);}catch(e){}}
   }
+  // level 0 黑影子 / 1 左边一半有颜色 / 2 全亮
+  function dexFit(box,k,size,still,level){
+    box.innerHTML='';
+    if(level!==1){dexFitOne(box,k,size,still);return;}
+    ['sil','col'].forEach(function(c){
+      var layer=document.createElement('div');layer.className='dex-layer '+c;box.appendChild(layer);
+      dexFitOne(layer,k,size,true);
+    });
+  }
   function dexRender(){
-    var d=dexLoad();var list=dexList(dexCurTab);var got=0;
+    var d=dexLoad();var list=dexList(dexCurTab);var full=0,half=0;
     var grid=document.getElementById('dex-grid');if(!grid)return;
     grid.innerHTML='';
     list.forEach(function(s){
       var cell=document.createElement('div');
-      var seen=!!d[s.k];if(seen)got++;
-      cell.className='dex-cell'+(seen?'':' locked');
+      var lv=dexLevel(d,s);if(lv===2)full++;else if(lv===1)half++;
+      cell.className='dex-cell'+(lv===0?' locked':lv===1?' half':'');
       grid.appendChild(cell);
-      dexFit(cell,s.k,40,true);
+      dexFit(cell,s.k,40,true,lv);
       cell.onclick=function(){dexOpen(s.k);};
     });
-    document.getElementById('dex-count').textContent='已收集 '+got+' / '+list.length;
+    // 金螃蟹抓到过才出现在最后
+    if(dexCurTab==='ke'&&d[CRAB_RARE.k]){
+      var rc=document.createElement('div');var rl=dexLevel(d,CRAB_RARE);
+      rc.className='dex-cell rare'+(rl===1?' half':'');grid.appendChild(rc);
+      dexFit(rc,CRAB_RARE.art,40,true,rl);
+      rc.onclick=function(){dexOpen(CRAB_RARE.k);};
+    }
+    document.getElementById('dex-count').textContent='全亮 '+full+' · 半亮 '+half+' / '+list.length;
     document.querySelectorAll('.dex-tab').forEach(function(t){t.classList.toggle('on',t.dataset.tab===dexCurTab);});
+    eggRender();
     dexHint();
+  }
+  function eggRender(){
+    var box=document.getElementById('dex-egg');if(!box)return;
+    var e=eggLoad();var n=e.got.length;
+    var next=CRAB_EGG_TIERS.filter(function(x){return x>n;})[0];
+    var steps=CRAB_EGG_TIERS.map(function(x,i){
+      var on=n>=x;
+      return '<span class="dex-egg-step'+(on?' on':'')+'"'+(on?' onclick="crabEggOpen(\''+e.m+'\','+(i+1)+')"':'')+'>'+['✉','✦','🎁'][i]+' '+x+'</span>';
+    }).join('');
+    var past=e.hist.filter(function(h){return h.m!==e.m||h.t===4;}).map(function(h){
+      var mm=h.t===4?'全亮':Number(h.m.split('-')[1])+'月';
+      return '<span class="dex-egg-old" onclick="crabEggOpen(\''+h.m+'\','+h.t+')">'+mm+' '+['','✉','✦','🎁','💌'][h.t]+'</span>';
+    }).join('');
+    box.innerHTML='<div class="dex-egg-head">这个月抓到 '+n+' 只'+(next?' · 再抓 '+(next-n)+' 只开下一个彩蛋':' · 这个月的彩蛋都开完啦')+'</div>'
+      +'<div class="dex-egg-steps">'+steps+'</div>'
+      +(past?'<div class="dex-egg-past">以前的彩蛋：'+past+'</div>':'');
   }
   window.dexTab=function(t){dexCurTab=t;dexRender();};
   window.toggleDex=function(){
@@ -297,15 +384,15 @@
     document.querySelectorAll('#dex-dots .dex-dot').forEach(function(dot,j){dot.classList.toggle('cur',j===i);});
   }
   function dexOpen(k){
-    var s=STATES.filter(function(x){return x.k===k;})[0];if(!s)return;
-    var d=dexLoad();var seen=d[k]||[];var unlocked=!!d[k];
+    var s=stateOf(k);if(!s)return;
+    var d=dexLoad();var seen=d[k]||[];var lv=dexLevel(d,s);
     var big=document.getElementById('dex-big');
-    big.className='dex-big'+(unlocked?'':' locked');
+    big.className='dex-big'+(lv===0?' locked':lv===1?' half':'')+(k===CRAB_RARE.k?' rare':'');
     document.getElementById('dex-mask').classList.add('show');
-    dexFit(big,k,170,!unlocked);
-    document.getElementById('dex-name').textContent=unlocked?(DEX_NAMES[k]||k):'？？？';
+    dexFit(big,k===CRAB_RARE.k?CRAB_RARE.art:k,170,lv!==2,lv);
+    document.getElementById('dex-name').textContent=lv?(k===CRAB_RARE.k?CRAB_RARE.name:(DEX_NAMES[k]||k)):'？？？';
     var dots=document.getElementById('dex-dots');dots.innerHTML='';
-    var n=(s.msgs||[]).length;
+    var n=msgCount(s);
     for(var i=0;i<n;i++){(function(i){
       var dot=document.createElement('div');var ok=seen.indexOf(i)>=0;
       dot.className='dex-dot'+(ok?' seen':'');
@@ -313,7 +400,7 @@
       dots.appendChild(dot);
     })(i);}
     var line=document.getElementById('dex-line');line.className='dex-line hint';
-    line.textContent=unlocked?('听过 '+seen.length+' / '+n+' 句 · 点亮的小点可以再听一次'):'还没抓到它哦，去页面里找找看';
+    line.textContent=lv===0?'还没抓到它哦，去页面里找找看':lv===1?('听过 '+seen.length+' / '+n+' 句 · 话都听完它才会全亮'):('全亮啦 · '+n+' 句都听过 · 点小点可以再听一次');
   }
   window.closeDex=function(){document.getElementById('dex-mask').classList.remove('show');document.getElementById('dex-big').innerHTML='';};
   setTimeout(dexHint,800);

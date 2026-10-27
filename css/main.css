@@ -1666,3 +1666,20 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .shop-item-tag.new{background:#EAF7EE;color:#3E9A63;border-color:#BFE3CB}
 .shop-item-tag.hot{background:#FFF1E0;color:#D9772B;border-color:#F5CFA5}
 .snack-book-tag{font-size:10px;color:#D2577F;background:#FFF0F4;border:1px solid #F7C8D6;border-radius:7px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+
+/* ===== 螃蟹图鉴：半亮、金螃蟹、彩蛋 ===== */
+.dex-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.dex-layer.sil .dex-fit{filter:brightness(0);opacity:.16}
+.dex-layer.col{clip-path:inset(0 50% 0 0)}
+.dex-big{position:relative}
+.dex-cell.half{background:linear-gradient(90deg,var(--pink-50) 50%,#F6EEF1 50%)}
+.dex-cell.rare,.dex-big.rare{border-color:#F2C96B;background:radial-gradient(circle,#FFF6D8 0,#FFF0F4 75%)}
+.dex-cell.rare .dex-fit,.dex-big.rare .dex-fit,#clabCrab.rare #clabCrabSvg{filter:sepia(.85) saturate(2.4) hue-rotate(-12deg) brightness(1.08) drop-shadow(0 0 4px #FFD36B)}
+.dex-cell.rare .dex-layer.sil .dex-fit,.dex-big.rare .dex-layer.sil .dex-fit{filter:brightness(0);opacity:.16}
+.dex-egg{margin-top:14px;padding-top:12px;border-top:1px dashed var(--border-light);text-align:center}
+.dex-egg-head{font-size:11px;color:var(--text-secondary);letter-spacing:.5px;margin-bottom:8px}
+.dex-egg-steps{display:flex;justify-content:center;gap:8px}
+.dex-egg-step{font-size:11px;padding:4px 10px;border-radius:12px;border:1px dashed var(--border-light);color:var(--text-muted)}
+.dex-egg-step.on{border-style:solid;border-color:var(--pink-400);background:var(--pink-100);color:var(--text-primary);cursor:pointer}
+.dex-egg-past{margin-top:10px;font-size:10.5px;color:var(--text-muted);line-height:2}
+.dex-egg-old{display:inline-block;margin:0 3px;padding:1px 8px;border-radius:10px;background:var(--pink-50);border:1px solid var(--border-light);cursor:pointer;color:var(--text-secondary)}

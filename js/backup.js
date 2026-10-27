@@ -10,6 +10,7 @@ function exportData(){
   try{const raw=localStorage.getItem('candyJarSnackData');if(raw) data.snackData=JSON.parse(raw);}catch(e){}
   try{const raw=localStorage.getItem('pigBellyData');if(raw) data.pigBellyData=JSON.parse(raw);}catch(e){}
   try{const raw=localStorage.getItem('crabDex');if(raw) data.crabDex=JSON.parse(raw);}catch(e){}
+  try{const raw=localStorage.getItem('crabEgg');if(raw) data.crabEgg=JSON.parse(raw);}catch(e){}
   try{if(typeof lkBackupData==='function') data.lookData=lkBackupData();}catch(e){}
   
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
@@ -34,6 +35,7 @@ async function importData(event){
       const data=JSON.parse(e.target.result);
       const now=Date.now();
       if(data.crabDex){try{localStorage.setItem('crabDex',JSON.stringify(data.crabDex));}catch(e){}}
+      if(data.crabEgg){try{localStorage.setItem('crabEgg',JSON.stringify(data.crabEgg));}catch(e){}}
       if(data.lookData&&typeof lkRestoreBackup==='function'){try{await lkRestoreBackup(data.lookData);}catch(e){}}
       if(data.appData){
         data.appData.savedAt=now;
