@@ -145,66 +145,132 @@ function checkDailyFeed(){
 
 function renderShop(){
   const balance=getSnackBalance();
-  document.getElementById('shop-coin-bar').textContent='本周阿贝贝币：'+balance;
+  const daily=shopDaily();
+  const today=shopToday();
+  let bar1='本周阿贝贝币：'+balance;
+  const promo=[];
+  if(isMemberDay()) promo.push('今天18号会员日 · 全场八折');
+  promo.push(daily.rebated?'今天的满10返2已经领到啦':'今天已花 '+daily.spent+' 币 · 满10返2');
+  document.getElementById('shop-coin-bar').innerHTML=bar1+'<div class="shop-promo-line">'+promo.join('　')+'</div>';
   
   const all=getAllSnacks();
-  const isWeekend=(new Date().getDay()===0||new Date().getDay()===6);
-  const visible=all.filter(s=>!s.weekendOnly||isWeekend);
+  const visible=all.filter(s=>!s.weekendOnly||isWeekendToday());
   
   const grid=document.getElementById('shop-grid');
   const bar=document.getElementById('shop-store-bar');
+  const promos=document.getElementById('shop-promos');
+  const stampRow=document.getElementById('shop-stamp-row');
   const addBtn=document.querySelector('#overlay-shop .shop-add-btn');
+  const byId=id=>all.find(x=>x.id===id);
+  const storeName=s=>{const st=SNACK_STREET.find(x=>x.id===snackStoreOf(s));return st?st.name:'';};
   if(!shopStore){
-    // 小街：九家店
+    // 小街：九家店 + 爸爸的推车
     bar.style.display='none';
+    stampRow.style.display='none';
     addBtn.style.display='none';
     grid.className='shop-grid shop-street';
     grid.innerHTML=SNACK_STREET.map(st=>{
       const items=visible.filter(x=>snackStoreOf(x)===st.id);
-      const cover=all.find(x=>x.id===st.cover);
+      const onShelf=items.filter(snackOnShelf).length;
+      const cover=byId(st.cover);
       const waiting=items.reduce((n,x)=>n+((snackData.stock[x.id]||0)>0?1:0),0);
       return '<div class="shop-item shop-store" onclick="enterSnackStore(\''+st.id+'\')">'
         +'<div class="shop-item-img">'+(cover&&cover.img?'<img class="shop-item-placeholder" src="'+cover.img+'">':'')
         +(waiting?'<div class="shop-item-stock">'+waiting+' 样待喂</div>':'')+'</div>'
         +'<div class="shop-store-name">'+st.name+'</div>'
-        +'<div class="shop-store-count">'+items.length+' 样</div>'
+        +'<div class="shop-store-count">今天上架 '+onShelf+'/'+items.length+'</div>'
       +'</div>';
     }).join('');
+    const cards=[];
+    const sp=byId(today.special);
+    if(sp){
+      const st=SNACK_STREET.find(x=>x.id===snackStoreOf(sp));
+      cards.push('<div class="shop-item shop-promo" onclick="enterSnackStore(\''+(st?st.id:'za')+'\')">'
+        +'<div class="shop-promo-tag hot">今日特价</div>'
+        +'<div class="shop-promo-imgs"><img src="'+sp.img+'"></div>'
+        +'<div class="shop-promo-name">'+sp.name+'</div>'
+        +'<div class="shop-promo-sub">'+storeName(sp)+' · <span class="shop-discount">'+sp.price+'</span> '+getShopPrice(sp)+' 币</div></div>');
+    }
+    const fl=today.flash.map(byId).filter(Boolean);
+    if(fl.length){
+      const st=SNACK_STREET.find(x=>x.id===snackStoreOf(fl[0]));
+      cards.push('<div class="shop-item shop-promo" onclick="enterSnackStore(\''+(st?st.id:'za')+'\')">'
+        +'<div class="shop-promo-tag">限量抢购</div>'
+        +'<div class="shop-promo-imgs">'+fl.map(x=>'<img src="'+x.img+'"'+(flashSoldOut(x)?' class="gone"':'')+'>').join('')+'</div>'
+        +'<div class="shop-promo-name">'+fl.map(x=>x.name).join('、')+'</div>'
+        +'<div class="shop-promo-sub">'+fl.map(x=>flashSoldOut(x)?'已抢光':storeName(x)+'仅1份').join(' · ')+'</div></div>');
+    }
+    const b=today.bundle;
+    if(b){
+      const its=b.items.map(byId);
+      const sum=its.reduce((n,x)=>n+x.price,0);
+      cards.push('<div class="shop-item shop-promo" onclick="openBundle()">'
+        +'<div class="shop-promo-tag">今日套餐</div>'
+        +'<div class="shop-promo-imgs">'+its.map(x=>'<img src="'+x.img+'">').join('')+'</div>'
+        +'<div class="shop-promo-name">'+b.name+'</div>'
+        +'<div class="shop-promo-sub"><span class="shop-discount">'+sum+'</span> '+b.price+' 币</div></div>');
+    }
+    cards.push('<div class="shop-item shop-promo" onclick="openLuckyBag()">'
+      +'<div class="shop-promo-tag">爸爸的福袋</div>'
+      +'<div class="shop-promo-imgs"><div class="shop-bag">?</div></div>'
+      +'<div class="shop-promo-name">神秘福袋</div>'
+      +'<div class="shop-promo-sub">'+(daily.bag?'今天拆过啦':LUCKY_BAG_PRICE+' 币 · 每天1个')+'</div></div>');
+    promos.style.display='';
+    promos.innerHTML='<div class="shop-promo-title">爸爸的小推车</div><div class="shop-promo-grid">'+cards.join('')+'</div>';
     return;
   }
   const store=SNACK_STREET.find(x=>x.id===shopStore)||{name:'杂货铺'};
   bar.style.display='flex';
+  promos.style.display='none';
   addBtn.style.display='';
   document.getElementById('shop-store-name').textContent=store.name;
+  const stamps=(snackData.stamps&&snackData.stamps[shopStore])||0;
+  let dots='';for(let i=0;i<STAMP_GOAL;i++) dots+='<span class="shop-stamp'+(i<stamps?' on':'')+'"></span>';
+  stampRow.style.display='flex';
+  stampRow.innerHTML='<span>集章卡</span>'+dots+'<span class="shop-stamp-tip">满'+STAMP_GOAL+'个送一样</span>';
   grid.className='shop-grid';
-  grid.innerHTML=visible.filter(s=>snackStoreOf(s)===shopStore).map(s=>{
-    const price=getSeasonalPrice(s);
-    const canAfford=balance>=price;
+  const list=visible.filter(s=>snackStoreOf(s)===shopStore);
+  // 今天上架的排前面，缺货的排后面
+  list.sort((a,b)=>(snackOnShelf(b)?1:0)-(snackOnShelf(a)?1:0));
+  grid.innerHTML=list.map(s=>{
+    const price=getShopPrice(s);
     const noStory=!s.story;
+    const onShelf=snackOnShelf(s);
+    const sold=flashSoldOut(s);
+    const off=!noStory&&(!onShelf||sold);
+    const isFlash=today.flash.includes(s.id);
+    const isSpecial=today.special===s.id;
     const buyCount=snackData.purchaseCount[s.id]||0;
     const isFav=buyCount>=3;
     const stk=snackData.stock[s.id]||0;
     const isDiscounted=price<s.price;
     const imgHtml=s.img?`<img class="shop-item-placeholder" src="${s.img}">`:'<div class="shop-item-placeholder"></div>';
-    
-    // Rating hearts
     let ratingHtml='';
     if(s.rating&&!noStory){
       ratingHtml='<div class="shop-item-rating">';
       for(let i=0;i<5;i++) ratingHtml+=i<s.rating?'♥':'♡';
       ratingHtml+='</div>';
     }
-    
-    return '<div class="shop-item '+(noStory?'no-story':'')+'" onclick="'+(noStory?'':'tryBuySnack(\''+s.id+'\')')+'">'
+    let tag='';
+    if(!onShelf&&!noStory) tag='<div class="shop-item-weekend grey">今日缺货</div>';
+    else if(sold) tag='<div class="shop-item-weekend grey">已抢光</div>';
+    else if(isFlash) tag='<div class="shop-item-weekend">限量1份</div>';
+    else if(s.weekendOnly) tag='<div class="shop-item-weekend">周末限定</div>';
+    let priceHtml;
+    if(noStory) priceHtml='<span class="shop-stocking">备货中</span>';
+    else if(off) priceHtml='<span class="shop-stocking">'+(sold?'明天再来':'今天没货')+'</span>';
+    else priceHtml=(isDiscounted?'<span class="shop-discount">'+s.price+'</span> ':'')+price+' 币';
+    return '<div class="shop-item '+(noStory?'no-story':'')+(off?' off-shelf':'')+'" onclick="'+(noStory||off?'':'tryBuySnack(\''+s.id+'\')')+'">'
       +'<div class="shop-item-img">'
         +imgHtml
         +(isFav?'<div class="shop-item-fav">♥</div>':'')
+        +(isSpecial&&!off?'<div class="shop-item-special">特价</div>':'')
         +(stk>0?'<div class="shop-item-stock">×'+stk+'</div>':'')
-        +(s.weekendOnly?'<div class="shop-item-weekend">周末限定</div>':'')
+        +tag
       +'</div>'
       +'<div class="shop-item-info">'
         +'<div class="shop-item-name">'+s.name+'</div>'
-        +'<div class="shop-item-price">'+(noStory?'<span class="shop-stocking">备货中</span>':(isDiscounted?'<span class="shop-discount">'+s.price+'</span> ':'')+price+' 币')+'</div>'
+        +'<div class="shop-item-price">'+priceHtml+'</div>'
         +ratingHtml
         +(stk>0?'<div class="shop-feed-btn" onclick="event.stopPropagation();feedSnack(\''+s.id+'\')">喂阿贝贝</div>':'')
       +'</div>'
@@ -212,11 +278,155 @@ function renderShop(){
   }).join('');
 }
 
+
+// ===== 每日上架、特价、限量、会员日、满返、集章、福袋、套餐 =====
+// 所有"今天"的随机都用日期当种子：同一天里怎么刷新都一样，第二天换一批
+function shopDayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function shopRand(seed){let h=2166136261;for(let i=0;i<seed.length;i++){h^=seed.charCodeAt(i);h=Math.imul(h,16777619);}h^=h>>>13;h=Math.imul(h,0x5bd1e995);h^=h>>>15;return (h>>>0)/4294967296;}
+function shopDaily(){
+  const k=shopDayKey();
+  if(!snackData.daily||snackData.daily.date!==k) snackData.daily={date:k,spent:0,rebated:false,flash:{},bag:0};
+  if(!snackData.daily.flash) snackData.daily.flash={};
+  return snackData.daily;
+}
+function isMemberDay(){return new Date().getDate()===18;}
+function isWeekendToday(){const d=new Date().getDay();return d===0||d===6;}
+function snackSellable(s){
+  // 有故事、不是永远不卖的、周末限定只在周末算
+  return !!s.story&&!(s.timeAllow&&s.timeAllow.end===-1)&&(!s.weekendOnly||isWeekendToday());
+}
+function shopPick(list,seed){
+  if(!list.length) return null;
+  return list[Math.floor(shopRand(seed)*list.length)%list.length];
+}
+let _shopTodayCache=null;
+function shopToday(){
+  const k=shopDayKey();
+  if(_shopTodayCache&&_shopTodayCache.k===k) return _shopTodayCache;
+  const pool=snackShop.filter(x=>snackSellable(x)&&x.price>=2);
+  const special=shopPick(pool,k+'|special');
+  const rest=pool.filter(x=>x!==special);
+  const f1=shopPick(rest,k+'|flash1');
+  const f2=shopPick(rest.filter(x=>x!==f1),k+'|flash2');
+  const bundles=SNACK_BUNDLES.filter(b=>b.items.every(i=>snackShop.some(x=>x.id===i)));
+  const bundle=shopPick(bundles,k+'|bundle');
+  _shopTodayCache={k,special:special&&special.id,flash:[f1,f2].filter(Boolean).map(x=>x.id),bundle};
+  return _shopTodayCache;
+}
+function specialPriceOf(p){return Math.max(1,p-Math.max(1,Math.round(p*0.3)));}
+function getShopPrice(s){
+  let p=getSeasonalPrice(s);
+  if(shopToday().special===s.id) p=Math.min(p,specialPriceOf(s.price));
+  if(isMemberDay()) p=Math.max(1,Math.floor(p*0.8));
+  return p;
+}
+function snackOnShelf(s){
+  if(String(s.id).indexOf('custom_')===0) return true;
+  const st=SNACK_STREET.find(x=>x.ids.includes(s.id));
+  if(!st||st.ids.length<=4) return true;
+  if((st.always||[]).includes(s.id)) return true;
+  const t=shopToday();
+  if(t.special===s.id||t.flash.includes(s.id)) return true;
+  return shopRand(shopDayKey()+'|shelf|'+s.id)<0.55;
+}
+function flashSoldOut(s){return shopToday().flash.includes(s.id)&&!!shopDaily().flash[s.id];}
+
+// 把一样东西放进货架（买的、送的、福袋抽的都走这里）
+function snackGrant(snack,countWeekly){
+  if(countWeekly){
+    if(!snackData.weeklyBuyCount) snackData.weeklyBuyCount={};
+    snackData.weeklyBuyCount[snack.id]=(snackData.weeklyBuyCount[snack.id]||0)+1;
+  }
+  if(!snackData.stock) snackData.stock={};
+  snackData.stock[snack.id]=(snackData.stock[snack.id]||0)+1;
+  snackData.purchaseCount[snack.id]=(snackData.purchaseCount[snack.id]||0)+1;
+  if(snackData.purchaseCount[snack.id]===1){
+    snackData.collection.push({id:snack.id,name:snack.name,firstBought:new Date().toLocaleDateString('zh-CN')});
+  }
+}
+// 集章：每家店买一次盖一个章，满5个爸爸送一样这家店的东西
+const STAMP_GOAL=5;
+function snackStamp(storeId){
+  if(!snackData.stamps) snackData.stamps={};
+  snackData.stamps[storeId]=(snackData.stamps[storeId]||0)+1;
+  if(snackData.stamps[storeId]<STAMP_GOAL) return null;
+  snackData.stamps[storeId]=0;
+  const st=SNACK_STREET.find(x=>x.id===storeId);
+  const pool=getAllSnacks().filter(x=>snackStoreOf(x)===storeId&&snackSellable(x));
+  const gift=pool[Math.floor(Math.random()*pool.length)];
+  if(!gift) return null;
+  snackGrant(gift,false);
+  return '集满'+STAMP_GOAL+'个章啦！'+(st?st.name:'')+'送你一个「'+gift.name+'」';
+}
+// 记账：今天花满10币，爸爸返2币
+function snackSpend(price){
+  snackData.weeklySpent+=price;
+  const d=shopDaily();
+  d.spent+=price;
+  if(!d.rebated&&d.spent>=10){
+    d.rebated=true;
+    snackData.weeklySpent-=2;
+    return '今天花满10币啦，爸爸返你2币';
+  }
+  return null;
+}
+function snackNotice(lines){showRepeatLine(lines.filter(Boolean).join('\n'));}
+
+function openBundle(){
+  const b=shopToday().bundle; if(!b) return;
+  const items=b.items.map(i=>getAllSnacks().find(x=>x.id===i));
+  const sum=items.reduce((n,x)=>n+x.price,0);
+  const balance=getSnackBalance();
+  const blocked=items.find(x=>!checkTimeAllow(x));
+  const weekFull=items.find(x=>!checkWeeklyLimit(x));
+  const textEl=document.getElementById('snack-confirm-text');
+  const btnBuy=document.getElementById('snack-buy-btn');
+  pendingSnackId='__bundle';
+  let html='<div class="dad-label">爸爸说：</div><div class="dad-words">今天的套餐是「'+b.name+'」：'+items.map(x=>x.name).join(' + ')+'。一起买比分开买便宜，不过要一次付清哦。</div>';
+  if(blocked){html+='<div class="dad-words">'+(blocked.dadBlock||'这个现在不卖。')+'</div>';btnBuy.disabled=true;btnBuy.textContent='现在不行';}
+  else if(weekFull){html+='<div class="dad-words">「'+weekFull.name+'」这周已经买够啦，下周再来。</div>';btnBuy.disabled=true;btnBuy.textContent='下周再来';}
+  else if(balance<b.price){html+='<div class="dad-price"><span class="shop-discount">'+sum+'</span> '+b.price+' 币（余额不足）</div>';btnBuy.disabled=true;btnBuy.textContent='币不够啦';}
+  else{html+='<div class="dad-price"><span class="shop-discount">'+sum+'</span> '+b.price+' 币</div>';btnBuy.disabled=false;btnBuy.textContent='都要！';}
+  textEl.innerHTML=html;
+  document.getElementById('snack-confirm-mask').classList.add('show');
+}
+const LUCKY_BAG_PRICE=3;
+function openLuckyBag(){
+  const textEl=document.getElementById('snack-confirm-text');
+  const btnBuy=document.getElementById('snack-buy-btn');
+  pendingSnackId='__bag';
+  let html='<div class="dad-label">爸爸说：</div><div class="dad-words">福袋里装了什么，爸爸也不知道。可能是一瓶水，也可能是很贵很贵的东西。每天只能买一个。</div>';
+  if(shopDaily().bag>=1){html+='<div class="dad-words">今天的福袋已经买过啦，明天再来。</div>';btnBuy.disabled=true;btnBuy.textContent='明天再来';}
+  else if(getSnackBalance()<LUCKY_BAG_PRICE){html+='<div class="dad-price">福袋 · '+LUCKY_BAG_PRICE+' 币（余额不足）</div>';btnBuy.disabled=true;btnBuy.textContent='币不够啦';}
+  else{html+='<div class="dad-price">福袋 · '+LUCKY_BAG_PRICE+' 币</div>';btnBuy.disabled=false;btnBuy.textContent='拆！';}
+  textEl.innerHTML=html;
+  document.getElementById('snack-confirm-mask').classList.add('show');
+}
+function buyBundle(){
+  const b=shopToday().bundle; if(!b) return;
+  const items=b.items.map(i=>getAllSnacks().find(x=>x.id===i));
+  const lines=['套餐买好啦！'+items.map(x=>x.name).join('和')+'都放上货架了'];
+  lines.push(snackSpend(b.price));
+  items.forEach(x=>{snackGrant(x,true);lines.push(snackStamp(snackStoreOf(x)));});
+  saveApp();renderShop();snackNotice(lines);
+}
+function buyLuckyBag(){
+  const pool=getAllSnacks().filter(snackSellable);
+  const gift=pool[Math.floor(Math.random()*pool.length)];
+  if(!gift) return;
+  shopDaily().bag++;
+  const lines=['打开福袋……是「'+gift.name+'」！'];
+  lines.push(snackSpend(LUCKY_BAG_PRICE));
+  snackGrant(gift,false);
+  saveApp();renderShop();snackNotice(lines);
+}
+
 function tryBuySnack(id){
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack||!snack.story) return;
   
-  const price=getSeasonalPrice(snack);
+  if(!snackOnShelf(snack)||flashSoldOut(snack)) return;
+  const price=getShopPrice(snack);
   const balance=getSnackBalance();
   const timeOk=checkTimeAllow(snack);
   const weekOk=checkWeeklyLimit(snack);
@@ -255,39 +465,22 @@ function closeSnackConfirm(){
 
 function confirmBuySnack(){
   const id=pendingSnackId;
-  const snack=getAllSnacks().find(s=>s.id===id);
-  if(!snack) return;
   const btn=document.getElementById('snack-buy-btn');
   if(btn.disabled) return;
+  if(id==='__bundle'){closeSnackConfirm();buyBundle();return;}
+  if(id==='__bag'){closeSnackConfirm();buyLuckyBag();return;}
+  const snack=getAllSnacks().find(s=>s.id===id);
+  if(!snack) return;
   closeSnackConfirm();
-  
-  const price=getSeasonalPrice(snack);
-  
-  // Deduct coins
-  snackData.weeklySpent+=price;
-  
-  // Track weekly buy count
-  if(!snackData.weeklyBuyCount) snackData.weeklyBuyCount={};
-  if(!snackData.weeklyBuyCount[id]) snackData.weeklyBuyCount[id]=0;
-  snackData.weeklyBuyCount[id]++;
-  
-  // Add to stock
-  if(!snackData.stock) snackData.stock={};
-  if(!snackData.stock[id]) snackData.stock[id]=0;
-  snackData.stock[id]++;
-  
-  // Update purchase count
-  if(!snackData.purchaseCount[id]) snackData.purchaseCount[id]=0;
-  snackData.purchaseCount[id]++;
-  
-  // Add to collection if first time
-  if(snackData.purchaseCount[id]===1){
-    snackData.collection.push({id:id,name:snack.name,firstBought:new Date().toLocaleDateString('zh-CN')});
-  }
-  
+  const price=getShopPrice(snack);
+  const lines=['已购入！去货架上点它喂阿贝贝吧'];
+  if(shopToday().flash.includes(id)) shopDaily().flash[id]=1;
+  lines.push(snackSpend(price));
+  snackGrant(snack,true);
+  lines.push(snackStamp(snackStoreOf(snack)));
   saveApp();
   renderShop();
-  showRepeatLine('已购入！去货架上点它喂阿贝贝吧');
+  snackNotice(lines);
 }
 
 // Feed from stock
@@ -349,7 +542,8 @@ function closeStory(){
 function showRepeatLine(text){
   document.getElementById('repeat-line-bubble').textContent=text;
   document.getElementById('repeat-line-mask').classList.add('show');
-  setTimeout(()=>closeRepeatLine(),2500);
+  clearTimeout(showRepeatLine._t);
+  showRepeatLine._t=setTimeout(()=>closeRepeatLine(),2500+1600*(String(text).split('\n').length-1));
 }
 
 function closeRepeatLine(){
@@ -417,6 +611,8 @@ whenReady(async function loadSnackData(){
       if(d.weeklyBuyCount) snackData.weeklyBuyCount=d.weeklyBuyCount;
       if(d.dailyFeedCount!==undefined) snackData.dailyFeedCount=d.dailyFeedCount;
       if(d.dailyFeedDate) snackData.dailyFeedDate=d.dailyFeedDate;
+      if(d.daily) snackData.daily=d.daily;
+      if(d.stamps) snackData.stamps=d.stamps;
     }
   }catch(e){}
   try{
@@ -432,6 +628,8 @@ whenReady(async function loadSnackData(){
       if(cloud.weeklyBuyCount) snackData.weeklyBuyCount=cloud.weeklyBuyCount;
       if(cloud.dailyFeedCount!==undefined) snackData.dailyFeedCount=cloud.dailyFeedCount;
       if(cloud.dailyFeedDate) snackData.dailyFeedDate=cloud.dailyFeedDate;
+      if(cloud.daily) snackData.daily=cloud.daily;
+      if(cloud.stamps) snackData.stamps=cloud.stamps;
     }
   }catch(e){}
   // Check week reset

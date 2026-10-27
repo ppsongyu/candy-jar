@@ -28,7 +28,7 @@
 | `data/candy-pics.js` | 糖果和便签：图片文件、底色、名字 |
 | `data/chat-words.js` | 阿贝贝聊天的对话库 |
 | `data/abebe-words.js` | 阿贝贝的台词：日常、季节、节日 |
-| `data/snacks.js` | 小卖部的零食和零食故事 |
+| `data/snacks.js` | 小卖部的零食和零食故事；SNACK_STREET 九家店（ids 店里有什么、always 每天都有货、cover 门口招牌）；SNACK_BUNDLES 套餐 |
 | `data/dreams.js` | 阿贝贝的梦 |
 | `data/fortunes.js` | 今日一签的签文 |
 | `data/crab-art.js` | 小螃蟹的图（SVG 和 sprite） |

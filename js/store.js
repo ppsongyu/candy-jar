@@ -195,18 +195,16 @@ function claudeApply(a){
     }
     case 'snack_buy':{
       const snack=getAllSnacks().find(x=>x.id===d.id||x.name===d.id);if(!snack) return '小卖部没有这个零食';
-      const price=getSeasonalPrice(snack);
+      if(!snackOnShelf(snack)) return snack.name+'今天缺货';
+      if(flashSoldOut(snack)) return snack.name+'今天已经抢光了';
+      const price=getShopPrice(snack);
       if(!checkTimeAllow(snack)) return '爸爸说现在不能买'+snack.name;
       if(!checkWeeklyLimit(snack)) return snack.name+'这周已经吃够啦';
       if(getSnackBalance()<price) return '阿贝贝币不够买'+snack.name;
-      const id=snack.id;
-      snackData.weeklySpent+=price;
-      if(!snackData.weeklyBuyCount) snackData.weeklyBuyCount={};
-      snackData.weeklyBuyCount[id]=(snackData.weeklyBuyCount[id]||0)+1;
-      if(!snackData.stock) snackData.stock={};
-      snackData.stock[id]=(snackData.stock[id]||0)+1;
-      snackData.purchaseCount[id]=(snackData.purchaseCount[id]||0)+1;
-      if(snackData.purchaseCount[id]===1) snackData.collection.push({id,name:snack.name,firstBought:new Date().toLocaleDateString('zh-CN')});
+      if(shopToday().flash.includes(snack.id)) shopDaily().flash[snack.id]=1;
+      snackSpend(price);
+      snackGrant(snack,true);
+      snackStamp(snackStoreOf(snack));
       return '买了'+snack.name;
     }
     case 'snack_feed':{

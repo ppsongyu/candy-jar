@@ -648,18 +648,95 @@ const snackShop=[
     story:'阿贝贝捧着杯子转了一圈又一圈。\n"你怎么有两种颜色。"\n上面是黄绿色的。下面是粉色的。中间隔了一层白白的碎碎的东西。三层。不搅的话它们就各自待在自己的位置。\n"你们三个人住在一起但互相不说话吗。"\n她先喝最上面那层。吸管伸进绿色的部分。\n——涩的。有一点点苦。但清清爽爽的，像早上刚醒来的时候空气的味道。\n"你是负责清醒的那个人。"\n然后她把吸管戳到最下面。粉色的部分。\n——甜的！番石榴的甜。浓浓的，果肉的味道，带一点点酸。\n"你是负责开心的那个人。"\n她看了看中间那层白色的。\n"你呢。你是什么。"\n她把吸管放在中间吸了一口。是椰奶。或者是什么奶。凉凉的，滑滑的。\n"你是负责让她们俩不吵架的那个人。"\n然后她把吸管上下搅了两下。三种颜色开始慢慢混在一起。绿变淡了，粉变浅了，白色在中间牵着线。\n"你们终于说话了。"\n混在一起之后的味道——她嚼了嚼嘴巴。不是三种味道。是一种新的。酸的甜的清的混在一起变成了一种只有混合才会出现的味道。\n"原来你们三个人一直想在一起。只是需要有人搅一下。"\n她把杯子喝到见底。\n"有些关系不搅就永远是三层。搅了才知道在一起多好喝。"',
     repeatLines:['"三层又来了。今天从粉色开始。"','"中间那个和事佬你好呀。"','"搅了搅了——你们终于在一起了。"','"混合味又出现了。每次都是新的。"','"不搅的时候也好看。搅了之后更好喝。"','"有些关系需要搅一下——我今天又想到了。"']
   },
-
+  {
+    id:'kitty_milk',name:'小猫吨吨桶牛奶',price:2,img:'./牛奶吨吨桶.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'圆滚滚的瓶子，跟你的小肚子一模一样。喝完了别扔，爸爸有用。',
+    dadBlock:'',
+    story:'阿贝贝把瓶子放在桌上，自己趴下来，下巴贴着桌面，跟瓶子平视。\n"你好圆。"\n瓶子没说话。瓶子上面的小猫举着一个小杯子，好像在跟她干杯。\n她也举起爪子，跟小猫碰了一下。"干杯。"\n然后她拧开粉色的盖子，抱着瓶子喝了一大口。牛奶凉凉的，滑滑的，从嘴巴一直凉到肚子里。她低头看了看自己的肚子，又看了看瓶子。\n"……我们是一样的形状。"\n她喝一口，看一眼瓶子，再看一眼肚子。瓶子里的牛奶越来越少，她的肚子越来越圆。\n"它的东西跑到我这里来了。"\n喝完最后一口，她把空瓶子举起来对着窗户看。光从瓶子里穿过去，在桌上照出一个圆圆的亮斑。\n爸爸走过来，把空瓶子拿走了。过了一会儿又拿回来。瓶子里装满了水。\n阿贝贝盯着它。\n"它刚才是牛奶。"\n"嗯。"\n"现在怎么变成水了。"\n"它累了，想休息一下，当一会儿水。"\n阿贝贝眯起眼睛，觉得这件事有问题。但瓶子上的小猫还在举着杯子对她笑。\n她犹豫了很久，抱起瓶子，抿了一小口。\n"……没有味道。"\n又抿了一口。\n"还是没有味道。"\n但她没有放下。小猫一直看着她，她不好意思不喝。\n喝了小半瓶，她把瓶子放回桌上，小声说："我不是喜欢喝水。我是给小猫面子。"',
+    repeatLines:['"小猫又来跟我干杯了。"','"我和瓶子今天还是一样圆。"','"喝完了……爸爸你是不是又要往里面倒水。"','"我今天给小猫面子了，喝了三口水。"','"凉凉的从嘴巴滑到肚子，好舒服。"','"这个瓶子我要留着，它是我的。"']
+  },
+  {
+    id:'jujube_cake',name:'红枣糕',price:3,img:'./红枣糕.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'软乎乎的，上面趴着几颗红枣。枣子里面有核，咬的时候慢一点，牙齿要先打个招呼。',
+    dadBlock:'',
+    story:'阿贝贝先数了一下。\n"一、二、三、四。四颗枣。"\n她用爪子按了按糕，糕软软地陷下去，又慢慢鼓回来。\n"它会呼吸。"\n她没有先吃糕。她先把最小的那颗红枣抠了下来，放进嘴里。甜甜的，有一点点皱皱的皮，咬到中间的时候牙齿碰到一个硬硬的东西。\n"啊。"\n她把核吐在手心里，看了看。尖尖的，像一颗小小的橄榄。\n"爸爸说的牙齿打招呼，就是这个意思吗。"\n然后她抠了第二颗。第三颗。三个核在手心里排成一排。\n只剩最大的那一颗了。她看着它，它也看着她。\n"……你最后。"\n她开始吃糕。一口下去，糕上留下一个小小的牙印，边上掉了好多黄黄的碎渣。她把碎渣一颗一颗捡起来吃掉，连桌上的也没放过。\n糕吃完了，那颗最大的红枣还孤零零地趴在最后一小块上。\n她想了想，没有吃。她把它连着那一小块糕，用糖纸包起来，塞进了枕头底下。\n"这颗留着。明天再吃。"\n她拍了拍枕头，确认它在里面。\n然后又拍了拍。\n然后掀开枕头看了一眼，又盖回去。\n"……它还在。好的。"',
+    repeatLines:['"四颗枣，我又数了一遍。"','"最大的那颗还是最后吃。规矩。"','"碎渣一颗都没浪费！"','"枕头底下那颗……昨天的，今天吃掉了。"','"软软的，按一下它就鼓回来。"','"我的牙齿已经跟枣核很熟了。"']
+  },
+  {
+    id:'pepino',name:'人参果',price:2,img:'./人参果.png',rating:5,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'这个是妈妈最爱吃的水果。爸爸挑了最熟的一个，黄黄的，带着紫色的条纹，闻起来有一点点香。分妈妈一口，好不好。',
+    dadBlock:'',
+    story:'"这是什么果。"\n"人参果。"\n阿贝贝听成了"人生果"。\n她捧着它看了很久。黄黄的皮，上面有一道一道紫色的花纹，像有人用毛笔随便画了几下。\n"人生是什么。"\n爸爸想了一下。"嗯……就是从小到大，每一天加起来。"\n"那它很重吗。"\n她掂了掂。不重。一只手就能托住。\n"人生不重。"她下了结论。\n爸爸把它切开了。里面是淡淡的黄色，中间有一小圈软软的籽。一股清清的香味飘出来，有一点像黄瓜，又有一点像甜瓜。\n阿贝贝咬了一小口。\n她没有说话。嚼了很久。\n"……淡淡的。"\n又咬了一口。\n"淡淡的，但是越嚼越甜。"\n她低头看着手里那半个，看了好一会儿。\n"人生的味道是淡淡的，越嚼越甜。"\n爸爸愣了一下，然后笑了。他没有告诉她其实是人参的参。\n阿贝贝吃到最后，剩下一小块，她停住了。\n"爸爸说这是妈妈最爱吃的。"\n她把那一小块放在一个小碟子里，摆在桌子正中间，还用一张纸巾盖起来。\n"这个是妈妈的。谁都不许动。"\n她坐在旁边守着。守了一会儿，偷偷掀开纸巾闻了一下。\n又盖回去。\n"……我只是检查它还在不在。"',
+    repeatLines:['"人生果！今天的也是越嚼越甜。"','"我给妈妈留了一块。这次是两块。"','"紫色的花纹，像有人用毛笔画的。"','"人生不重。我又掂了一次。"','"淡淡的……我开始喜欢淡淡的东西了。"','"妈妈喜欢的，我也要喜欢。"']
+  },
+  {
+    id:'passion_fruit',name:'百香果',price:2,img:'./百香果.png',rating:4,
+    weeklyLimit:0,timeAllow:null,
+    dadWords:'这个很酸哦，酸到耳朵会竖起来那种。妈妈会用它做一种很厉害的饮料，叫爆炸水。你先尝尝原味的。',
+    dadBlock:'',
+    story:'阿贝贝拿着它摇了摇，里面哗啦哗啦响。\n"里面有东西在动。"\n爸爸把它切成两半。黄色的果肉流出来，亮晶晶的，里面藏着一颗一颗黑色的小籽。一股很香很香的味道扑到她脸上。\n"哇。"\n"它叫百香果，就是一百种香味的意思。"\n她认真地闻了一下。\n"……我只闻到了一种。剩下的九十九种在哪里。"\n"可能还在睡觉。"\n她拿小勺子舀了一勺，放进嘴里。\n然后她整只兔子都定住了。\n耳朵唰地一下竖得笔直。眼睛紧紧闭起来。鼻子皱成一团。嘴巴抿成一条线。\n过了好几秒，她才张开嘴，哈了一口气。\n"……它，它在我嘴巴里，爆炸了。"\n"酸吗。"\n"不酸。"她摇头，耳朵还竖着没下来。\n然后她又舀了一勺。\n耳朵又竖了一次。\n然后第三勺。\n籽在牙齿中间咔嚓咔嚓地响，酸完了以后舌头上留下一点甜甜的香。她吃到最后，用勺子把果壳刮得干干净净，连白色的那层都刮薄了。\n"我知道为什么叫爆炸水了。"\n她举着空壳，像举着一个小碗。\n"因为它会在嘴巴里爆炸。爆完了，就想再炸一次。"',
+    repeatLines:['"耳朵又竖起来了！它还是好酸！"','"今天我闻到了第二种香味。还差九十八种。"','"籽在牙齿里咔嚓咔嚓的，好好听。"','"我要学妈妈做爆炸水。"','"果壳刮得干干净净，一点都没剩。"','"酸完了舌头上甜甜的，好神奇。"']
+  },
+  {
+    id:'chess_box',name:'松鹤棋盒',price:5,img:'./棋盒.png',rating:5,
+    weeklyLimit:1,timeAllow:null,
+    dadWords:'盒盖上画着松树、云和一只小鸟。里面是黑白两种棋子。爸爸陪你下五子棋，输了不许哭，赢了不许笑得太大声。',
+    dadBlock:'',
+    story:'阿贝贝先看盖子。\n盖子上有一棵弯弯的松树，树下面是一团一团的云，天上飞着一只小鸟。\n"小鸟要去哪里。"\n"可能去找它的朋友下棋。"\n她打开盖子，里面是一格一格的棋盘，旁边是白色和黑色的小圆珠子。她抓了一把白的，凉凉的，滑滑的，在爪子里滚来滚去。\n"爸爸，你下黑的。我下白的。因为白的跟我一样。"\n爸爸教她：五颗连成一条线就赢了。横着、竖着、斜着都可以。\n第一盘，她输了。\n她盯着爸爸那五颗黑子看了很久，耳朵慢慢耷拉下来。\n"……不哭。"她自己说，"爸爸说不许哭。"\n第二盘，她也输了。\n第三盘下到一半，爸爸起身去倒水。\n阿贝贝看了看门口。又看了看棋盘。她伸出爪子，飞快地把爸爸的一颗黑子往旁边挪了一格。\n爸爸回来了，坐下，看了看棋盘。\n"嗯？"\n阿贝贝把两只爪子放在腿上，坐得特别直，看着天花板。\n"这一颗，好像自己走了一步。"\n"它可能是被风吹的。"阿贝贝说。\n爸爸没有拆穿她。那一盘，阿贝贝赢了。\n她努力不笑得太大声，憋得脸都鼓起来了，最后还是没憋住，"嘻"了一声，赶紧用耳朵捂住嘴巴。\n晚上睡觉前，她又打开盖子看了一眼那只小鸟。\n"小鸟，今天的事情，你不要告诉别人。"',
+    repeatLines:['"爸爸，再来一盘！我下白的！"','"今天没有被风吹。我是真的赢的。"','"……又输了。不哭。"','"小鸟今天也在盖子上飞。"','"白子凉凉的，我喜欢抓一把在手里。"','"五颗连成一条线！横着的！"']
+  },
+  {
+    id:'pipa_ornament',name:'牡丹琵琶摆件',price:6,img:'./琵琶摆件.png',rating:5,
+    weeklyLimit:1,timeAllow:null,
+    dadWords:'这个很贵，是摆着看的，不是真的能弹。上面开满了牡丹花，琴头上还有一朵荷花。要轻轻拿，轻轻放，像抱着一个睡着的小婴儿。',
+    dadBlock:'',
+    story:'阿贝贝不敢碰它。\n她蹲在桌子前面，眼睛跟琴一样高，一动不动地看。\n红红的琴身，上面开着一大朵粉色的牡丹，旁边还有好几朵小的，叶子绿绿的。牡丹上面停着一只蓝色的小蝴蝶。琴头上顶着一朵荷花，像戴了一顶帽子。\n"它好漂亮。"她小声说，好像怕把它吵醒。\n过了很久，她才伸出一根爪子，轻轻碰了一下琴弦。\n没有声音。\n她又碰了一下。还是没有声音。\n"……它不会唱歌吗。"\n"它是摆件，摆着看的。"\n阿贝贝歪着头想了想。\n"不对。它会唱的。它只是害羞。"\n她跑去拿了一块小手帕，坐回来，很认真地给它擦灰。先擦琴头的荷花，再擦每一朵牡丹，擦到那只蓝蝴蝶的时候动作特别慢，好像怕它飞走。\n擦完了，她清了清嗓子。\n"那我先唱给你听。你听会了，就不害羞了。"\n她唱了一首不知道哪里来的歌，没有歌词，只有"啦啦啦"和"嗯嗯嗯"。唱到一半跑调了，她自己没发现，还越唱越大声。\n唱完了，她看着琵琶。\n琵琶还是没有声音。但阳光从窗户照进来，照在琴弦上，那几根金色的弦亮了一下。\n阿贝贝的耳朵竖起来了。\n"它刚才回答我了。"\n她很肯定。',
+    repeatLines:['"今天又给它擦灰了，蝴蝶还在。"','"我唱歌给它听，它没有嫌我跑调。"','"琴弦今天又亮了一下！"','"轻轻拿，轻轻放，像抱小婴儿。"','"它还在害羞。没关系，我等它。"','"荷花帽子今天也戴得很正。"']
+  },
+  {
+    id:'game_console',name:'粉色小游戏机',price:6,img:'./粉色游戏机.png',rating:5,
+    weeklyLimit:1,timeAllow:null,weekendOnly:true,
+    dadWords:'周末才卖的东西。每天只能玩一会儿，眼睛累了就要停。爸爸会检查的。',
+    dadBlock:'',
+    story:'阿贝贝按下开关的时候，屏幕亮了。\n一个戴红帽子的小人出现在屏幕上，旁边有绿色的管子、砖头墙，还有一个会发光的问号方块。\n"他是谁。"\n"你按这个键，他就会跳。"\n她按了一下。小人跳起来，脑袋撞到了问号方块，叮的一声，掉出来一枚金币。\n阿贝贝整只兔子都亮了。\n"他撞头了！他撞头会掉钱！"\n她开始疯狂地按。小人跳啊跳，撞啊撞，金币叮叮叮地往外冒。然后一个棕色的小蘑菇走过来，碰了小人一下，小人就掉下去了。\n"啊！！"\n她把游戏机举到眼前，盯着屏幕。\n"那个蘑菇是坏蛋。"\n她又玩了一次。又被蘑菇碰掉了。\n又玩了一次。又掉了。\n第七次的时候，她终于跳到了蘑菇头上，把它踩扁了。她激动得在床上滚了两圈，差点把游戏机甩出去。\n爸爸说："好了，今天玩够了，眼睛要休息。"\n阿贝贝把游戏机交给爸爸，很乖地躺下，闭上眼睛。\n半夜，被子里亮起了一小团光。\n被子里还传出很小很小的叮、叮、叮的声音。\n爸爸走过去，掀开被子一角。\n阿贝贝抱着游戏机，眼睛红红的，两只耳朵垂下来盖在屏幕上面，好像这样就能挡住光。\n"……我在帮他找回家的路。"她说。\n爸爸把游戏机拿走了，把她的耳朵扶正，盖好被子。\n第二天早上，游戏机不见了。她翻遍了整个房间，最后在爸爸的衣柜最上面一层找到了。她够不着。',
+    repeatLines:['"今天踩扁了三个坏蘑菇！"','"他又撞头了，掉了好多金币。"','"眼睛累了……我自己停下来的哦。"','"被子里不发光了，我保证。"','"我帮他找到回家的路了！"','"周末好快就来了，又可以玩了。"']
+  },
+  {
+    id:'kitty_register',name:'小猫收银机',price:4,img:'./收银机.png',rating:5,
+    weeklyLimit:1,timeAllow:null,
+    dadWords:'一个小收银机，会算数，还有一个能拉开的小抽屉和一叠玩具钞票。买了这么多东西，这回轮到你当老板了。',
+    dadBlock:'',
+    story:'阿贝贝把收银机摆在床边，后面放了一张小板凳，坐上去。\n"欢迎光临。"\n屋子里没有人。\n她又说了一遍，声音大了一点。"欢迎光临！"\n爸爸从门口探了个头进来。"请问这里是什么店。"\n"这里是阿贝贝的店。什么都卖。"\n"那我想买……一个抱抱。多少钱。"\n阿贝贝低头在收银机上按了好久。8、8、点、8、0。小屏幕上亮起黄色的数字：88.80。\n"八十八块八。"\n"这么贵。"\n"因为是很大的抱抱。"\n爸爸从那叠玩具钞票里抽了一张100的，递给她。钞票上印着一只小猫的脸。\n阿贝贝接过来，对着光照了照，又摸了摸，认真地放进小抽屉里，咔哒一声推上。\n然后她从板凳上跳下来，跑过去，抱住了爸爸。抱得很紧。\n抱完了，她回到板凳上坐好。\n爸爸站在那里等。\n"……找钱呢？"\n阿贝贝看了看抽屉，又看了看爸爸。\n"本店不找零。"\n"为什么。"\n"因为找零就要拉开抽屉。拉开抽屉，钱就会跑掉。"\n爸爸想了想，又抽了一张100给她。\n"那再来一个。"\n阿贝贝眼睛一亮，跳下板凳又抱了一次。\n那天晚上，她数了数抽屉里的钱。两张。\n她把它们压在枕头底下，跟别的宝贝放在一起。\n"今天赚了两个抱抱的钱。"她小声说，"明天要赚三个。"',
+    repeatLines:['"欢迎光临！今天的抱抱还是八十八块八。"','"本店不找零。规矩就是规矩。"','"抽屉里已经有好多钱了。"','"今天卖出去三个抱抱！"','"爸爸，你要不要买一个亲亲，打折哦。"','"我当老板好辛苦，但是好开心。"']
+  }
 ];
 
 // 小卖部的九家店：按顺序排成三行三列的小街；cover 是店门口摆的那样零食
 const SNACK_STREET=[
-  {id:'fan',name:'饭饭店',cover:'claypot_rice',ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu']},
-  {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer']},
-  {id:'tian',name:'甜点店',cover:'souffle',ids:['strawberry_cake_roll','souffle','rose_tangyuan','bo_zai_gao','qingtuan_lao','egg_yolk_pastry','pineapple_cake','xi_bing','mooncake_box','donut','fruit_sandwich','matcha_icecream','strawberry_fondue','peach_blossom_cake','squirrel_cookies','choco_cream_bucket','treasure_box']},
-  {id:'yin',name:'饮品店',cover:'matcha_boba',ids:['strawberry_milk','fresh_milk','yibao_water','apple_juice','mango_sago','tapioca_soup','bayberry_drink','watermelon_drink','guava_drink','strawberry_matcha','matcha_boba','snowman_cocoa','vodka_cocktail','baileys','kitty_beer']},
-  {id:'guo',name:'水果摊',cover:'chuyan_strawberry',ids:['raspberry','chuyan_strawberry','pineapple_fruit','durian','cucumber','corn_bag']},
-  {id:'ling',name:'零食铺',cover:'jasmine_seeds',ids:['jasmine_seeds','miao_jiao_cui','sweet_potato_fries','grape_jelly','doublemint']},
+  {id:'fan',name:'饭饭店',cover:'claypot_rice',always:['curry_rice','fruit_porridge'],ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu']},
+  {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',always:['shumai','bbq_skewer'],ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer']},
+  {id:'tian',name:'甜点店',cover:'souffle',always:['egg_yolk_pastry','donut'],ids:['strawberry_cake_roll','souffle','rose_tangyuan','bo_zai_gao','qingtuan_lao','egg_yolk_pastry','pineapple_cake','xi_bing','mooncake_box','donut','fruit_sandwich','matcha_icecream','strawberry_fondue','peach_blossom_cake','squirrel_cookies','choco_cream_bucket','treasure_box','jujube_cake']},
+  {id:'yin',name:'饮品店',cover:'matcha_boba',always:['fresh_milk','yibao_water','kitty_milk'],ids:['strawberry_milk','fresh_milk','yibao_water','apple_juice','mango_sago','tapioca_soup','bayberry_drink','watermelon_drink','guava_drink','strawberry_matcha','matcha_boba','snowman_cocoa','vodka_cocktail','baileys','kitty_beer','kitty_milk']},
+  {id:'guo',name:'水果摊',cover:'chuyan_strawberry',always:['raspberry','pepino'],ids:['raspberry','chuyan_strawberry','pineapple_fruit','durian','cucumber','corn_bag','pepino','passion_fruit']},
+  {id:'ling',name:'零食铺',cover:'jasmine_seeds',always:['jasmine_seeds','doublemint'],ids:['jasmine_seeds','miao_jiao_cui','sweet_potato_fries','grape_jelly','doublemint']},
   {id:'mei',name:'小香兔子',cover:'chanel_n5',ids:['eyeshadow','floral_cream','chanel_n5']},
   {id:'yao',name:'药店',cover:'banlangen',ids:['banlangen','tylenol_medicine']},
-  {id:'za',name:'杂货铺',cover:'pink_bunny',ids:['mosquito_coil','cat_food_k01','pingpong_paddle','answer_book','little_prince','pink_bunny','firecracker_fish']}
+  {id:'za',name:'杂货铺',cover:'pink_bunny',always:['mosquito_coil','cat_food_k01'],ids:['mosquito_coil','cat_food_k01','pingpong_paddle','answer_book','little_prince','pink_bunny','firecracker_fish','chess_box','pipa_ornament','game_console','kitty_register']}
+];
+
+// 每天随机推一组套餐：两样一起买比分开买便宜
+const SNACK_BUNDLES=[
+  {id:'b_morning',name:'早安牛奶套餐',items:['kitty_milk','jujube_cake'],price:4},
+  {id:'b_tea',name:'下午茶套餐',items:['matcha_boba','egg_yolk_pastry'],price:6},
+  {id:'b_fruit',name:'妈妈的水果篮',items:['pepino','passion_fruit'],price:3},
+  {id:'b_sweet',name:'甜甜双拼',items:['donut','strawberry_milk'],price:3},
+  {id:'b_cozy',name:'冬天暖暖套餐',items:['snowman_cocoa','rose_tangyuan'],price:7},
+  {id:'b_snack',name:'嘎嘣脆零嘴包',items:['jasmine_seeds','sweet_potato_fries'],price:3},
+  {id:'b_play',name:'玩具双人份',items:['chess_box','kitty_register'],price:8},
+  {id:'b_beauty',name:'小香兔子礼盒',items:['eyeshadow','floral_cream'],price:5},
+  {id:'b_street',name:'路边小吃拼盘',items:['bbq_skewer','grilled_gluten'],price:5},
+  {id:'b_dim',name:'早茶点心',items:['shumai','shrimp_dumpling'],price:6}
 ];
