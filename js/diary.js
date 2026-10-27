@@ -114,27 +114,6 @@ function askJarMotion(){
   try{if(localStorage.getItem('candyJarMotion')==='1')document.addEventListener('click',function once(){document.removeEventListener('click',once,true);askJarMotion();},true);}catch(_){}
 })();
 
-// ===== DELETE CANDY =====
-let deleteCandyIdx=-1;
-function showDeleteCandy(idx){
-  deleteCandyIdx=idx;
-  const mask=document.createElement('div');
-  mask.className='delete-confirm-mask';
-  mask.id='delete-candy-mask';
-  mask.innerHTML=`<div class="delete-confirm"><p>取出这颗糖吗？</p><div class="delete-confirm-btns"><button class="cancel" onclick="closeDeleteCandy()">留着</button><button class="confirm" onclick="confirmDeleteCandy()">取出来</button></div></div>`;
-  document.body.appendChild(mask);
-}
-function closeDeleteCandy(){document.getElementById('delete-candy-mask')?.remove();}
-function confirmDeleteCandy(){
-  const candies=getCurrentMonthCandies();
-  if(deleteCandyIdx>=0&&deleteCandyIdx<candies.length){
-    candies.splice(deleteCandyIdx,1);
-    saveApp();renderJarCandies();
-    // Also refresh view overlay if open
-    if(document.getElementById('overlay-view').classList.contains('show')) openViewCandies();
-  }
-  closeDeleteCandy();
-}
 
 let viewFilterAuthor='all';
 function setViewAuthorFilter(author){

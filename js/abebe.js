@@ -253,31 +253,6 @@ function renderAbebeStatus(){
 }
 
 // Hidden button pool
-const hiddenPool=[
-  {id:'sniff',text:'闻闻花'},
-  {id:'goldfish',text:'看金鱼'},
-  {id:'foldpaper',text:'叠糖纸'},
-  {id:'sunbelly',text:'晒肚皮'},
-  {id:'blanket',text:'盖毯子'},
-  {id:'mirror',text:'照镜子'},
-  {id:'hum',text:'哼小曲'},
-  {id:'count',text:'数星星'},
-  {id:'ribbon',text:'系蝴蝶结'},
-  {id:'hide',text:'捉迷藏'},
-  {id:'draw',text:'画画'},
-  {id:'story',text:'讲故事'},
-  {id:'cake',text:'看蛋糕'},
-  {id:'butterfly',text:'追蝴蝶'}
-];
-function getTodayHiddenBtns(){
-  const today=new Date();
-  const seed=today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate();
-  const count=1;
-  const shuffled=[...hiddenPool];
-  let s=seed;
-  for(let i=shuffled.length-1;i>0;i--){s=(s*1103515245+12345)&0x7fffffff;const j=s%i;[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
-  return shuffled.slice(0,count);
-}
 
 function renderAbebeActions(){
   const h=new Date().getHours();
@@ -293,11 +268,6 @@ function renderAbebeActions(){
   if(h>=20||h<6) btns+=`<div class="abebe-action" onclick="abebeAction('goodnight')"><div class="abebe-action-text">哄睡觉</div></div>`;
   if(h>=5&&h<12) btns+=`<div class="abebe-action" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
   
-  // Hidden buttons
-  const hiddenBtns=[]; // 盲盒按钮松雨说不要了
-  hiddenBtns.forEach(hb=>{
-    btns+=`<div class="abebe-action hidden-btn" onclick="abebeAction('${hb.id}')"><div class="abebe-action-text">${hb.text}</div></div>`;
-  });
   
   document.getElementById('abebe-actions').innerHTML=btns;
 }

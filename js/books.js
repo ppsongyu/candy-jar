@@ -1,22 +1,5 @@
 /* 读书 */
 // ===== BOOK MANAGEMENT =====
-// Override renderBookDetail to add delete book + done toggle + note delete
-
-
-function confirmDeleteNote(noteIdx){
-  const mask=document.createElement('div');
-  mask.className='delete-confirm-mask';
-  mask.id='delete-note-mask';
-  mask.innerHTML=`<div class="delete-confirm"><p style="margin-bottom:16px;line-height:1.8">要删掉这条笔记吗</p><div class="delete-confirm-btns"><button class="cancel" onclick="document.getElementById('delete-note-mask').remove()">留着</button><button class="confirm" onclick="doDeleteNote(${noteIdx})">删掉</button></div></div>`;
-  document.body.appendChild(mask);
-}
-function doDeleteNote(noteIdx){
-  document.getElementById('delete-note-mask')?.remove();
-  booksData[currentBookIdx].notes.splice(noteIdx,1);
-  saveApp();
-  renderBookDetail();
-  renderBooksList();
-}
 function toggleBookDone(){
   booksData[currentBookIdx].done=!booksData[currentBookIdx].done;
   saveApp();renderBookDetail();renderBooksList();
