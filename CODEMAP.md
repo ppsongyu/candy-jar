@@ -22,6 +22,7 @@
 | `js/backup.js` | 数据导出导入 |
 | `js/theme.js` | 主题、阿贝贝的梦 |
 | `js/games.js` | 糖果接接乐、记忆翻牌 |
+| `js/wardrobe.js` | 阿贝贝的衣柜：小香兔子卖衣服、衣柜、换装 |
 | `js/avatar.js` | 头像和情侣名 |
 | `js/weather.js` | 天气 |
 | `js/crab.js` | 克劳德灵动岛、小螃蟹、螃蟹图鉴（图和台词在 data/） |
@@ -29,6 +30,7 @@
 | `data/chat-words.js` | 阿贝贝聊天的对话库 |
 | `data/abebe-words.js` | 阿贝贝的台词：日常、季节、节日 |
 | `data/snacks.js` | 小卖部的零食和零食故事；SNACK_STREET 九家店（ids 店里有什么、always 每天都有货、cover 门口招牌）；SNACK_BUNDLES 套餐 |
+| `data/outfits.js` | 阿贝贝的小衣服：名字、价格、爸爸的话、第一次穿的故事（图在 outfits/） |
 | `data/dreams.js` | 阿贝贝的梦 |
 | `data/fortunes.js` | 今日一签的签文 |
 | `data/crab-art.js` | 小螃蟹的图（SVG 和 sprite） |

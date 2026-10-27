@@ -169,14 +169,15 @@ function renderShop(){
     grid.className='shop-grid shop-street';
     grid.innerHTML=SNACK_STREET.map(st=>{
       const items=visible.filter(x=>snackStoreOf(x)===st.id);
-      const onShelf=items.filter(snackOnShelf).length;
+      const extra=(st.id==='mei'&&typeof OUTFITS!=='undefined')?OUTFITS.length:0;
+      const onShelf=items.filter(snackOnShelf).length+extra;
       const cover=byId(st.cover);
       const waiting=items.reduce((n,x)=>n+((snackData.stock[x.id]||0)>0?1:0),0);
       return '<div class="shop-item shop-store" onclick="enterSnackStore(\''+st.id+'\')">'
         +'<div class="shop-item-img">'+(cover&&cover.img?'<img class="shop-item-placeholder" src="'+cover.img+'">':'')
         +(waiting?'<div class="shop-item-stock">'+waiting+' 样待喂</div>':'')+'</div>'
         +'<div class="shop-store-name">'+st.name+'</div>'
-        +'<div class="shop-store-count">今天上架 '+onShelf+'/'+items.length+'</div>'
+        +'<div class="shop-store-count">今天上架 '+onShelf+'/'+(items.length+extra)+'</div>'
       +'</div>';
     }).join('');
     const cards=[];
@@ -274,6 +275,7 @@ function renderShop(){
       +'</div>'
     +'</div>';
   }).join('');
+  if(shopStore==='mei'&&typeof outfitShopHtml==='function') grid.innerHTML+=outfitShopHtml(balance);
 }
 
 
@@ -467,6 +469,7 @@ function confirmBuySnack(){
   if(btn.disabled) return;
   if(id==='__bundle'){closeSnackConfirm();buyBundle();return;}
   if(id==='__bag'){closeSnackConfirm();buyLuckyBag();return;}
+  if(id.indexOf('__outfit:')===0){closeSnackConfirm();buyOutfit(id.slice(9));return;}
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
   closeSnackConfirm();
@@ -613,6 +616,7 @@ whenReady(async function loadSnackData(){
       if(d.dailyFeedDate) snackData.dailyFeedDate=d.dailyFeedDate;
       if(d.daily) snackData.daily=d.daily;
       if(d.stamps) snackData.stamps=d.stamps;
+      if(d.wardrobe) snackData.wardrobe=d.wardrobe;
     }
   }catch(e){}
   try{
@@ -630,11 +634,13 @@ whenReady(async function loadSnackData(){
       if(cloud.dailyFeedDate) snackData.dailyFeedDate=cloud.dailyFeedDate;
       if(cloud.daily) snackData.daily=cloud.daily;
       if(cloud.stamps) snackData.stamps=cloud.stamps;
+      if(cloud.wardrobe) snackData.wardrobe=cloud.wardrobe;
     }
   }catch(e){}
   // Check week reset
   getSnackBalance();
   renderCoinDisplay();
+  if(typeof applyOutfit==='function') applyOutfit();
 });
 
 // ===== ADD SNACK FORM =====

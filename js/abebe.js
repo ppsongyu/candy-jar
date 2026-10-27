@@ -298,6 +298,7 @@ function showBubble(text){
 }
 function enterAbebe(){
   updateAllStates();
+  if(typeof applyOutfit==='function') applyOutfit();
   const visitLine=getLastVisitLine();
   const hungryLine=tummyLineNow();
   if(hungryLine){
