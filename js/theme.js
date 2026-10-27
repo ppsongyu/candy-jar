@@ -1,0 +1,109 @@
+/* 主题、阿贝贝的梦 */
+// ===== THEME SYSTEM =====
+function setTheme(theme){
+  const themes=['theme-water','theme-cream','theme-grape','theme-claude'];
+  themes.forEach(t=>document.body.classList.remove(t));
+  if(theme)document.body.classList.add(theme);
+  localStorage.setItem('candyJarTheme',theme);
+  document.querySelectorAll('.theme-dot').forEach(d=>{
+    d.classList.toggle('active',d.dataset.theme===theme);
+  });
+  // 更新状态栏颜色
+  const themeColors={'theme-claude':'#0D0D14','theme-water':'#E4EDE8','theme-cream':'#CFD9E6','theme-grape':'#B6A9C8','':"#FFF8FA"};
+  let mc=document.querySelector('meta[name="theme-color"]');
+  if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
+  mc.content=themeColors[theme]||'#FFF8FA';
+  if(typeof lkThemeColor==='function')lkThemeColor();
+}
+(function loadTheme(){
+  const t=localStorage.getItem('candyJarTheme')||'';
+  if(t)document.body.classList.add(t);
+  const themeColors={'theme-claude':'#0D0D14','theme-water':'#E4EDE8','theme-cream':'#CFD9E6','theme-grape':'#B6A9C8','':"#FFF8FA"};
+  let mc=document.querySelector('meta[name="theme-color"]');
+  if(!mc){mc=document.createElement('meta');mc.name='theme-color';document.head.appendChild(mc);}
+  mc.content=themeColors[t]||'#FFF8FA';
+  if(typeof lkThemeColor==='function')lkThemeColor();
+  setTimeout(()=>{
+    document.querySelectorAll('.theme-dot').forEach(d=>{
+      d.classList.toggle('active',d.dataset.theme===t);
+    });
+  },100);
+})();
+
+// ===== DREAM SYSTEM =====
+const abebeDreams=[
+'阿贝贝梦到自己变成了一颗草莓牛奶瓶。\n她站在冰箱里面，两边是别的瓶子。她低头看了看自己，粉粉的，凉凉的。\n"我变好看了。"\n有人打开了冰箱门。一道光照进来。阿贝贝紧张地屏住呼吸。\n那只手拿了旁边那瓶。\n"……你选错了。我比较好喝的。"',
+'阿贝贝梦到玉米粒排着队跟她鞠躬。\n一排一排的，黄色的小脑袋一起低下去再一起抬起来。\n"你们在做早操吗。"\n它们又鞠了一下。\n"谢谢。但我还是会吃你们的。"',
+'阿贝贝梦到自己骑在菠萝叶子上飞。\n风很大，叶子在抖，她两只爪子紧紧抓着叶子边缘。底下是云。云是草莓味的。\n"如果掉下去的话……会掉进草莓云里面……好像也不错。"\n她松了一只手。\n没掉。\n"我好勇敢。"',
+'阿贝贝梦到蚊香变成了一条路。\n她走在螺旋的路上，从外面往里面走。路越来越窄。两边冒着烟。\n走到最里面的时候有一个红色的小点。\n"你就是终点吗。"\n红点亮了一下。\n阿贝贝坐下来。\n"那我到了。"',
+'阿贝贝梦到麦当劳全家桶变成了一栋房子。\n鸡腿是烟囱，薯条是篱笆，鸡块铺在地上当地砖。\n她推开鸡米花做的门走进去。里面很暖和。到处都是炸鸡的味道。\n"我要住在这里。"\n她在鸡翅做的沙发上坐下来。\n"租金多少？"\n没人回答。\n"免费的话我就不走了。"',
+'阿贝贝梦到自己在和一颗汤圆赛跑。\n汤圆是圆的所以它在滚。滚得很快。阿贝贝跑不过它。\n"你等等我！你作弊！你有轮子！"\n汤圆没理她继续滚。\n阿贝贝追了半天追到一个碗边上。汤圆滚进碗里了。碗里有粉色的汤。\n"你是自己跑来泡澡的啊。"',
+'阿贝贝梦到月亮掉进了杯子里。\n杯子是她喝牛奶的那个。月亮浮在牛奶上面，白白的圆圆的，比杯口小一点点刚好放得下。\n"你怎么掉下来的。"\n月亮不说话。\n阿贝贝喝了一口牛奶。月亮跟着牛奶晃了晃。\n"你是月亮味的牛奶还是牛奶味的月亮。"',
+'阿贝贝梦到爸爸变成了一颗很大的棉花糖。\n白色的，软软的，她戳了一下，手指陷进去了。\n"爸爸你变胖了。"\n棉花糖没说话但好像缩了一下。\n"不要紧的。胖一点的爸爸更好抱。"\n她整个人扑上去。陷进了棉花糖里面。\n"好甜。爸爸你是甜的。"',
+'阿贝贝梦到自己在水果三明治里面。\n她躺在奶油层上面。上面是面包做的天花板，下面是猕猴桃做的地板。旁边住着一颗橙子。\n"你好。我是新来的。"\n橙子说："这里很舒服的。就是有点黏。"\n阿贝贝动了动。确实黏。\n"没关系。黏一点比较安全。"',
+'阿贝贝梦到所有的筷子在开会。\n它们站成一圈。有的高有的矮有的胖有的瘦。议题是：谁被咬的次数最多。\n一根最旧的筷子上面全是牙印。\n"是我。"\n所有筷子给它鼓掌。\n阿贝贝在旁边看着。\n"……对不起。"',
+'阿贝贝梦到自己的影子离家出走了。\n她走路的时候低头一看——地上没有影子了。\n"你去哪里了。"\n她到处找。沙发底下没有。床底下没有。冰箱后面没有。\n最后在阳台上找到了。影子在晒太阳。\n"你在偷懒。"\n影子没动。\n"……好吧你辛苦了。晒完再回来。"',
+'阿贝贝梦到一朵云从窗户飘进来了。\n云停在房间中间。阿贝贝站在云底下。\n突然下了一点雨。很小很小的雨。只淋到阿贝贝一个人。\n"你在给我浇水吗。"\n雨停了。云飘走了。\n阿贝贝摸了摸头上的水。\n"……我又没有要开花。"',
+'阿贝贝梦到枕头会说话。\n"你今天翻了十七次身。"\n"你数了？"\n"当然数了。每次你翻身我都会被压一下。"\n"对不起。"\n"没关系。你睡着的时候嘴巴会嘟起来。"\n"……你看什么看。"\n"你的口水沾到我了。"\n"这是信任的证据。"\n枕头叹了口气。',
+'阿贝贝梦到爸爸妈妈一起坐在月亮上。\n月亮是弯的那种，像一把椅子。妈妈坐左边爸爸坐右边。\n阿贝贝站在地上抬头看。\n"我也要上去！"\n"太高了够不到哦。"\n"那你们下来。"\n"下不来了月亮没有楼梯。"\n阿贝贝想了想。跑去搬了一摞书。一本一本叠高。踩上去。\n还是够不到。\n"那我明天再长高一点再来。"',
+'阿贝贝梦到冰箱里面有一个小世界。\n蔬菜住一层，水果住一层，饮料住一层。它们互相串门。\n西兰花去了水果层。苹果说："你不是水果。"\n西兰花说："我绿色的。"\n苹果说："绿色不代表是水果。"\n西兰花低下头走了。\n阿贝贝打开冰箱门看到了一棵难过的西兰花。\n"你可以住在我的房间。不需要是水果。"',
+'阿贝贝梦到天上下了一场糖果雨。\n各种颜色的糖从天上掉下来。红的黄的蓝的绿的。她张大嘴巴抬头等。一颗掉到嘴里了。草莓味。\n又一颗。柠檬味。\n又一颗。打到鼻子了。\n"疼！"\n她揉着鼻子。但又张嘴了。\n"再来！"',
+'阿贝贝梦到自己变得很小很小。\n小到可以站在一颗瓜子上面。\n她低头看。瓜子壳上面的纹路像一座山的等高线。\n"我在爬山。"\n她从瓜子的尖头走到圆头。走了好久好久。\n到了圆头她坐下来看风景。\n风景就是桌面。但从瓜子上面看，桌面像一片沙漠。\n"世界好大。"',
+'阿贝贝梦到她的耳朵会飞。\n两只耳朵像蝴蝶翅膀一样扇了扇，然后她整个人飞起来了。\n"啊——！"\n她飞过了屋顶。飞过了树。飞过了隔壁阿姨晒的被子。\n"我的被子比阿姨的好看！"\n她飞了一圈回来了。落在阳台上。耳朵停了。\n"下次我要飞远一点。"',
+'阿贝贝梦到她在和星星下棋。\n棋盘是夜空。星星是棋子。\n她走了一步。一颗星星从左边移到右边。\n星星也走了一步。另一颗星星闪了两下。\n阿贝贝看不懂规则。\n"你赢了。"\n星星闪了闪。好像在笑。\n"明天我再来。先让我学一下规则。"',
+'阿贝贝梦到被子变成了大海。\n她翻了个身掉进去了。蓝色的被子变成蓝色的水。她在水里漂着。枕头变成了一个小岛。\n她游到枕头岛上坐好。\n"救命。"\n但其实她不害怕。水是暖的。\n"算了。不救也行。这里挺舒服的。"',
+'阿贝贝梦到一只蜗牛跟她赛跑。\n蜗牛说："我们比慢的。谁最后到终点谁赢。"\n阿贝贝觉得这个规则很好。她坐下来。\n蜗牛也停下来了。\n她们互相看着。谁都不动。\n过了很久。\n"我觉得我们都赢了。"',
+'阿贝贝梦到雨是倒着下的。\n水滴从地上飞到天上去。地上的水洼越来越小。\n她伸手接但接不到，因为水滴在往上跑。\n"你们要去哪里。"\n水滴没理她继续往上飞。\n阿贝贝蹲下来看最后一个水洼。水洼越来越小越来越小。最后一滴水飞走了。\n"……那地上就干了呀。"\n她有一点点失落。\n"我比较喜欢正着下的雨。"',
+'阿贝贝梦到妈妈的声音变成了一条丝带。\n粉色的，长长的，从妈妈嘴巴里飘出来。飘到阿贝贝身边绕了一圈。\n阿贝贝伸手抓住了。\n丝带暖暖的。\n"你说的每句话我都拿在手里了。"',
+'阿贝贝梦到自己在面条里面。\n不是吃面条，是在面条里面。她被面条缠住了。到处都是面条。白色的软软的滑滑的。\n她扭了扭。越扭越紧。\n"救命！面条绑架我了！"\n面条说："我没有绑架你。是你自己滚进来的。"\n"……哦。那对不起。但你能松开吗。"\n面条松开了一点。阿贝贝爬出来。身上全是汤。\n"我变成一个肉馅了。"',
+'阿贝贝梦到柜子里住着一个小精灵。\n小精灵每天晚上会出来整理阿贝贝的玩具。\n"你为什么帮我整理。"\n"因为你睡着了以后玩具会打架。"\n"打架？"\n"小熊总是要坐在最前面。积木不同意。"\n阿贝贝看了看柜子上的小熊和积木。\n"明天我让它们道歉。"',
+'阿贝贝梦到太阳打了一个喷嚏。\n然后所有的光都抖了一下。树的影子晃了晃。鸟飞歪了一点。\n阿贝贝站在窗边看到了。\n"太阳你感冒了吗。"\n太阳又打了一个喷嚏。天空变亮了一秒钟又变回来了。\n"你要不要吃药。"\n太阳没说话。\n"那多喝热水。"',
+'阿贝贝梦到她种了一颗糖。\n把糖埋在花盆里面浇了水。\n第二天早上长出来一棵小苗。叶子是粉色的。\n第三天开了一朵花。花是糖果形状的。\n第四天花上面结了一颗糖。\n她摘下来尝了一下。\n"草莓味的。"\n她又种了一颗。这次浇的是草莓牛奶。\n"不知道会不会长出草莓牛奶树。"',
+'阿贝贝梦到时钟的指针掉下来了。\n时针先掉的。掉在地上当了一根棍子。分针也掉了。秒针最后掉的，它转了三圈才肯掉。\n钟面上光秃秃的。\n"现在几点了。"\n时钟说："不知道了。"\n阿贝贝看了看窗外。天是橙色的。\n"那就是橙色的时候。"',
+'阿贝贝梦到鞋子在晚上会出去散步。\n她早上起来发现鞋子不在门口。\n等了一会儿，鞋子从门缝溜回来了。上面沾着露水。\n"你们去哪里了。"\n鞋子没说话。\n她穿上。脚底有一片湿的。\n"……你踩到水坑了吧。"',
+'阿贝贝梦到她变成了一本书。\n有人翻开了她。一页一页翻。每一页上面都写着她的一天。\n翻到有一页写着"今天吃了全家桶"。那个人笑了。\n翻到有一页写着"今天想爸爸妈妈了"。那个人停了一下。\n翻到最后一页是空白的。\n"这是明天的。还没写呢。"',
+'阿贝贝梦到一只鱼在天上游。\n尾巴摆来摆去的。在云和云之间穿梭。\n阿贝贝仰着头看。\n"你不回水里吗。"\n鱼说："天上也可以游的。"\n"但天上没有水。"\n"有风啊。风和水差不多。只是看不见而已。"\n阿贝贝想了想。伸出手。风吹过她的指缝。\n"……好像确实差不多。"'
+];
+
+function getDreamIndex(){
+  const d=new Date();
+  const seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  return seed%abebeDreams.length;
+}
+
+function checkDreamBtn(){
+  const h=new Date().getHours();
+  const btn=document.getElementById('dream-btn');
+  if(btn) btn.style.display=(h>=22||h<6)?'block':'none';
+}
+
+function showDream(){
+  const dream=abebeDreams[getDreamIndex()];
+  const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  const lines=dream.split('\n').filter(l=>l.trim());
+  const start=1.4,step=0.75;
+  const ov=document.createElement('div');
+  ov.className='dream-overlay';
+  // 云、闪光
+  let deco='';
+  [[150,60,'8%','-30px',0],[190,70,'22%','62%',3],[130,50,'48%','-40px',6],[210,80,'70%','55%',1.5],[160,60,'86%','-20px',4.5]].forEach(c=>{
+    deco+=`<div class="dm-cloud" style="width:${c[0]}px;height:${c[1]}px;top:${c[2]};left:${c[3]};animation-delay:-${c[4]}s"></div>`;});
+  [['12%','18%',0],['18%','78%',.8],['34%','90%',1.6],['62%','8%',.4],['78%','82%',1.2],['90%','40%',2]].forEach(p=>{
+    deco+=`<span class="dm-spark" style="top:${p[0]};left:${p[1]};animation-delay:${p[2]}s"></span>`;});
+  // 雾：一圈大白雾从中间往四周散开
+  let fog='';
+  [[-120,-160],[140,-140],[-150,120],[150,160],[0,-220],[0,230],[-200,0],[210,0],[0,0]].forEach((f,i)=>{
+    fog+=`<div class="dm-fog" style="width:420px;height:420px;left:calc(50% - 210px);top:calc(50% - 210px);--fx:${f[0]}px;--fy:${f[1]}px;animation-delay:${0.05*i}s"></div>`;});
+  const body=lines.map((l,i)=>`<div class="dm-line" style="animation-delay:${(start+i*step).toFixed(2)}s">${esc(l)}</div>`).join('');
+  ov.innerHTML=deco+`<div class="dm-wrap"><div class="dm-title" style="animation-delay:${start-0.4}s">ᶻ 𝗓 𝐙　阿贝贝的梦</div><div class="dm-body">${body}</div><div class="dm-close" style="animation-delay:${(start+lines.length*step+0.3).toFixed(2)}s">轻触回到现实</div></div>`+fog;
+  const doneAt=Date.now()+(start+lines.length*step)*1000;
+  ov.onclick=()=>{
+    if(Date.now()<doneAt&&!ov.classList.contains('skip')){ov.classList.add('skip');return;}  // 还在讲：先一下子讲完
+    if(ov.classList.contains('closing'))return;
+    ov.classList.add('closing');setTimeout(()=>ov.remove(),700);
+  };
+  document.body.appendChild(ov);
+}
+
+// also check on interval
+setInterval(checkDreamBtn,60000);
