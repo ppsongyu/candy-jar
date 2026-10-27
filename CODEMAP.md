@@ -24,7 +24,7 @@
 | `js/games.js` | 糖果接接乐、记忆翻牌 |
 | `js/avatar.js` | 头像和情侣名 |
 | `js/weather.js` | 天气 |
-| `js/crab.js` | 克劳德灵动岛、小螃蟹、螃蟹图鉴（sprite 的 base64 也在这里） |
+| `js/crab.js` | 克劳德灵动岛、小螃蟹、螃蟹图鉴（图和台词在 data/） |
 | `data/candy-pics.js` | 糖果和便签：图片文件、底色、名字 |
 | `data/chat-words.js` | 阿贝贝聊天的对话库 |
 | `data/abebe-words.js` | 阿贝贝的台词：日常、季节、节日 |
