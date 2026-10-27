@@ -326,14 +326,6 @@ function abebeAction(type){
   if(type==='poke'){
     abebeLastAction='poked';
     abebeState.mood=Math.min(100,abebeState.mood+5);
-  }else if(type==='feed'){
-    const todayCandies=getTodayCandies();
-    if(todayCandies.length===0) return;
-    abebeLastAction='fed';
-    abebeFedTime=Date.now();
-    setTummy(Math.min(TUMMY_MAX,getTummy()+5));
-    abebeState.food=Math.round(getTummy());
-    abebeState.mood=Math.min(100,abebeState.mood+5);
   }else if(type==='groom'){
     abebeLastAction='groomed';
     abebeLastGroomTime=Date.now();

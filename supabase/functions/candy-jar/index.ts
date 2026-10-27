@@ -341,10 +341,10 @@ tool('write_pig_belly', '在猪肚记里记一餐吃了什么（会替换那一�
   return '记好了。' + QUEUED;
 });
 
-tool('visit_abebe', '去阿贝贝的小窝陪它：喂糖、梳毛、亲亲、戳一戳、说早安或晚安。', {
-  action: { type: 'string', enum: ['feed', 'groom', 'kiss', 'poke', 'goodmorning', 'goodnight'], description: 'feed 喂糖 / groom 梳毛 / kiss 亲亲 / poke 戳一戳 / goodmorning 早安 / goodnight 晚安' },
+tool('visit_abebe', '去阿贝贝的小窝陪它：梳毛、亲亲、戳一戳、说早安或晚安。想喂她吃东西用 feed_snack。', {
+  action: { type: 'string', enum: ['groom', 'kiss', 'poke', 'goodmorning', 'goodnight'], description: 'groom 梳毛 / kiss 亲亲 / poke 戳一戳 / goodmorning 早安 / goodnight 晚安' },
 }, ['action'], async (a) => {
-  const names = { feed: '喂糖', groom: '梳毛', kiss: '亲亲', poke: '戳一戳', goodmorning: '早安', goodnight: '晚安' };
+  const names = { groom: '梳毛', kiss: '亲亲', poke: '戳一戳', goodmorning: '早安', goodnight: '晚安' };
   if (!names[a.action]) throw new Error('不认识这个动作');
   await enqueue('abebe', { action: a.action });
   return `好，给阿贝贝${names[a.action]}。` + QUEUED;
@@ -376,7 +376,7 @@ tool('buy_snack', '在小卖部给阿贝贝买零食，花阿贝贝币，买的�
   return `好，去买${hit.name}。宝宝打开糖罐子时会买；要是币不够、时间不对或这周买够了，就买不成（可以之后用 recent_results 看结果）。`;
 });
 
-tool('feed_snack', '把货架上的零食喂给阿贝贝（每天最多 3 次）。', { snack: str('零食名字') }, ['snack'], async (a) => {
+tool('feed_snack', '把货架上的零食喂给阿贝贝（她的小肚子快满了就吃不下）。', { snack: str('零食名字') }, ['snack'], async (a) => {
   const s = (await getRow('snack_data')) || {};
   const hit = SHOP.concat(s.customSnacks || []).find((x) => x.name === a.snack || x.id === a.snack);
   if (!hit) throw new Error('没有「' + a.snack + '」这个零食');

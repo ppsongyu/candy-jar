@@ -189,8 +189,8 @@ function claudeApply(a){
       pigBellyData[d.dateKey][d.meal]={text:d.text};pbSaveData();return '记了猪肚记';
     }
     case 'abebe':{
-      if(d.action==='feed'){abebeFedTime=Date.now();setTummy(Math.min(TUMMY_MAX,getTummy()+5));}
-      else if(d.action==='groom') abebeLastGroomTime=Date.now();
+      if(d.action==='feed') return '喂糖没有啦，去小卖部买东西喂她吧';
+      if(d.action==='groom') abebeLastGroomTime=Date.now();
       else if(d.action==='goodnight') abebeSaidGoodnight=true;
       else if(d.action==='goodmorning') abebeSaidGoodmorning=true;
       abebeLastAction={feed:'fed',groom:'groomed',kiss:'kissed',poke:'poked'}[d.action]||d.action;
