@@ -254,7 +254,7 @@ function renderAbebeStatus(){
     {name:'洗香香',val:abebeState.clean}
   ];
   document.getElementById('abebe-status').innerHTML=items.map(it=>{
-    const pos=100-it.val;
+    const pos=Math.max(0,Math.min(100,it.val)); // 越往右越满
     return `<div class="abebe-status-row"><div class="abebe-status-name">${it.name}</div><div class="abebe-status-track"><div class="abebe-status-knob" style="left:${pos}%"></div></div></div>`;
   }).join('');
 }

@@ -50,3 +50,6 @@ data/ 里的文件只能放纯内容（文字、数字、图片字符串），�
 3. 需要等所有文件都加载完再跑的事（读云端数据、启动），用 `whenReady(fn)` 包起来。
 4. 图片路径写 `./xxx.png` 就行（相对 index.html）；css 里的字体路径是 `../fonts/`。
 5. 推送后 GitHub Pages 大约 10 分钟才更新，测试时等一会儿再把 app 彻底划掉重开。
+6. 加了新糖、新便签或新零食，想让克劳德的连接器也认识：跑 `python3 sync_connector.py`，
+   再把 `supabase/functions/candy-jar/index.ts` 重新部署到 Supabase（Edge Functions → candy-jar → 编辑代码 → Deploy）。
+   注意第 8 行 `const SECRET = 'PUT_YOUR_SECRET_HERE';` 要换回你自己的那串钥匙，不然连接器网址会失效。

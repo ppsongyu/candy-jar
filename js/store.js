@@ -131,7 +131,9 @@ function claudeApply(a){
   switch(a.type){
     case 'candy_add':{
       if(!savedCandiesByMonth[d.monthKey]) savedCandiesByMonth[d.monthKey]=[];
-      savedCandiesByMonth[d.monthKey].unshift(d.candy);return '放了一颗糖';
+      // 记下宝宝克是几点放的（连接器每件事都带着时间）
+      const c=Object.assign({},d.candy);if(!c.at&&a.at)c.at=a.at;
+      savedCandiesByMonth[d.monthKey].unshift(c);return '放了一颗糖';
     }
     case 'candy_edit':{
       const i=claudeFindCandy(d);if(i<0) return '没找到要改的糖';

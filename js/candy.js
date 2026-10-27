@@ -190,7 +190,8 @@ function checkKeTrace(){
   keTraceShown=true;
   try{localStorage.setItem(KE_SEEN_KEY,JSON.stringify(all.map(x=>x.sig)));}catch(e){}
   const c=fresh[0].c;const [m,d]=String(c.date||'').split('.');
-  const when=(m&&d)?`${m}月${d}日`:'刚刚';
+  let when=(m&&d)?`${m}月${d}日`:'刚刚';
+  if(c.at){const t=new Date(c.at);when=`${t.getMonth()+1}月${t.getDate()}日 ${String(t.getHours()).padStart(2,'0')}:${String(t.getMinutes()).padStart(2,'0')}`;}
   const el=document.getElementById('ke-trace');if(!el)return;
   el.textContent=`宝宝克 ${when} 来过`+(fresh.length>1?` · 放了 ${fresh.length} 颗糖`:' · 放了一颗糖');
   setTimeout(()=>el.classList.add('show'),400);
