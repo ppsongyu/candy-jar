@@ -295,6 +295,14 @@ function renderAbebeActions(){
   document.getElementById('abebe-actions').innerHTML=btns;
 }
 
+// 饿了的时候，阿贝贝说的话优先变成闹饿（没饿就返回 null）
+function tummyLineNow(chance){
+  if(typeof getTummy!=='function') return null;
+  const t=getTummy();
+  if(t<TUMMY_STARVING&&Math.random()<(chance==null?1:Math.min(1,chance+0.2))) return randFrom(tummyLines.starving);
+  if(t<TUMMY_HUNGRY&&Math.random()<(chance==null?1:chance)) return randFrom(tummyLines.hungry);
+  return null;
+}
 function showBubble(text){
   const bubble=document.getElementById('abebe-speech');
   bubble.classList.remove('visible');
@@ -304,7 +312,11 @@ function showBubble(text){
 function enterAbebe(){
   updateAllStates();
   const visitLine=getLastVisitLine();
-  if(visitLine&&!abebeVisitedThisSession){
+  const hungryLine=tummyLineNow();
+  if(hungryLine){
+    showBubble(hungryLine);
+    abebeVisitedThisSession=true;
+  }else if(visitLine&&!abebeVisitedThisSession){
     showBubble(visitLine);
     abebeVisitedThisSession=true;
   }else if(abebeLastAction){
@@ -364,7 +376,7 @@ function abebeAction(type){
     abebeState.mood=Math.min(100,abebeState.mood+5);
   }
   const lines=abebeLines[abebeLastAction]||abebeLines.hiddenDefault;
-  showBubble(randFrom(lines));
+  showBubble((type!=='goodnight'&&tummyLineNow(0.5))||randFrom(lines));
   renderAbebeStatus();
   renderAbebeActions();
   saveApp();

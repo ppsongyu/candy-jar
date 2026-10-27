@@ -33,7 +33,7 @@ function startIdleChatter(){
     if(!page.classList.contains('active')) return;
     const h=new Date().getHours();
     const lines=(h>=22||h<6)?idleLinesNight:idleLinesDay;
-    showBubble(randFrom(lines));
+    showBubble(tummyLineNow(0.7)||randFrom(lines));
     startIdleChatter(); // restart for next idle
   },15000);
 }
