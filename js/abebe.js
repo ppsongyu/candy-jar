@@ -6,7 +6,7 @@
 function randFrom(arr){return arr[Math.floor(Math.random()*arr.length)]}
 
 // ===== ABEBE CORE STATE =====
-let abebeState={mood:80,sleep:70,food:75,miss:90,clean:85,snackHappy:30};
+let abebeState={mood:80,sleep:70,food:75,miss:90,clean:85};
 let abebeSaidGoodnight=false;
 let abebeSaidGoodmorning=false;
 let abebeLastAction='';
@@ -59,12 +59,6 @@ function getTummy(){
 }
 function setTummy(v){abebeTummy={v:Math.max(0,Math.min(TUMMY_MAX+10,v)),at:Date.now()};}
 function calcFood(){return getTummy();}
-function calcSnackHappy(){
-  // decays slowly over time, base level is 20
-  const current=abebeState.snackHappy||20;
-  // decay ~3 per hour equivalent, applied each update
-  return Math.max(5,current-1);
-}
 function calcSleep(){
   const h=new Date().getHours();
   if(abebeSaidGoodnight) return 95;
@@ -79,7 +73,7 @@ function calcMood(){
   // base random wobble
   const wobble=(Math.random()-0.5)*16;
   // influenced by other states
-  const avgOthers=(abebeState.food+abebeState.sleep+abebeState.miss+abebeState.clean+abebeState.snackHappy)/5;
+  const avgOthers=(abebeState.food+abebeState.sleep+abebeState.miss+abebeState.clean)/4;
   let base=65+wobble;
   if(avgOthers>70) base+=10;
   else if(avgOthers<40) base-=15;
@@ -96,7 +90,6 @@ function updateAllStates(){
   abebeState.food=Math.round(calcFood());
   abebeState.sleep=Math.round(calcSleep());
   abebeState.clean=Math.round(calcClean());
-  abebeState.snackHappy=Math.round(calcSnackHappy());
   abebeState.mood=calcMood();
 }
 
@@ -231,16 +224,6 @@ function getAbebeLine(){
     "阿贝贝假装在忙，但明显在偷看门口"
   ]);
   
-  // Priority 4.5: snack hungry lines
-  if(abebeState.snackHappy<20&&Math.random()<0.4) return randFrom([
-    "阿贝贝舔了舔嘴巴，好像在想什么好吃的",
-    "阿贝贝看了一眼小卖部的方向，又假装没看",
-    "阿贝贝小声说'好久没吃到好吃的了……'",
-    "阿贝贝抱着空空的爪子，说'嗯……有点想念那个味道'",
-    "阿贝贝在地上画了一个圈圈，画着画着变成了一颗糖的形状",
-    "阿贝贝翻了翻宝贝册，看了好一会儿",
-    "阿贝贝的肚子咕了一声，她赶紧捂住假装什么都没发生"
-  ]);
   
   // Priority 5: time-based states
   if(h>=23||h<6){
@@ -267,7 +250,6 @@ function renderAbebeStatus(){
     {name:'兔兔心',val:abebeState.mood},
     {name:'睡觉觉',val:abebeState.sleep},
     {name:'吃饱饱',val:abebeState.food},
-    {name:'舔嘴嘴',val:abebeState.snackHappy},
     {name:'想泥萌',val:abebeState.miss},
     {name:'洗香香',val:abebeState.clean}
   ];

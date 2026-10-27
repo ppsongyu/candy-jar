@@ -495,10 +495,7 @@ function feedSnack(id){
   if(amt>0) setTummy(getTummy()+amt);
   abebeState.food=Math.round(getTummy());
   
-  // Boost 舔嘴嘴
-  const boost=snack.price<=2?20:snack.price<=4?30:40;
-  if(amt>0) abebeState.snackHappy=Math.min(100,abebeState.snackHappy+boost);
-  else abebeState.mood=Math.min(100,abebeState.mood+5);
+  // 吃了东西兔兔心也开心一点
   abebeState.mood=Math.min(100,abebeState.mood+5);
   
   const totalFed=(snackData.purchaseCount[id]||1)-(snackData.stock[id]||0);
