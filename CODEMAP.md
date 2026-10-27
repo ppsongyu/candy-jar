@@ -25,11 +25,24 @@
 | `js/avatar.js` | 头像和情侣名 |
 | `js/weather.js` | 天气 |
 | `js/crab.js` | 克劳德灵动岛、小螃蟹、螃蟹图鉴（sprite 的 base64 也在这里） |
+| `data/candy-pics.js` | 糖果和便签：图片文件、底色、名字 |
+| `data/chat-words.js` | 阿贝贝聊天的对话库 |
+| `data/abebe-words.js` | 阿贝贝的台词：日常、季节、节日 |
+| `data/snacks.js` | 小卖部的零食和零食故事 |
+| `data/dreams.js` | 阿贝贝的梦 |
+| `data/fortunes.js` | 今日一签的签文 |
+| `data/crab-art.js` | 小螃蟹的图（SVG 和 sprite） |
+| `data/crab-words.js` | 小螃蟹的状态、台词、图鉴名字 |
 | `supabase/functions/candy-jar/` | 连接器（克劳德放糖用的 MCP） |
+
+## 文字和图片放 data/，干活的代码放 js/
+
+想加新的梦、新零食、新螃蟹台词，去 `data/` 里对应的文件加就行。
+data/ 里的文件只能放纯内容（文字、数字、图片字符串），不要在里面写函数或用到别的变量。
 
 ## 改代码时的规矩
 
-1. **改完 css/ 或 js/ 里的任何文件，推送前跑一次 `python3 bump.py`**。
+1. **改完 css/、js/ 或 data/ 里的任何文件，推送前跑一次 `python3 bump.py`**。
    它会更新 index.html 里每个文件后面的 `?v=` 版本号。不跑的话手机可能继续用旧文件。
 2. js 文件都是普通 `<script>`，共用一个全局作用域，**加载顺序有意义**：
    后面的文件可以用前面文件里的东西；前面文件在加载时**立刻执行**的代码不能用后面文件里的函数。

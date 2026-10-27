@@ -13,7 +13,7 @@ def repl(m):
     v = hashlib.md5(data).hexdigest()[:8]
     return f'{m.group(1)}./{path}?v={v}'
 
-new = re.sub(r'((?:src|href)=")\./((?:css|js)/[\w.-]+)\?v=[\w]*', repl, html)
+new = re.sub(r'((?:src|href)=")\./((?:css|js|data)/[\w.-]+)\?v=[\w]*', repl, html)
 if new != html:
     index.write_text(new, encoding='utf-8')
     print('版本号已更新')

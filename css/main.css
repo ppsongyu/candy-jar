@@ -1567,3 +1567,27 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .lk-confirm{margin-top:8px;padding:12px;border-radius:14px;background:#FFF3F6;font-size:12px;text-align:center;line-height:1.6}
 .lk-confirm .lk-save-row{margin-top:10px}
 
+
+/* ===== 猪肚记页面和弹窗 ===== */
+#pigbelly-overlay{z-index:200;background:var(--overlay-bg);padding:0}
+#pigbelly-overlay .pb-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 8px}
+#pigbelly-overlay .pb-back{font-size:14px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;background:none;border:none;font-family:'SGH',Georgia,serif;letter-spacing:0.5px}
+#pigbelly-overlay .pb-title{font-size:15px;letter-spacing:1px;color:var(--text-primary)}
+#pigbelly-overlay .pb-head-spacer{width:40px}
+#pigbelly-container{flex:1;overflow-y:auto;padding:12px 20px}
+#pb-input-mask,#pb-confirm-mask{position:fixed;inset:0;background:rgba(74,55,40,0.15);display:none;align-items:center;justify-content:center}
+#pb-input-mask{z-index:210}
+#pb-confirm-mask{z-index:220}
+.pb-mask .pb-box{background:var(--bg-card);border-radius:20px;padding:24px;width:85%;max-width:320px;box-shadow:0 8px 32px var(--shadow-pink);border:1px solid var(--border-light);text-align:left}
+.pb-mask .pb-box.small{width:75%;max-width:280px;text-align:center}
+.pb-mask .pb-box-title{font-size:14px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:14px;text-align:center}
+.pb-mask .pb-meals{display:flex;gap:8px;margin-bottom:14px;justify-content:center;flex-wrap:wrap}
+.pb-mask .pb-meal-btn{padding:7px 16px;border-radius:14px;border:1.5px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-primary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px;transition:all .15s}
+#pb-text{width:100%;height:70px;border:1.5px solid var(--border-light);border-radius:14px;padding:12px;font-size:16px;font-family:'SGH',Georgia,serif;resize:none;outline:none;color:var(--text-primary);background:var(--pink-50);line-height:1.6}
+.pb-mask .pb-btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.pb-mask .pb-btns.center{margin-top:0;justify-content:center}
+.pb-mask .pb-btn{padding:9px 18px;border-radius:14px;border:1px solid var(--border-light);background:var(--bg-card);font-size:12px;color:var(--text-secondary);cursor:pointer;font-family:'SGH',Georgia,serif;letter-spacing:0.5px}
+.pb-mask .pb-btn.main{border:none;background:var(--pink-400);color:#fff;letter-spacing:1px}
+.pb-mask .pb-btn.danger{border:none;background:var(--pink-500);color:#fff;letter-spacing:normal}
+.pb-mask .pb-btns.center .pb-btn{letter-spacing:normal}
+.pb-mask .pb-confirm-text{font-size:13px;color:var(--text-primary);margin-bottom:16px;line-height:1.6}
