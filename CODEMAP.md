@@ -29,7 +29,8 @@
 | `data/candy-pics.js` | 糖果和便签：图片文件、底色、名字 |
 | `data/chat-words.js` | 阿贝贝聊天的对话库 |
 | `data/abebe-words.js` | 阿贝贝的台词：日常、季节、节日 |
-| `data/snacks.js` | 小卖部的零食和零食故事；SNACK_STREET 九家店（ids 店里有什么、always 每天都有货、cover 门口招牌）；SNACK_BUNDLES 套餐 |
+| `data/snacks.js` | 小卖部的零食和零食故事；SNACK_STREET 九家店（ids 店里有什么、always 每天都有货、cover 门口招牌）；SNACK_BUNDLES 套餐；SNACK_STORE_HOURS 营业时间、SNACK_STORE_REST 店休的话、SNACK_NEW 新品上架日 |
+| `data/tastes.js` | 阿贝贝的口味（藏起来的，只在吃东西的反应里露出来）和反应台词 |
 | `data/outfits.js` | 阿贝贝的小衣服：名字、价格、爸爸的话、第一次穿的故事（图在 outfits/） |
 | `data/dreams.js` | 阿贝贝的梦 |
 | `data/fortunes.js` | 今日一签的签文 |

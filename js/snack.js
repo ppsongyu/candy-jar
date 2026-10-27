@@ -87,6 +87,48 @@ function snackStoreOf(s){
   const st=SNACK_STREET.find(x=>x.ids.includes(s.id));
   return st?st.id:'za';
 }
+
+// ---- 营业时间 ----
+function storeHourNow(){const d=new Date();return d.getHours()+d.getMinutes()/60;}
+function storeOpen(id){
+  const hrs=SNACK_STORE_HOURS[id]; if(!hrs) return true;
+  const h=storeHourNow();
+  return hrs.some(([a,b])=>(h>=a&&h<b)||(h+24>=a&&h+24<b));
+}
+function storeHoursText(id,full){
+  const hrs=SNACK_STORE_HOURS[id]; if(!hrs) return '';
+  if(hrs.length===1&&hrs[0][0]===0&&hrs[0][1]>=24) return '24小时营业';
+  const f=x=>{x=x%24;const hh=Math.floor(x),mm=Math.round((x-hh)*60);return (hh<10?'0':'')+hh+':'+(mm<10?'0':'')+mm;};
+  if(hrs.length>1) return full?hrs.map(([a,b])=>f(a)+'–'+f(b)).join('、'):f(hrs[0][0])+'–'+f(hrs[hrs.length-1][1])+' 有午休';
+  return f(hrs[0][0])+'–'+f(hrs[0][1]);
+}
+function storeRestText(id){
+  let t=SNACK_STORE_REST[id]||'休息中';
+  if(id==='yao'&&t.indexOf('/')>0){const h=storeHourNow();t=t.split('/')[h>=12&&h<13?0:1];t='医生'+t.replace(/^医生/,'');}
+  return t;
+}
+function streetPeriod(){
+  const h=new Date().getHours();
+  return h>=5&&h<10?'morning':h>=10&&h<17?'day':h>=17&&h<19?'dusk':'night';
+}
+// ---- 货架小标签：常买 / 新品 / 本周人气 ----
+function snackIsNew(s){
+  const d=SNACK_NEW[s.id]; if(!d) return false;
+  const t=new Date(d+'T00:00:00').getTime();
+  return Date.now()-t<14*86400000;
+}
+function storeWeekHot(list){
+  const w=snackData.weeklyBuyCount||{};
+  let best=null,top=0,tie=false;
+  list.forEach(s=>{const n=w[s.id]||0;if(n>top){top=n;best=s.id;tie=false;}else if(n===top&&n>0)tie=true;});
+  return top>=2&&!tie?best:null;
+}
+function snackTagHtml(s,hot){
+  if(hot===s.id) return '<div class="shop-item-tag hot">本周人气</div>';
+  if(snackIsNew(s)) return '<div class="shop-item-tag new">新品</div>';
+  if((snackData.purchaseCount[s.id]||0)>=3) return '<div class="shop-item-tag">常买</div>';
+  return '';
+}
 function enterSnackStore(id){
   shopStore=id;
   document.getElementById('shop-add-form').style.display='none';
@@ -161,6 +203,8 @@ function renderShop(){
   const addBtn=document.querySelector('#overlay-shop .shop-add-btn');
   const byId=id=>all.find(x=>x.id===id);
   const storeName=s=>{const st=SNACK_STREET.find(x=>x.id===snackStoreOf(s));return st?st.name:'';};
+  const ov=document.getElementById('overlay-shop');
+  ['morning','day','dusk','night'].forEach(p=>ov.classList.toggle('street-'+p,p===streetPeriod()));
   if(!shopStore){
     // 小街：九家店 + 爸爸的推车
     bar.style.display='none';
@@ -173,11 +217,13 @@ function renderShop(){
       const onShelf=items.filter(snackOnShelf).length+extra;
       const cover=byId(st.cover);
       const waiting=items.reduce((n,x)=>n+((snackData.stock[x.id]||0)>0?1:0),0);
-      return '<div class="shop-item shop-store" onclick="enterSnackStore(\''+st.id+'\')">'
+      const open=storeOpen(st.id);
+      return '<div class="shop-item shop-store'+(open?'':' closed')+'" onclick="enterSnackStore(\''+st.id+'\')">'
         +'<div class="shop-item-img">'+(cover&&cover.img?'<img class="shop-item-placeholder" src="'+cover.img+'">':'')
+        +(open?'':'<div class="shop-store-rest">休息中</div>')
         +(waiting?'<div class="shop-item-stock">'+waiting+' 样待喂</div>':'')+'</div>'
         +'<div class="shop-store-name">'+st.name+'</div>'
-        +'<div class="shop-store-count">今天上架 '+onShelf+'/'+(items.length+extra)+'</div>'
+        +'<div class="shop-store-count">'+(open?'今天上架 '+onShelf+'/'+(items.length+extra):storeHoursText(st.id))+'</div>'
       +'</div>';
     }).join('');
     const cards=[];
@@ -227,10 +273,14 @@ function renderShop(){
   let dots='';for(let i=0;i<STAMP_GOAL;i++) dots+='<span class="shop-stamp'+(i<stamps?' on':'')+'"></span>';
   stampRow.style.display='flex';
   stampRow.innerHTML='<span>集章卡</span>'+dots+'<span class="shop-stamp-tip">满'+STAMP_GOAL+'个送一样</span>';
+  const storeIsOpen=storeOpen(shopStore);
+  if(!storeIsOpen) stampRow.innerHTML='<span class="shop-rest-note">🌙 休息中 · '+storeRestText(shopStore)+'</span><span class="shop-stamp-tip">营业 '+storeHoursText(shopStore,true)+'</span>';
+  else stampRow.innerHTML+='<span class="shop-stamp-tip shop-hours">'+storeHoursText(shopStore)+'</span>';
   grid.className='shop-grid';
   const list=visible.filter(s=>snackStoreOf(s)===shopStore);
   // 今天上架的排前面，缺货的排后面
   list.sort((a,b)=>(snackOnShelf(b)?1:0)-(snackOnShelf(a)?1:0));
+  const hot=storeWeekHot(list);
   grid.innerHTML=list.map(s=>{
     const price=getShopPrice(s);
     const noStory=!s.story;
@@ -239,17 +289,9 @@ function renderShop(){
     const off=!noStory&&(!onShelf||sold);
     const isFlash=today.flash.includes(s.id);
     const isSpecial=today.special===s.id;
-    const buyCount=snackData.purchaseCount[s.id]||0;
-    const isFav=buyCount>=3;
     const stk=snackData.stock[s.id]||0;
     const isDiscounted=price<s.price;
     const imgHtml=s.img?`<img class="shop-item-placeholder" src="${s.img}">`:'<div class="shop-item-placeholder"></div>';
-    let ratingHtml='';
-    if(s.rating&&!noStory){
-      ratingHtml='<div class="shop-item-rating">';
-      for(let i=0;i<5;i++) ratingHtml+=i<s.rating?'♥':'♡';
-      ratingHtml+='</div>';
-    }
     let tag='';
     if(!onShelf&&!noStory) tag='<div class="shop-item-weekend grey">今日缺货</div>';
     else if(sold) tag='<div class="shop-item-weekend grey">已抢光</div>';
@@ -259,10 +301,11 @@ function renderShop(){
     if(noStory) priceHtml='<span class="shop-stocking">备货中</span>';
     else if(off) priceHtml='<span class="shop-stocking">'+(sold?'明天再来':'今天没货')+'</span>';
     else priceHtml=(isDiscounted?'<span class="shop-discount">'+s.price+'</span> ':'')+price+' 币';
-    return '<div class="shop-item '+(noStory?'no-story':'')+(off?' off-shelf':'')+'" onclick="'+(noStory||off?'':'tryBuySnack(\''+s.id+'\')')+'">'
+    const closed=!storeIsOpen&&!noStory&&!off;
+    return '<div class="shop-item '+(noStory?'no-story':'')+(off?' off-shelf':'')+(closed?' store-closed':'')+'" onclick="'+(noStory||off?'':closed?'storeClosedTip()':'tryBuySnack(\''+s.id+'\')')+'">'
       +'<div class="shop-item-img">'
         +imgHtml
-        +(isFav?'<div class="shop-item-fav">♥</div>':'')
+        +(noStory?'':snackTagHtml(s,hot))
         +(isSpecial&&!off?'<div class="shop-item-special">特价</div>':'')
         +(stk>0?'<div class="shop-item-stock">×'+stk+'</div>':'')
         +tag
@@ -270,12 +313,14 @@ function renderShop(){
       +'<div class="shop-item-info">'
         +'<div class="shop-item-name">'+s.name+'</div>'
         +'<div class="shop-item-price">'+priceHtml+'</div>'
-        +ratingHtml
         +(stk>0?'<div class="shop-feed-btn" onclick="event.stopPropagation();feedSnack(\''+s.id+'\')">'+snackUseOf(s).give+'</div>':'')
       +'</div>'
     +'</div>';
   }).join('');
   if(shopStore==='mei'&&typeof outfitShopHtml==='function') grid.innerHTML+=outfitShopHtml(balance);
+}
+function storeClosedTip(){
+  showRepeatLine('店里休息中，'+storeHoursText(shopStore)+' 再来买吧（家里有的还能喂哦）');
 }
 
 
@@ -379,11 +424,13 @@ function openBundle(){
   const balance=getSnackBalance();
   const blocked=items.find(x=>!checkTimeAllow(x));
   const weekFull=items.find(x=>!checkWeeklyLimit(x));
+  const shut=items.find(x=>!storeOpen(snackStoreOf(x)));
   const textEl=document.getElementById('snack-confirm-text');
   const btnBuy=document.getElementById('snack-buy-btn');
   pendingSnackId='__bundle';
   let html='<div class="dad-label">爸爸说：</div><div class="dad-words">今天的套餐是「'+b.name+'」：'+items.map(x=>x.name).join(' + ')+'。一起买比分开买便宜，不过要一次付清哦。</div>';
-  if(blocked){html+='<div class="dad-words">'+(blocked.dadBlock||'这个现在不卖。')+'</div>';btnBuy.disabled=true;btnBuy.textContent='现在不行';}
+  if(shut){html+='<div class="dad-words">「'+shut.name+'」那家店现在休息，等它开门再来买套餐吧。</div>';btnBuy.disabled=true;btnBuy.textContent='店休中';}
+  else if(blocked){html+='<div class="dad-words">'+(blocked.dadBlock||'这个现在不卖。')+'</div>';btnBuy.disabled=true;btnBuy.textContent='现在不行';}
   else if(weekFull){html+='<div class="dad-words">「'+weekFull.name+'」这周已经买够啦，下周再来。</div>';btnBuy.disabled=true;btnBuy.textContent='下周再来';}
   else if(balance<b.price){html+='<div class="dad-price"><span class="shop-discount">'+sum+'</span> '+b.price+' 币（余额不足）</div>';btnBuy.disabled=true;btnBuy.textContent='币不够啦';}
   else{html+='<div class="dad-price"><span class="shop-discount">'+sum+'</span> '+b.price+' 币</div>';btnBuy.disabled=false;btnBuy.textContent='都要！';}
@@ -426,6 +473,7 @@ function tryBuySnack(id){
   if(!snack||!snack.story) return;
   
   if(!snackOnShelf(snack)||flashSoldOut(snack)) return;
+  if(!storeOpen(snackStoreOf(snack))){showRepeatLine('「'+snack.name+'」那家店休息中，'+storeHoursText(snackStoreOf(snack))+' 营业');return;}
   const price=getShopPrice(snack);
   const balance=getSnackBalance();
   const timeOk=checkTimeAllow(snack);
@@ -473,6 +521,7 @@ function confirmBuySnack(){
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
   closeSnackConfirm();
+  if(!storeOpen(snackStoreOf(snack))) return;
   const price=getShopPrice(snack);
   const lines=['已购入！去货架上点它喂阿贝贝吧'];
   if(shopToday().flash.includes(id)) shopDaily().flash[id]=1;
@@ -490,6 +539,21 @@ function refreshAbebeStatus(){
   if(typeof getTummy==='function') abebeState.food=Math.round(getTummy());
   if(typeof renderAbebeStatus==='function') renderAbebeStatus();
 }
+// ---- 阿贝贝的口味（藏起来的，只在反应里露出来）----
+const TASTE_STORES=['fan','xiaochi','tian','yin','guo','ling'];
+function snackTasteOf(snack){
+  const t=SNACK_TASTE[snack.id];
+  if(snackStoreOf(snack)==='yao') return t==null?null:t;
+  if(!TASTE_STORES.includes(snackStoreOf(snack))) return null;
+  return t==null?2:t;
+}
+function tasteLine(snack,taste){
+  if(taste==null) return '';
+  const sp=TASTE_SPECIAL[snack.id];
+  if(taste===3&&sp&&Math.random()<0.6) return randFrom(sp);
+  return randFrom(TASTE_LINES[taste]).replace(/\{name\}/g,snack.name);
+}
+
 function feedSnack(id){
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
@@ -502,8 +566,10 @@ function feedSnack(id){
   }
   snackData.stock[id]--;
   if(amt>0) setTummy(getTummy()+amt);
-  // 吃了东西兔兔心也开心一点
-  abebeState.mood=Math.min(100,abebeState.mood+5);
+  // 吃到喜欢的心情好得多，不爱吃的会有点委屈（但从不挑食）
+  const taste=snackTasteOf(snack);
+  const moodAdd=taste==null?5:[-2,3,6,12][taste];
+  abebeState.mood=Math.max(0,Math.min(100,abebeState.mood+moodAdd));
   refreshAbebeStatus();
   
   const totalFed=(snackData.purchaseCount[id]||1)-(snackData.stock[id]||0);
@@ -514,8 +580,13 @@ function feedSnack(id){
     closeSnackShop();
     showStory(snack.name,snack.story);
   }else{
-    // Repeat feed
-    if(snack.repeatLines&&snack.repeatLines.length>0){
+    // Repeat feed：吃的东西有时露出她的口味
+    const tl=tasteLine(snack,taste);
+    if(tl&&(Math.random()<0.6||!(snack.repeatLines&&snack.repeatLines.length))){
+      saveApp();
+      renderShop();
+      showRepeatLine(tl);
+    }else if(snack.repeatLines&&snack.repeatLines.length>0){
       const line=snack.repeatLines[Math.floor(Math.random()*snack.repeatLines.length)];
       saveApp();
       renderShop();
@@ -574,16 +645,10 @@ function renderSnackBook(){
     const isFav=count>=3;
     const snack=getAllSnacks().find(s=>s.id===c.id);
     const imgHtml=snack&&snack.img?'<img src="'+snack.img+'" style="width:100%;height:100%;object-fit:contain;padding:4px">':'';
-    let ratingHtml='';
-    if(snack&&snack.rating){
-      ratingHtml='<span style="color:#E85A8A;font-size:10px;letter-spacing:1px;margin-left:8px">';
-      for(let i=0;i<5;i++) ratingHtml+=i<snack.rating?'♥':'♡';
-      ratingHtml+='</span>';
-    }
     return `<div class="snack-book-item" onclick="viewSnackStory('${c.id}')">
       <div class="snack-book-thumb">${imgHtml}</div>
       <div class="snack-book-info">
-        <div class="snack-book-name">${c.name}${isFav?' <span style="color:#E85A8A;font-size:12px">♥ 阿贝贝的最爱</span>':''}${ratingHtml}</div>
+        <div class="snack-book-name">${c.name}${isFav?' <span class="snack-book-tag">常买</span>':''}</div>
         <div class="snack-book-meta">首次购买：${c.firstBought}</div>
         <div class="snack-book-count">×${count}</div>
       </div>

@@ -761,6 +761,23 @@ const SNACK_STORE_USE={
   yin:{tummy:10,give:'喂阿贝贝'},guo:{tummy:15,give:'喂阿贝贝'},ling:{tummy:5,give:'喂阿贝贝'},
   mei:{tummy:0,give:'给阿贝贝'},yao:{tummy:0,give:'给阿贝贝吃药'},za:{tummy:0,give:'给阿贝贝玩'}
 };
+// 每家店几点开门几点关（24 小时制，可以写半点 9.5；过了半夜写成 26 表示凌晨 2 点）
+const SNACK_STORE_HOURS={
+  fan:[[10,22]], xiaochi:[[16,26]], tian:[[7,21]], yin:[[8,23]], guo:[[8,20]],
+  ling:[[0,24]], mei:[[10,21]], yao:[[8,12],[13,22]], za:[[9,21]]
+};
+// 店休时门口挂的话
+const SNACK_STORE_REST={
+  fan:'厨师回家睡觉啦', xiaochi:'小摊收摊啦，傍晚四点出摊', tian:'烤箱凉下来了，明早七点见',
+  yin:'杯子都洗好扣起来了', guo:'果子还在路上', ling:'', mei:'橱窗的灯关了',
+  yao:'医生在午睡/下班了', za:'老板去遛弯了'
+};
+// 新上架的东西：上架那天起两周内挂「新品」
+const SNACK_NEW={
+  kitty_milk:'2026-10-27',jujube_cake:'2026-10-27',pepino:'2026-10-27',passion_fruit:'2026-10-27',chess_box:'2026-10-27',
+  pipa_ornament:'2026-10-27',game_console:'2026-10-27',kitty_register:'2026-10-27',baisuishan_water:'2026-10-27',
+  fruit_yogurt_bowl:'2026-10-27',hp_magic_book:'2026-10-27',fried_egg:'2026-10-27',pan_fried_dumpling:'2026-10-27'
+};
 const SNACK_STREET=[
   {id:'fan',name:'饭饭店',cover:'claypot_rice',always:['curry_rice','fruit_porridge'],ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu','fried_egg']},
   {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',always:['shumai','bbq_skewer'],ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer','pan_fried_dumpling']},

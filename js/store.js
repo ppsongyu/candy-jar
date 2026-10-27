@@ -200,6 +200,7 @@ function claudeApply(a){
       const snack=getAllSnacks().find(x=>x.id===d.id||x.name===d.id);if(!snack) return '小卖部没有这个零食';
       if(!snackOnShelf(snack)) return snack.name+'今天缺货';
       if(flashSoldOut(snack)) return snack.name+'今天已经抢光了';
+      if(!storeOpen(snackStoreOf(snack))) return snack.name+'那家店休息中（'+storeHoursText(snackStoreOf(snack))+'营业）';
       const price=getShopPrice(snack);
       if(!checkTimeAllow(snack)) return '爸爸说现在不能买'+snack.name;
       if(!checkWeeklyLimit(snack)) return snack.name+'这周已经吃够啦';
@@ -217,6 +218,8 @@ function claudeApply(a){
       if(amt>0&&getTummy()+amt>TUMMY_MAX+10) return '阿贝贝吃撑了，晚点再喂'+snack.name;
       snackData.stock[snack.id]--;
       if(amt>0) setTummy(getTummy()+amt);
+      {const t=snackTasteOf(snack);abebeState.mood=Math.max(0,Math.min(100,abebeState.mood+(t==null?5:[-2,3,6,12][t])));
+       const tl=tasteLine(snack,t);if(tl) return tl;}
       return (amt>0?'喂了阿贝贝':'给了阿贝贝')+snack.name;
     }
   }
