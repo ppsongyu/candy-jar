@@ -715,6 +715,12 @@ const snackShop=[
 ];
 
 // 小卖部的九家店：按顺序排成三行三列的小街；cover 是店门口摆的那样零食
+// tummy：喂一次占多少小肚子（0 表示不是吃的）；give：货架上那个按钮叫什么
+const SNACK_STORE_USE={
+  fan:{tummy:40,give:'喂阿贝贝'},xiaochi:{tummy:15,give:'喂阿贝贝'},tian:{tummy:20,give:'喂阿贝贝'},
+  yin:{tummy:10,give:'喂阿贝贝'},guo:{tummy:15,give:'喂阿贝贝'},ling:{tummy:5,give:'喂阿贝贝'},
+  mei:{tummy:0,give:'给阿贝贝'},yao:{tummy:0,give:'给阿贝贝吃药'},za:{tummy:0,give:'给阿贝贝玩'}
+};
 const SNACK_STREET=[
   {id:'fan',name:'饭饭店',cover:'claypot_rice',always:['curry_rice','fruit_porridge'],ids:['mcdonalds_bucket','cheese_burger','brain_noodle','cat_wonton','luosifen','claypot_rice','curry_katsu','curry_rice','fruit_porridge','zihi_hotpot','unagi_bento','hairy_crab','dongpo_pork','soft_boiled_egg','fermented_tofu']},
   {id:'xiaochi',name:'小吃摊',cover:'bbq_skewer',always:['shumai','bbq_skewer'],ids:['bbq_skewer','grilled_gluten','garlic_oyster','cheese_bagel','mentaiko_zucchini','shumai','shrimp_dumpling','egg_hotdog_bread','tanghulu','malt_sugar_art','marshmallow_skewer']},

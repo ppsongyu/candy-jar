@@ -36,7 +36,7 @@ function saveApp(){
     savedAt:Date.now(),
     savedCandiesByMonth,booksData,milestonesData,wishlistData,
     diaryCheckins:diaryCheckins||{},
-    abebeFedTime,abebeLastGroomTime,abebeLastVisit:abebeLastVisit||Date.now(),
+    abebeFedTime,abebeTummy:(typeof abebeTummy!=='undefined'?abebeTummy:null),abebeLastGroomTime,abebeLastVisit:abebeLastVisit||Date.now(),
     fortuneDrawn,fortuneDate:new Date().toDateString(),
     abebeChatCount,abebeChatDate,
     todaysChatSlots,todaysChatSlotDate,recentChatHistory,
@@ -78,6 +78,7 @@ async function loadApp(){
   if(data.wishlistData) wishlistData.splice(0,wishlistData.length,...data.wishlistData);
   if(data.diaryCheckins) diaryCheckins=data.diaryCheckins;
   if(data.abebeFedTime) abebeFedTime=data.abebeFedTime;
+  if(data.abebeTummy) abebeTummy=data.abebeTummy;
   if(data.abebeLastGroomTime) abebeLastGroomTime=data.abebeLastGroomTime;
   if(data.abebeLastVisit) abebeLastVisit=data.abebeLastVisit;
   if(data.abebeChatCount) abebeChatCount=data.abebeChatCount;
@@ -186,7 +187,7 @@ function claudeApply(a){
       pigBellyData[d.dateKey][d.meal]={text:d.text};pbSaveData();return '记了猪肚记';
     }
     case 'abebe':{
-      if(d.action==='feed') abebeFedTime=Date.now();
+      if(d.action==='feed'){abebeFedTime=Date.now();setTummy(Math.min(TUMMY_MAX,getTummy()+5));}
       else if(d.action==='groom') abebeLastGroomTime=Date.now();
       else if(d.action==='goodnight') abebeSaidGoodnight=true;
       else if(d.action==='goodmorning') abebeSaidGoodmorning=true;
@@ -210,8 +211,11 @@ function claudeApply(a){
     case 'snack_feed':{
       const snack=getAllSnacks().find(x=>x.id===d.id||x.name===d.id);if(!snack) return '没有这个零食';
       if(!snackData.stock||!(snackData.stock[snack.id]>0)) return '货架上没有'+snack.name;
-      if(!checkDailyFeed()) return '阿贝贝今天吃饱啦';
-      snackData.stock[snack.id]--;snackData.dailyFeedCount++;return '喂了阿贝贝'+snack.name;
+      const amt=snackTummyOf(snack);
+      if(amt>0&&getTummy()+amt>TUMMY_MAX+10) return '阿贝贝吃撑了，晚点再喂'+snack.name;
+      snackData.stock[snack.id]--;
+      if(amt>0) setTummy(getTummy()+amt);
+      return (amt>0?'喂了阿贝贝':'给了阿贝贝')+snack.name;
     }
   }
   return '不认识的事情';

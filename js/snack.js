@@ -24,7 +24,6 @@ let snackData={
   dailyFeedCount:0,
   dailyFeedDate:''
 };
-const DAILY_FEED_LIMIT=3;
 
 function getWeekStart(){
   const now=new Date();
@@ -81,6 +80,8 @@ function openSnackShop(){
   document.getElementById('overlay-shop').classList.add('show');
   renderShop();
 }
+function snackUseOf(s){return SNACK_STORE_USE[snackStoreOf(s)]||{tummy:15,give:'喂阿贝贝'};}
+function snackTummyOf(s){return typeof s.tummy==='number'?s.tummy:snackUseOf(s).tummy;}
 function snackStoreOf(s){
   if(s.shop) return s.shop;
   const st=SNACK_STREET.find(x=>x.ids.includes(s.id));
@@ -137,11 +138,6 @@ function checkWeeklyLimit(snack){
   return (snackData.weeklyBuyCount[snack.id]||0)<snack.weeklyLimit;
 }
 
-function checkDailyFeed(){
-  const today=new Date().toDateString();
-  if(snackData.dailyFeedDate!==today){snackData.dailyFeedCount=0;snackData.dailyFeedDate=today;}
-  return snackData.dailyFeedCount<DAILY_FEED_LIMIT;
-}
 
 function renderShop(){
   const balance=getSnackBalance();
@@ -149,6 +145,7 @@ function renderShop(){
   const today=shopToday();
   let bar1='本周阿贝贝币：'+balance;
   const promo=[];
+  if(typeof getTummy==='function'&&getTummy()<TUMMY_HUNGRY) promo.unshift(tummyLines.street[Math.floor(shopRand(shopDayKey()+'|st'+new Date().getHours())*tummyLines.street.length)%tummyLines.street.length]);
   if(isMemberDay()) promo.push('今天18号会员日 · 全场八折');
   promo.push(daily.rebated?'今天的满10返2已经领到啦':'今天已花 '+daily.spent+' 币 · 满10返2');
   document.getElementById('shop-coin-bar').innerHTML=bar1+'<div class="shop-promo-line">'+promo.join('　')+'</div>';
@@ -272,7 +269,7 @@ function renderShop(){
         +'<div class="shop-item-name">'+s.name+'</div>'
         +'<div class="shop-item-price">'+priceHtml+'</div>'
         +ratingHtml
-        +(stk>0?'<div class="shop-feed-btn" onclick="event.stopPropagation();feedSnack(\''+s.id+'\')">喂阿贝贝</div>':'')
+        +(stk>0?'<div class="shop-feed-btn" onclick="event.stopPropagation();feedSnack(\''+s.id+'\')">'+snackUseOf(s).give+'</div>':'')
       +'</div>'
     +'</div>';
   }).join('');
@@ -488,20 +485,20 @@ function feedSnack(id){
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
   if(!snackData.stock[id]||snackData.stock[id]<=0) return;
-  
-  // Check daily feed limit
-  if(!checkDailyFeed()){
-    showRepeatLine('阿贝贝说肚子圆了……今天不能再吃了');
+  const amt=snackTummyOf(snack);
+  // 吃的东西占小肚子；快满了就吃不下
+  if(amt>0&&getTummy()+amt>TUMMY_MAX+10){
+    showRepeatLine(randFrom(tummyLines.full));
     return;
   }
-  
-  // Consume from stock
   snackData.stock[id]--;
-  snackData.dailyFeedCount++;
+  if(amt>0) setTummy(getTummy()+amt);
+  abebeState.food=Math.round(getTummy());
   
   // Boost 舔嘴嘴
   const boost=snack.price<=2?20:snack.price<=4?30:40;
-  abebeState.snackHappy=Math.min(100,abebeState.snackHappy+boost);
+  if(amt>0) abebeState.snackHappy=Math.min(100,abebeState.snackHappy+boost);
+  else abebeState.mood=Math.min(100,abebeState.mood+5);
   abebeState.mood=Math.min(100,abebeState.mood+5);
   
   const totalFed=(snackData.purchaseCount[id]||1)-(snackData.stock[id]||0);

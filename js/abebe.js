@@ -36,10 +36,29 @@ function getMissCategory(){
 }
 
 // ===== 2. STATE DECAY =====
-function calcFood(){
-  const hrsSinceFed=(Date.now()-abebeFedTime)/3600000;
-  return Math.max(5,100-hrsSinceFed*18);
+// ===== 小肚子 =====
+// 存的是"上次记下时有多饱"和"那是什么时候"，现在有多饱按经过的时间算：
+// 白天（7点到22点）每小时消化 6，晚上睡觉每小时只消化 3，所以早上醒来是有点饿
+let abebeTummy=null; // {v:0-100, at:时间戳}
+const TUMMY_DAY_RATE=6, TUMMY_NIGHT_RATE=3, TUMMY_HUNGRY=30, TUMMY_STARVING=10, TUMMY_MAX=100;
+function tummyRateAt(t){const h=new Date(t).getHours();return (h>=22||h<7)?TUMMY_NIGHT_RATE:TUMMY_DAY_RATE;}
+function getTummy(){
+  if(!abebeTummy){
+    // 第一次：从以前的"上次喂糖时间"接过来
+    const hrs=(Date.now()-abebeFedTime)/3600000;
+    abebeTummy={v:Math.max(20,Math.min(TUMMY_MAX,100-hrs*18)),at:Date.now()};
+  }
+  let v=abebeTummy.v, t=abebeTummy.at; const now=Date.now();
+  let guard=0;
+  while(t<now&&v>0&&guard++<200){
+    const next=Math.min(now,(Math.floor(t/3600000)+1)*3600000);
+    v-=tummyRateAt(t)*(next-t)/3600000;
+    t=next;
+  }
+  return Math.max(0,Math.min(TUMMY_MAX,v));
 }
+function setTummy(v){abebeTummy={v:Math.max(0,Math.min(TUMMY_MAX+10,v)),at:Date.now()};}
+function calcFood(){return getTummy();}
 function calcSnackHappy(){
   // decays slowly over time, base level is 20
   const current=abebeState.snackHappy||20;
@@ -65,6 +84,7 @@ function calcMood(){
   if(avgOthers>70) base+=10;
   else if(avgOthers<40) base-=15;
   else if(avgOthers<25) base-=25;
+  if(getTummy()<TUMMY_STARVING) base-=15;
   return Math.max(5,Math.min(100,Math.round(base)));
 }
 function calcClean(){
@@ -183,6 +203,11 @@ function getAbebeLine(){
   const holiday=getHoliday();
   if(holiday&&holidayLines[holiday]&&Math.random()<0.6) return randFrom(holidayLines[holiday]);
   
+  // Priority 1.5: 小肚子饿了就闹
+  const tum=getTummy();
+  if(tum<TUMMY_STARVING&&Math.random()<0.85) return randFrom(tummyLines.starving);
+  if(tum<TUMMY_HUNGRY&&Math.random()<0.6) return randFrom(tummyLines.hungry);
+
   // Priority 2: easter egg
   const egg=checkEasterEgg();
   if(egg) return egg;
@@ -256,11 +281,9 @@ function renderAbebeStatus(){
 
 function renderAbebeActions(){
   const h=new Date().getHours();
-  const todayCandies=getTodayCandies();
   
   let btns='';
   btns+=`<div class="abebe-action" onclick="abebeAction('poke')"><div class="abebe-action-text">戳一戳</div></div>`;
-  btns+=`<div class="abebe-action ${todayCandies.length===0?'done':''}" onclick="abebeAction('feed')"><div class="abebe-action-text">喂糖</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('groom')"><div class="abebe-action-text">梳毛</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('kiss')"><div class="abebe-action-text">亲亲</div></div>`;
   btns+=`<div class="abebe-action" onclick="abebeAction('daze')"><div class="abebe-action-text">发呆</div></div>`;
@@ -308,7 +331,8 @@ function abebeAction(type){
     if(todayCandies.length===0) return;
     abebeLastAction='fed';
     abebeFedTime=Date.now();
-    abebeState.food=Math.min(100,abebeState.food+25);
+    setTummy(Math.min(TUMMY_MAX,getTummy()+5));
+    abebeState.food=Math.round(getTummy());
     abebeState.mood=Math.min(100,abebeState.mood+5);
   }else if(type==='groom'){
     abebeLastAction='groomed';
