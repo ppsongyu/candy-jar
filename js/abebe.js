@@ -275,8 +275,24 @@ function renderAbebeActions(){
     const old=msgBtn.querySelector('.cv-dot'); if(old) old.remove();
     if(typeof cvUnreadDays==='function'&&cvUnreadDays()>=2) msgBtn.insertAdjacentHTML('beforeend','<span class="cv-dot"></span>');
   }
-  if(h>=20||h<6) btns+=`<div class="abebe-action" onclick="abebeAction('goodnight')"><div class="abebe-action-text">哄睡觉</div></div>`;
-  if(h>=5&&h<12) btns+=`<div class="abebe-action" onclick="abebeAction('goodmorning')"><div class="abebe-action-text">早安</div></div>`;
+  // 哄睡觉（小月亮）和早安（小太阳）在左上角第三个小圆圈里，到时间才出现；还没做过就轻轻发光
+  const tBtn=document.getElementById('abebe-time-btn');
+  if(tBtn){
+    let kind='';
+    if(h>=20||h<6) kind='goodnight'; else if(h>=6&&h<12) kind='goodmorning';
+    if(!kind){tBtn.style.display='none';}
+    else{
+      const night=kind==='goodnight';
+      const done=night?abebeSaidGoodnight:abebeSaidGoodmorning;
+      tBtn.style.display='flex';
+      tBtn.className='abebe-msg-btn abebe-time-btn '+(night?'moon':'sun')+(done?'':' glow');
+      tBtn.setAttribute('aria-label',night?'哄阿贝贝睡觉':'跟阿贝贝说早安');
+      tBtn.onclick=()=>abebeAction(kind);
+      tBtn.innerHTML=night
+        ?'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 14.6A7.8 7.8 0 1 1 9.4 4.5a6.2 6.2 0 0 0 10.1 10.1z"/></svg>'
+        :'<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="3.8"/><path d="M12 3v1.8M12 19.2V21M3 12h1.8M19.2 12H21M5.6 5.6l1.3 1.3M17.1 17.1l1.3 1.3M5.6 18.4l1.3-1.3M17.1 6.9l1.3-1.3"/></svg>';
+    }
+  }
   
   
   document.getElementById('abebe-actions').innerHTML=btns;
