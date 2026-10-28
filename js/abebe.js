@@ -8,6 +8,7 @@ function randFrom(arr){return arr[Math.floor(Math.random()*arr.length)]}
 // ===== ABEBE CORE STATE =====
 let abebeState={mood:80,sleep:70,food:75,miss:90,clean:85};
 let abebeSaidGoodnight=false;
+let abebeGoodnightAt=0; // 上一次哄睡的时间：晚上哄过，过了零点到早上 6 点前都还算哄过
 let abebeSaidGoodmorning=false;
 let abebeLastAction='';
 let abebeSessionStart=Date.now();
@@ -283,7 +284,9 @@ function renderAbebeActions(){
     if(!kind){tBtn.style.display='none';}
     else{
       const night=kind==='goodnight';
-      const done=night?abebeSaidGoodnight:abebeSaidGoodmorning;
+      // 月亮：从最近一个晚上 8 点算起哄过没有（过了零点也还算）
+      const eight=new Date(); if(h<20) eight.setDate(eight.getDate()-1); eight.setHours(20,0,0,0);
+      const done=night?(abebeGoodnightAt>=eight.getTime()):abebeSaidGoodmorning;
       tBtn.style.display='flex';
       tBtn.className='abebe-msg-btn abebe-time-btn '+(night?'moon':'sun')+(done?'':' glow');
       tBtn.setAttribute('aria-label',night?'哄阿贝贝睡觉':'跟阿贝贝说早安');
@@ -355,6 +358,7 @@ function abebeAction(type){
     abebeLastAction='dazed';
     abebeState.mood=Math.min(100,abebeState.mood+3);
   }else if(type==='goodnight'){
+    abebeGoodnightAt=Date.now();
     if(!abebeSaidGoodnight){
       abebeSaidGoodnight=true;
       abebeState.sleep=100;

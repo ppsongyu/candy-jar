@@ -40,7 +40,7 @@ function saveApp(){
     fortuneDrawn,fortuneDate:new Date().toDateString(),
     abebeChatCount,abebeChatDate,
     todaysChatSlots,todaysChatSlotDate,recentChatHistory,
-    abebeSaidGoodnight,abebeSaidGoodmorning,
+    abebeSaidGoodnight,abebeSaidGoodmorning,abebeGoodnightAt,
     timeCapsules,claudeSeen,claudeFortunes,claudeLog
   };
   try{localStorage.setItem('candyJarData',JSON.stringify(data));}catch(e){}
@@ -87,6 +87,7 @@ async function loadApp(){
   if(data.todaysChatSlotDate) todaysChatSlotDate=data.todaysChatSlotDate;
   if(data.recentChatHistory) recentChatHistory=data.recentChatHistory;
   if(data.abebeSaidGoodnight) abebeSaidGoodnight=data.abebeSaidGoodnight;
+  if(data.abebeGoodnightAt) abebeGoodnightAt=data.abebeGoodnightAt;
   if(data.abebeSaidGoodmorning) abebeSaidGoodmorning=data.abebeSaidGoodmorning;
   if(data.timeCapsules) timeCapsules=data.timeCapsules;
   if(data.claudeSeen) claudeSeen=data.claudeSeen;
@@ -191,7 +192,7 @@ function claudeApply(a){
     case 'abebe':{
       if(d.action==='feed') return '喂糖没有啦，去小卖部买东西喂她吧';
       if(d.action==='groom') abebeLastGroomTime=Date.now();
-      else if(d.action==='goodnight') abebeSaidGoodnight=true;
+      else if(d.action==='goodnight'){abebeSaidGoodnight=true;abebeGoodnightAt=Date.now();}
       else if(d.action==='goodmorning') abebeSaidGoodmorning=true;
       abebeLastAction={feed:'fed',groom:'groomed',kiss:'kissed',poke:'poked'}[d.action]||d.action;
       return '陪阿贝贝玩';
