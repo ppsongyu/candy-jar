@@ -1634,6 +1634,7 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .wd-item.locked{cursor:default}
 .wd-name{font-size:10.5px;color:var(--text-primary);margin-top:4px;line-height:1.35;letter-spacing:.3px}
 .wd-item.locked .wd-name{color:var(--text-muted)}
+.wd-story{position:absolute;top:6px;left:6px;font-size:9px;color:var(--pink-400);background:var(--bg-card);border:1px solid var(--pink-400);padding:0 6px;border-radius:8px;line-height:15px}
 .wd-on{position:absolute;top:6px;right:6px;font-size:9px;color:#fff;background:var(--pink-400);padding:1px 7px;border-radius:8px}
 
 /* ===== 小街的早中晚夜 + 店休 + 货架小标签 ===== */

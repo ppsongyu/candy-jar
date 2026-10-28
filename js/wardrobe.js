@@ -69,10 +69,17 @@ function renderWardrobe(){
   document.getElementById('wardrobe-count').textContent='已经有 '+have+' / '+OUTFITS.length+' 件';
   const cell=(id,src,name,on,locked)=>'<div class="wd-item'+(on?' on':'')+(locked?' locked':'')+'" onclick="'+(locked?'wardrobeLocked()':'wearOutfit(\''+id+'\')')+'">'
     +'<div class="wd-img"><img src="'+src+'" loading="lazy" alt=""></div>'
-    +'<div class="wd-name">'+(locked?'？？？':name)+'</div>'+(on?'<div class="wd-on">穿着</div>':'')+'</div>';
+    +'<div class="wd-name">'+(locked?'？？？':name)+'</div>'+(on?'<div class="wd-on">穿着</div>':'')
+    +(id&&!locked&&w.seen.includes(id)?'<div class="wd-story" onclick="event.stopPropagation();rereadStory(\''+id+'\')">故事</div>':'')+'</div>';
   let h=cell('',ABEBE_DEFAULT_IMG,'原来的样子',!w.wearing,false);
   OUTFITS.forEach(o=>{h+=cell(o.id,outfitThumb(o),o.name,w.wearing===o.id,!w.owned.includes(o.id));});
   document.getElementById('wardrobe-grid').innerHTML=h;
+}
+// 已经看过的故事可以再看
+function rereadStory(id){
+  const o=outfitById(id); if(!o||!wardrobeData().seen.includes(id)) return;
+  closeWardrobe();
+  showStory(o.name,o.story);
 }
 function wardrobeLocked(){showRepeatLine('这件还没买呢，小香兔子有卖');}
 function wearOutfit(id){
