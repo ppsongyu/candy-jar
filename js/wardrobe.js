@@ -31,7 +31,7 @@ function applyOutfit(){
 // ---- 小香兔子里的衣服 ----
 function outfitCardHtml(o){
   const own=ownsOutfit(o.id);
-  return '<div class="shop-item'+(own?' outfit-owned':'')+'" onclick="'+(own?'openWardrobe()':'tryBuyOutfit(\''+o.id+'\')')+'">'
+  return '<div class="shop-item'+(own?' outfit-owned':'')+'" onclick="'+(own?'showOwnedDad(\''+o.id+'\')':'tryBuyOutfit(\''+o.id+'\')')+'">'
     +'<div class="shop-item-img"><img class="shop-item-placeholder" src="'+outfitThumb(o)+'" loading="lazy">'
     +(own?'<div class="shop-item-weekend">已拥有</div>':'')+'</div>'
     +'<div class="shop-item-info"><div class="shop-item-name">'+o.name+'</div>'
@@ -43,7 +43,7 @@ function outfitCardHtml(o){
 function outfitBundleCardHtml(st){
   const own=setOwnedCount(st)===st.items.length;
   const items=st.items.map(outfitById);
-  return '<div class="shop-item outfit-bundle'+(own?' outfit-owned':'')+'" onclick="'+(own?'openWardrobe()':'tryBuyOutfitSet(\''+st.id+'\')')+'">'
+  return '<div class="shop-item outfit-bundle'+(own?' outfit-owned':'')+'" onclick="'+(own?'showOwnedDad(\''+st.id+'\')':'tryBuyOutfitSet(\''+st.id+'\')')+'">'
     +'<div class="shop-item-img"><div class="ob-strip" onscroll="obDots(this)">'
     +items.map(o=>'<img src="'+outfitThumb(o)+'" loading="lazy" alt="'+o.name+'">').join('')+'</div>'
     +'<div class="ob-dots">'+items.map((o,i)=>'<i'+(i?'':' class="on"')+'></i>').join('')+'</div>'
@@ -78,6 +78,17 @@ function confirmOutfitHtml(dad,name,price,balance){
   if(balance<price){html+='<div class="dad-price">'+name+' · '+price+' 币（余额不足）</div>';btnBuy.disabled=true;btnBuy.textContent='币不够啦';}
   else{html+='<div class="dad-price">'+name+' · '+price+' 币</div>';btnBuy.disabled=false;btnBuy.textContent='买给她！';}
   document.getElementById('snack-confirm-text').innerHTML=html;
+  document.getElementById('snack-confirm-mask').classList.add('show');
+}
+// 买过的也能再看爸爸说的话
+function showOwnedDad(id){
+  const st=outfitSet(id), o=outfitById(id);
+  const dad=st&&st.dad?st.dad:(o?o.dad:''); const name=st?st.name:(o?o.name:'');
+  if(!dad) {openWardrobe();return;}
+  pendingSnackId='__gowd';
+  document.getElementById('snack-confirm-text').innerHTML='<div class="dad-label">爸爸说：</div><div class="dad-words">'+dad+'</div><div class="dad-price">'+name+' · 在衣柜里</div>';
+  const btn=document.getElementById('snack-buy-btn'); btn.disabled=false; btn.textContent='去衣柜';
+  const c=document.querySelector('#snack-confirm-mask .cancel'); if(c) c.textContent='收起';
   document.getElementById('snack-confirm-mask').classList.add('show');
 }
 function tryBuyOutfit(id){

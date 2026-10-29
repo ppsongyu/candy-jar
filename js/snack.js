@@ -509,6 +509,7 @@ function tryBuySnack(id){
 function closeSnackConfirm(){
   document.getElementById('snack-confirm-mask').classList.remove('show');
   pendingSnackId='';
+  const c=document.querySelector('#snack-confirm-mask .cancel'); if(c) c.textContent='还是算了';
 }
 
 function confirmBuySnack(){
@@ -517,6 +518,7 @@ function confirmBuySnack(){
   if(btn.disabled) return;
   if(id==='__bundle'){closeSnackConfirm();buyBundle();return;}
   if(id==='__bag'){closeSnackConfirm();buyLuckyBag();return;}
+  if(id==='__gowd'){closeSnackConfirm();openWardrobe();return;}
   if(id.indexOf('__outfitset:')===0){closeSnackConfirm();buyOutfitSet(id.slice(12));return;}
   if(id.indexOf('__outfit:')===0){closeSnackConfirm();buyOutfit(id.slice(9));return;}
   const snack=getAllSnacks().find(s=>s.id===id);
