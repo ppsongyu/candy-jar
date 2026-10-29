@@ -662,7 +662,6 @@ function renderSnackBook(){
 function viewSnackStory(id){
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack||!snack.story) return;
-  closeSnackBook();
   showStory(snack.name,snack.story);
 }
 
@@ -685,6 +684,7 @@ whenReady(async function loadSnackData(){
       if(d.daily) snackData.daily=d.daily;
       if(d.stamps) snackData.stamps=d.stamps;
       if(d.wardrobe) snackData.wardrobe=d.wardrobe;
+      if(d.g2048) snackData.g2048=d.g2048;
     }
   }catch(e){}
   try{
@@ -703,6 +703,7 @@ whenReady(async function loadSnackData(){
       if(cloud.daily) snackData.daily=cloud.daily;
       if(cloud.stamps) snackData.stamps=cloud.stamps;
       if(cloud.wardrobe) snackData.wardrobe=cloud.wardrobe;
+      if(cloud.g2048) snackData.g2048=cloud.g2048;
     }
   }catch(e){}
   // Check week reset

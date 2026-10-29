@@ -18,10 +18,11 @@
 | `js/init.js` | 启动、今日一签 |
 | `js/abebe.js` | 阿贝贝主系统 |
 | `js/look.js` | 在一起时间条、自定义外观、设置抽屉 |
-| `js/snack.js` | 小卖部、添加零食 |
+| `js/snack.js` | 小卖部、添加零食、宝贝册（入口在小卖部右上角的本子图标） |
 | `js/backup.js` | 数据导出导入 |
 | `js/theme.js` | 主题、阿贝贝的梦 |
 | `js/games.js` | 糖果接接乐、记忆翻牌 |
+| `js/g2048.js` | 糖糖2048（阿贝贝页的「2048」按钮）：3×3～6×6、每种格子各记最高分、每天第一次玩给1或2个币；存档在 snackData.g2048，棋盘存在手机本地 |
 | `js/wardrobe.js` | 阿贝贝的衣柜：小香兔子卖衣服、衣柜、换装 |
 | `js/avatar.js` | 头像和情侣名 |
 | `js/weather.js` | 天气 |
@@ -33,6 +34,7 @@
 | `data/tastes.js` | 阿贝贝的口味（藏起来的，只在吃东西的反应里露出来）和反应台词 |
 | `data/outfits.js` | 阿贝贝的小衣服：名字、价格、爸爸的话、第一次穿的故事（图在 outfits/）；底下 OUTFIT_SETS 是成套的衣服（bundle 一格卖一组，collect 单件卖、集齐有惊喜） |
 | `data/dreams.js` | 阿贝贝的梦 |
+| `data/game2048-words.js` | 糖糖2048的色块颜色和阿贝贝的台词 |
 | `data/fortunes.js` | 今日一签的签文 |
 | `data/crab-art.js` | 小螃蟹的图（SVG 和 sprite） |
 | `data/crab-words.js` | 小螃蟹的状态、台词、图鉴名字 |
