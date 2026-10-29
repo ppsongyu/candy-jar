@@ -213,7 +213,7 @@ function renderShop(){
     grid.className='shop-grid shop-street';
     grid.innerHTML=SNACK_STREET.map(st=>{
       const items=visible.filter(x=>snackStoreOf(x)===st.id);
-      const extra=(st.id==='mei'&&typeof OUTFITS!=='undefined')?OUTFITS.length:0;
+      const extra=(st.id==='mei'&&typeof OUTFITS!=='undefined')?(typeof outfitListingCount==='function'?outfitListingCount():OUTFITS.length):0;
       const onShelf=items.filter(snackOnShelf).length+extra;
       const cover=byId(st.cover);
       const waiting=items.reduce((n,x)=>n+((snackData.stock[x.id]||0)>0?1:0),0);
@@ -517,6 +517,7 @@ function confirmBuySnack(){
   if(btn.disabled) return;
   if(id==='__bundle'){closeSnackConfirm();buyBundle();return;}
   if(id==='__bag'){closeSnackConfirm();buyLuckyBag();return;}
+  if(id.indexOf('__outfitset:')===0){closeSnackConfirm();buyOutfitSet(id.slice(12));return;}
   if(id.indexOf('__outfit:')===0){closeSnackConfirm();buyOutfit(id.slice(9));return;}
   const snack=getAllSnacks().find(s=>s.id===id);
   if(!snack) return;
