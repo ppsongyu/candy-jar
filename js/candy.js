@@ -89,7 +89,9 @@ function switchTab(tab){
   document.getElementById('topbar-title').textContent=tabInfo[tab].title;
   document.getElementById('topbar-sub').textContent=tabInfo[tab].sub;
   event.currentTarget.classList.add('active');
-  document.querySelector('.content').scrollTop=0;
+  const ct=document.querySelector('.content');
+  ct.scrollTop=0;
+  ct.classList.toggle('content-fixed',tab==='abebe');
   if(tab==='us'){animateDays();updateUsClock();}
   const fab=document.getElementById('us-settings-fab');
   if(fab)fab.style.display=tab==='us'?'flex':'none';
