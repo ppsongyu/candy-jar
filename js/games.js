@@ -151,6 +151,7 @@ function gameLoop(){
       }
       // Caught!
       gameScore++;
+      if(typeof sfx==='function') sfx('catch');
       document.getElementById('game-score').textContent=gameScore;
       // Flash effect
       const flash=document.createElement('div');

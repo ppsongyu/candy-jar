@@ -1768,3 +1768,12 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .outfit-sale-banner{margin:4px 0 12px;padding:9px 12px;border-radius:12px;background:var(--bg-card);border:1px dashed var(--pink-300);color:var(--pink-500);font-size:12px;line-height:1.6;text-align:center;letter-spacing:.5px}
 .outfit-sale-banner.hot{border-style:solid;background:var(--pink-100)}
 .shop-item.outfit-preview .shop-item-img img{opacity:.8}
+
+/* 设置里的声音 */
+.snd-tracks{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:10px 0 4px}
+.snd-chip{text-align:center;font-size:12px;padding:7px 0;border-radius:12px;border:1px solid var(--border-light);color:var(--text-secondary);cursor:pointer;letter-spacing:.5px;transition:all .2s}
+.snd-chip.on{background:var(--pink-300);border-color:var(--pink-300);color:#fff}
+.snd-vol-row{display:flex;align-items:center;gap:10px;padding:8px 4px 2px;font-size:12px;color:var(--text-secondary)}
+.snd-vol-row input{flex:1;accent-color:var(--pink-400)}
+.snd-vol-row input{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--pink-200);outline:none}
+.snd-vol-row input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--pink-400);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
