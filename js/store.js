@@ -25,6 +25,7 @@ let appLoaded=false;
 // False when this phone had nothing saved and the cloud couldn't be reached:
 // uploading then would replace the real cloud copy with empty defaults.
 let appCloudSync=true;
+let snackCloudSync=true;
 // Ids of candies already taken in from claude_inbox (see claudeInboxSync).
 let claudeSeen=[];
 // Fortunes 宝宝克 wrote through the connector, keyed by YYYY-M-D; and what happened to its actions.
@@ -52,7 +53,7 @@ function saveApp(){
       if(typeof memGameData!=='undefined') snackData.memGameData=memGameData;
       snackData.savedAt=Date.now();
       localStorage.setItem('candyJarSnackData',JSON.stringify(snackData));
-      if(appCloudSync) supaUpsert('snack_data',snackData);
+      if(appCloudSync&&snackCloudSync) supaUpsert('snack_data',snackData);
     }catch(e){}
   }
 }
@@ -67,7 +68,9 @@ async function loadApp(){
     const cloud=await supaGet('app_data');
     // Only trust the cloud copy over local when it was saved later. Older cloud
     // copies have no savedAt and may hold the empty defaults, so they never win.
-    if(cloud===undefined&&!data) appCloudSync=false;
+    // 云端没读到（网不好、超时）时，这台设备上的数据可能是旧的，这一次就不往云端写，
+    // 免得旧数据盖掉别的设备新写的糖。下次打开读到云端了再同步。
+    if(cloud===undefined) appCloudSync=false;
     if(cloud&&(!data||(cloud.savedAt||0)>(data.savedAt||0))) data=cloud;
   }catch(e){}
   appLoaded=true;

@@ -34,6 +34,10 @@ async function importData(event){
     try{
       const data=JSON.parse(e.target.result);
       const now=Date.now();
+      if(data.appData&&data.appData.savedCandiesByMonth&&appLoaded){
+        const merge=confirm('要用「找回模式」吗？\n\n找回模式：只把备份里有、现在罐子里没有的糖放回来，别的东西都不动（推荐）。\n\n点「确定」= 找回模式\n点「取消」= 整个覆盖，回到备份那天的样子');
+        if(merge){await mergeCandiesFromBackup(data.appData.savedCandiesByMonth);return;}
+      }
       if(data.crabDex){try{localStorage.setItem('crabDex',JSON.stringify(data.crabDex));}catch(e){}}
       if(data.crabEgg){try{localStorage.setItem('crabEgg',JSON.stringify(data.crabEgg));}catch(e){}}
       if(data.lookData&&typeof lkRestoreBackup==='function'){try{await lkRestoreBackup(data.lookData);}catch(e){}}
@@ -60,6 +64,31 @@ async function importData(event){
   };
   reader.readAsText(file);
   event.target.value='';
+}
+
+// 找回模式：备份里有、现在没有的糖放回去，已有的一颗都不动
+async function mergeCandiesFromBackup(backup){
+  let added=0;
+  Object.keys(backup||{}).forEach(k=>{
+    const cur=savedCandiesByMonth[k]||(savedCandiesByMonth[k]=[]);
+    const have=new Set(cur.map(c=>keCandySig(k,c)));
+    (backup[k]||[]).forEach(c=>{
+      if(!c) return;
+      const sig=keCandySig(k,c);
+      if(have.has(sig)) return;
+      have.add(sig); cur.push(c); added++;
+    });
+    // 新的在前面：按日子从大到小排，同一天里保持原来的先后
+    cur.forEach((c,i)=>c.__i=i);
+    cur.sort((a,b)=>(b.day||0)-(a.day||0)||a.__i-b.__i);
+    cur.forEach(c=>delete c.__i);
+  });
+  if(!added){alert('备份里的糖现在罐子里都有，不用找回');return;}
+  saveApp();
+  // 等云端真的写好再刷新，不然刷新会把上传打断
+  if(appCloudSync){try{await supaUpsert('app_data',JSON.parse(localStorage.getItem('candyJarData')));}catch(e){}}
+  alert('找回了 '+added+' 颗糖！'+(appCloudSync?'':'\n（这次没连上云端，糖先存在手机里，下次打开会自动同步）'));
+  location.reload();
 }
 
 // Weekly nudge to export a backup. "晚点再说" snoozes it for a day.

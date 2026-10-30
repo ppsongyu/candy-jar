@@ -689,6 +689,7 @@ whenReady(async function loadSnackData(){
   }catch(e){}
   try{
     const cloud=await supaGet('snack_data');
+    if(cloud===undefined) snackCloudSync=false;
     // Same rule as loadApp: older cloud copies never overwrite what's on this phone.
     if(cloud&&(!hasLocal||(cloud.savedAt||0)>localSavedAt)){
       if(cloud.purchaseCount) snackData.purchaseCount=cloud.purchaseCount;
