@@ -1,8 +1,9 @@
 /* 阿贝贝的衣柜：小香兔子卖衣服，买了进衣柜，点一件就换到阿贝贝页上 */
 // 存在 snackData.wardrobe：owned 买过的、wearing 正在穿的、seen 已经看过第一次穿的故事
 const ABEBE_DEFAULT_IMG='./愉快阿贝贝.png';
-function outfitImg(o){return './outfits/'+o.id+'.webp';}
-function outfitThumb(o){return './outfits/'+o.id+'_s.webp';}
+// 图换过的衣服在数据里写 v，带上版本号，手机就不会一直用旧图
+function outfitImg(o){return './outfits/'+o.id+'.webp'+(o.v?'?v='+o.v:'');}
+function outfitThumb(o){return './outfits/'+o.id+'_s.webp'+(o.v?'?v='+o.v:'');}
 function outfitById(id){return OUTFITS.find(o=>o.id===id);}
 function wardrobeData(){
   if(!snackData.wardrobe) snackData.wardrobe={owned:[],wearing:'',seen:[]};
