@@ -261,7 +261,7 @@ function renderShop(){
       +'<div class="shop-promo-name">神秘福袋</div>'
       +'<div class="shop-promo-sub">'+(daily.bag?'今天拆过啦':LUCKY_BAG_PRICE+' 币 · 每天1个')+'</div></div>');
     promos.style.display='';
-    promos.innerHTML='<div class="shop-promo-title">爸爸的小推车</div><div class="shop-promo-grid">'+cards.join('')+'</div>';
+    promos.innerHTML=(typeof outfitSaleBanner==='function'?outfitSaleBanner():'')+'<div class="shop-promo-title">爸爸的小推车</div><div class="shop-promo-grid">'+cards.join('')+'</div>';
     return;
   }
   const store=SNACK_STREET.find(x=>x.id===shopStore)||{name:'杂货铺'};

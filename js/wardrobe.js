@@ -39,18 +39,50 @@ function outfitCardHtml(o){
     +(own?'<div class="shop-feed-btn" onclick="event.stopPropagation();openWardrobe()">去衣柜</div>':'')
     +'</div></div>';
 }
+// 限时卖的衣服（sale）：notice 那天起小街上有预告，from～to 能买，其余时间只能看；promo 是某一天某个钟点的特价
+function outfitSaleState(st){
+  if(!st||!st.sale) return {on:true,price:st?st.price:0};
+  const sa=st.sale, now=new Date(), md=(now.getMonth()+1)*100+now.getDate(), h=now.getHours();
+  const v=a=>a[0]*100+a[1];
+  const on=md>=v(sa.from)&&md<=v(sa.to);
+  const notice=!on&&sa.notice&&md>=v(sa.notice)&&md<v(sa.from);
+  const p=sa.promo, promo=on&&p&&md===p.m*100+p.d&&h>=p.h1&&h<p.h2;
+  return {on,notice,promo,price:promo?p.price:st.price};
+}
+function outfitSaleBanner(){
+  let h='';
+  OSETS.filter(st=>st.sale).forEach(st=>{
+    const s=outfitSaleState(st), p=st.sale.promo;
+    if(setOwnedCount(st)===st.items.length) return;
+    const cn=x=>['零','一','两','三','四','五','六','七','八','九','十','十一','十二'][x>12?x-12:x];
+    const when=p?p.m+'月'+p.d+'日'+(p.h1>=18?'晚上':'下午')+cn(p.h1)+'点到'+cn(p.h2)+'点':'';
+    if(s.notice&&p) h+='<div class="outfit-sale-banner">🔔 小香兔子预告：「'+st.name+'」'+st.sale.from[0]+'月'+st.sale.from[1]+'日上架，'+when+'只要 '+p.price+' 币</div>';
+    else if(s.promo) h+='<div class="outfit-sale-banner hot">🔔 「'+st.name+'」特价中！现在只要 '+p.price+' 币，打烊前结束</div>';
+    else if(s.on) h+='<div class="outfit-sale-banner">🔔 小香兔子的「'+st.name+'」卖到 '+st.sale.to[0]+'月'+st.sale.to[1]+'日</div>';
+  });
+  return h;
+}
+function outfitNotOnSale(sid){
+  const st=outfitSet(sid);
+  snackNotice(['「'+st.name+'」'+st.sale.from[0]+'月'+st.sale.from[1]+'日才上架，','现在只能先看看～']);
+}
 // 一组卖的：一格，图片可以左右滑
 function outfitBundleCardHtml(st){
   const own=setOwnedCount(st)===st.items.length;
   const items=st.items.map(outfitById);
-  return '<div class="shop-item outfit-bundle'+(own?' outfit-owned':'')+'" onclick="'+(own?'showOwnedDad(\''+st.id+'\')':'tryBuyOutfitSet(\''+st.id+'\')')+'">'
+  const sale=outfitSaleState(st);
+  const tap=own?'showOwnedDad(\''+st.id+'\')':(sale.on?'tryBuyOutfitSet(\''+st.id+'\')':'outfitNotOnSale(\''+st.id+'\')');
+  const priceHtml=own?'<span class="shop-stocking">在衣柜里</span>'
+    :!sale.on?'<span class="shop-stocking">'+(st.sale.label||'还没上架')+'</span>'
+    :sale.promo?'<span class="shop-discount">'+st.price+'</span> '+sale.price+' 币':st.price+' 币';
+  return '<div class="shop-item outfit-bundle'+(own?' outfit-owned':'')+(!own&&!sale.on?' outfit-preview':'')+'" onclick="'+tap+'">'
     +'<div class="shop-item-img"><div class="ob-strip" onscroll="obDots(this)">'
     +items.map(o=>'<img src="'+outfitThumb(o)+'" loading="lazy" alt="'+o.name+'">').join('')+'</div>'
     +'<div class="ob-dots">'+items.map((o,i)=>'<i'+(i?'':' class="on"')+'></i>').join('')+'</div>'
     +'<div class="ob-tag">一组'+items.length+'件</div>'
     +(own?'<div class="shop-item-weekend">已拥有</div>':'')+'</div>'
     +'<div class="shop-item-info"><div class="shop-item-name">'+st.name+'</div>'
-    +'<div class="shop-item-price">'+(own?'<span class="shop-stocking">在衣柜里</span>':st.price+' 币')+'</div>'
+    +'<div class="shop-item-price">'+priceHtml+'</div>'
     +(own?'<div class="shop-feed-btn" onclick="event.stopPropagation();openWardrobe()">去衣柜</div>':'')
     +'</div></div>';
 }
@@ -129,8 +161,9 @@ function tryBuyOutfit(id){
 }
 function tryBuyOutfitSet(sid){
   const st=outfitSet(sid); if(!st||setOwnedCount(st)===st.items.length) return;
+  const sale=outfitSaleState(st); if(!sale.on){outfitNotOnSale(sid);return;}
   pendingSnackId='__outfitset:'+sid;
-  confirmOutfitHtml(st.dad,st.name+'（一组'+st.items.length+'件）',st.price,getSnackBalance());
+  confirmOutfitHtml(st.dad,st.name+'（一组'+st.items.length+'件）'+(sale.promo?'·特价':''),sale.price,getSnackBalance());
 }
 function buyOutfit(id){
   const o=outfitById(id); if(!o||ownsOutfit(id)) return;
@@ -146,9 +179,10 @@ function buyOutfitSet(sid){
   const st=outfitSet(sid); if(!st) return;
   const w=wardrobeData();
   if(st.items.every(i=>w.owned.includes(i))) return;
-  if(getSnackBalance()<st.price) return;
+  const sale=outfitSaleState(st); if(!sale.on) return;
+  if(getSnackBalance()<sale.price) return;
   const lines=['买好啦！「'+st.name+'」'+st.items.length+'件都挂进衣柜了'];
-  lines.push(snackSpend(st.price));
+  lines.push(snackSpend(sale.price));
   st.items.forEach(i=>{if(!w.owned.includes(i)) w.owned.push(i);});
   lines.push(snackStamp('mei'));
   saveApp();renderShop();snackNotice(lines);
