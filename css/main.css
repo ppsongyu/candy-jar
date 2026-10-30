@@ -1757,4 +1757,8 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 @keyframes g2merge{0%{transform:scale(1)}50%{transform:scale(1.14)}100%{transform:scale(1)}}
 .g2-over{position:absolute;inset:0;border-radius:14px;background:rgba(255,245,248,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
 .g2-over-text{font-size:15px;color:#C28A9C;letter-spacing:1px}
-.g2-restart{text-align:center;font-size:12px;color:#C9AFBB;padding:12px 0 2px;cursor:pointer;letter-spacing:1px}
+.g2-btns{display:flex;justify-content:center;align-items:center;gap:18px;padding:12px 0 2px}
+.g2-restart{font-size:12px;color:#C9AFBB;cursor:pointer;letter-spacing:1px}
+.g2-undo{font-size:12px;color:#fff;background:#F8C9D9;border-radius:14px;padding:5px 14px;cursor:pointer;letter-spacing:1px}
+.g2-undo.used{background:transparent;color:#D8C3CC;border:1px dashed #EBD3DD}
+.g2-over-help{font-size:12px;color:#C28A9C;cursor:pointer;letter-spacing:1px;padding:4px}

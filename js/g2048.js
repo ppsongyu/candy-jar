@@ -1,4 +1,5 @@
 /* 糖糖2048：阿贝贝坐在棋盘边看妈妈滑。颜色和台词在 data/game2048-words.js */
+let g2Prev=null, g2UndoUsed=false;
 let g2N=4, g2Grid=[], g2Score=0, g2Id=0, g2Busy=false, g2Shown={}, g2FullSaid=false, g2BestDirty=false;
 
 function g2Data(){
@@ -50,7 +51,7 @@ function g2Load(){
   try{saved=JSON.parse(localStorage.getItem('candy2048board_'+g2N)||'null');}catch(e){}
   g2Setup();
   if(saved&&saved.cells&&saved.cells.length===g2N*g2N&&!saved.over){
-    g2Score=saved.score||0; g2Shown=saved.shown||{};
+    g2Score=saved.score||0; g2Shown=saved.shown||{}; g2UndoUsed=!!saved.undoUsed;
     saved.cells.forEach((v,i)=>{if(v) g2Add(Math.floor(i/g2N),i%g2N,v,false);});
   }else{
     g2Add2(); g2Add2();
@@ -64,7 +65,7 @@ function g2Restart(){
 }
 function g2Setup(){
   g2Grid=Array.from({length:g2N},()=>Array(g2N).fill(null));
-  g2Score=0; g2Shown={}; g2FullSaid=false;
+  g2Score=0; g2Shown={}; g2FullSaid=false; g2Prev=null; g2UndoUsed=false;
   const board=document.getElementById('g2-board');
   board.style.setProperty('--n',g2N);
   board.innerHTML='<div class="g2-cells">'+'<div class="g2-cell"></div>'.repeat(g2N*g2N)+'</div><div class="g2-tiles" id="g2-tiles"></div>';
@@ -73,7 +74,7 @@ function g2Setup(){
 function g2SaveBoard(){
   if(!g2Grid.length) return;
   const cells=[]; g2Grid.forEach(row=>row.forEach(t=>cells.push(t?t.v:0)));
-  try{localStorage.setItem('candy2048board_'+g2N,JSON.stringify({cells,score:g2Score,shown:g2Shown,over:!g2CanMove()}));}catch(e){}
+  try{localStorage.setItem('candy2048board_'+g2N,JSON.stringify({cells,score:g2Score,shown:g2Shown,undoUsed:g2UndoUsed,over:!g2CanMove()}));}catch(e){}
 }
 
 function g2Pos(el,r,c){
@@ -116,6 +117,7 @@ function g2Move(dir){
   const dr={up:-1,down:1,left:0,right:0}[dir], dc={up:0,down:0,left:-1,right:1}[dir];
   const rows=[...Array(g2N).keys()], cols=[...Array(g2N).keys()];
   if(dr===1) rows.reverse(); if(dc===1) cols.reverse();
+  const snap=g2Snap();
   let moved=false, gained=0, maxNew=0;
   const merged=new Set(), dying=[];
   rows.forEach(r=>cols.forEach(c=>{
@@ -137,6 +139,7 @@ function g2Move(dir){
     if(nr!==r||nc!==c){g2Grid[r][c]=null; g2Grid[nr][nc]=t; t.r=nr; t.c=nc; g2Pos(t.el,nr,nc); moved=true;}
   }));
   if(!moved) return;
+  g2Prev=snap;
   g2Busy=true;
   setTimeout(()=>{
     dying.forEach(([t,o])=>{
@@ -184,6 +187,27 @@ function g2AfterMove(maxNew){
 function g2Hud(){
   document.getElementById('g2-score').textContent=g2Score;
   document.getElementById('g2-best').textContent=g2Data().best[g2N]||0;
+  const u=document.getElementById('g2-undo');
+  if(u){u.classList.toggle('used',g2UndoUsed); u.textContent=g2UndoUsed?'阿贝贝已经帮过啦':'求助阿贝贝';}
+}
+
+// 求助阿贝贝：每盘可以悔一步
+function g2Snap(){
+  const cells=[]; g2Grid.forEach(row=>row.forEach(t=>cells.push(t?t.v:0)));
+  return {cells,score:g2Score,shown:{...g2Shown}};
+}
+function g2Undo(){
+  if(g2Busy) return;
+  if(g2UndoUsed){g2Say('undoUsed','./委屈阿贝贝.png'); return;}
+  if(!g2Prev){g2Say('undoNone','./愉快阿贝贝.png'); return;}
+  const p=g2Prev;
+  g2Grid=Array.from({length:g2N},()=>Array(g2N).fill(null));
+  document.getElementById('g2-tiles').innerHTML='';
+  p.cells.forEach((v,i)=>{if(v) g2Add(Math.floor(i/g2N),i%g2N,v,false);});
+  g2Score=p.score; g2Shown=p.shown; g2Prev=null; g2UndoUsed=true; g2FullSaid=false;
+  document.getElementById('g2-over').style.display='none';
+  g2Hud(); g2SaveBoard();
+  g2Say('undo','./害羞阿贝贝.png');
 }
 
 // 手势和键盘
