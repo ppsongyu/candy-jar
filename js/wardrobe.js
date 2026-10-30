@@ -59,6 +59,36 @@ function obDots(el){
   const d=el.parentNode.querySelectorAll('.ob-dots i');
   d.forEach((x,k)=>x.classList.toggle('on',k===i));
 }
+// 一组衣服翻页：不只靠手机自带的横向滑动（有的手机在会上下滚的页面里吃掉横滑），
+// 自己认一下手指往左还是往右，翻到上一张/下一张；点下面的小圆点也能翻
+function obGo(strip,i){
+  const n=strip.children.length; i=Math.max(0,Math.min(n-1,i));
+  strip.scrollTo({left:i*strip.clientWidth,behavior:'smooth'});
+  setTimeout(()=>obDots(strip),350);
+}
+let obTouch=null, obSwipedAt=0;
+document.addEventListener('touchstart',e=>{
+  const strip=e.target.closest&&e.target.closest('.ob-strip');
+  if(!strip){obTouch=null;return;}
+  obTouch={strip,x:e.touches[0].clientX,y:e.touches[0].clientY,i:Math.round(strip.scrollLeft/Math.max(1,strip.clientWidth))};
+},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!obTouch) return;
+  const t=obTouch; obTouch=null;
+  const dx=e.changedTouches[0].clientX-t.x, dy=e.changedTouches[0].clientY-t.y;
+  if(Math.abs(dx)<25||Math.abs(dx)<Math.abs(dy)) return;
+  obSwipedAt=Date.now();
+  obGo(t.strip,t.i+(dx<0?1:-1));
+},{passive:true});
+document.addEventListener('click',e=>{
+  // 刚滑完手指抬起时不要算成「点了这件衣服」
+  if(Date.now()-obSwipedAt<450&&e.target.closest&&e.target.closest('.outfit-bundle')){e.stopPropagation();e.preventDefault();return;}
+  const dot=e.target.closest&&e.target.closest('.ob-dots i');
+  if(!dot) return;
+  e.stopPropagation();
+  const strip=dot.closest('.shop-item-img').querySelector('.ob-strip');
+  obGo(strip,[...dot.parentNode.children].indexOf(dot));
+},true);
 function outfitShopHtml(balance){
   let h='<div class="shop-outfit-title">小衣服</div>';
   OSETS.filter(st=>st.kind==='bundle').forEach(st=>{h+=outfitBundleCardHtml(st);});

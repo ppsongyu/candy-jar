@@ -1700,10 +1700,11 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 
 .outfit-series{display:flex;justify-content:center;gap:8px;align-items:baseline;padding-top:14px}
 .outfit-series span{font-size:10.5px;color:var(--pink-400);letter-spacing:.5px}
-.ob-strip{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ob-strip{position:absolute;inset:0;display:flex;overflow-x:auto;touch-action:pan-x pan-y;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .ob-strip::-webkit-scrollbar{display:none}
 .ob-strip img{flex:0 0 100%;width:100%;height:100%;object-fit:contain;scroll-snap-align:start}
-.ob-dots{position:absolute;bottom:6px;left:0;right:0;display:flex;justify-content:center;gap:5px;pointer-events:none}
+.ob-dots{position:absolute;bottom:2px;left:0;right:0;display:flex;justify-content:center;gap:2px;pointer-events:none}
+.ob-dots i{pointer-events:auto;box-sizing:content-box;padding:4px;background-clip:content-box!important;cursor:pointer}
 .ob-dots i{width:5px;height:5px;border-radius:50%;background:var(--border-light);transition:background .2s}
 .ob-dots i.on{background:var(--pink-400)}
 .ob-tag{position:absolute;top:6px;left:6px;font-size:9.5px;color:var(--pink-400);background:var(--bg-card);border:1px solid var(--pink-400);padding:0 6px;border-radius:8px;line-height:15px;pointer-events:none}
