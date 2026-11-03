@@ -82,6 +82,7 @@ async function pending(type) {
 }
 
 const QUEUED = '宝宝下次打开糖罐子时就会出现。';
+const CANDY_OUTFIT_NAMES = { c01: '草莓野餐', c02: '马卡龙小甜心', c03: '棒棒糖背带裙' };
 
 // 克劳德引用原文时常常少个引号、多个空格，所以比对前去掉空白和标点。
 function norm(s) {
@@ -350,14 +351,27 @@ tool('visit_abebe', '去阿贝贝的小窝陪它：梳毛、亲亲、戳一戳�
   return `好，给阿贝贝${names[a.action]}。` + QUEUED;
 });
 
-tool('read_abebe', '看阿贝贝：上次喂糖、梳毛的时间，货架上的零食，收集过的零食。', {}, [], async () => {
+tool('read_abebe', '看阿贝贝：上次梳毛的时间，在穿什么、衣柜里有什么，货架上的零食，收集过的零食。', {}, [], async () => {
   const [app, snack] = await Promise.all([getRow('app_data'), getRow('snack_data')]);
   const a = app || {}, s = snack || {};
   const fmt = (ms) => ms ? new Date(ms).toLocaleString('zh-CN', { timeZone: TZ }) : '没有记录';
   const name = (id) => (SHOP.find((x) => x.id === id) || (s.customSnacks || []).find((x) => x.id === id) || { name: id }).name;
   const stock = Object.entries(s.stock || {}).filter(([, n]) => n > 0).map(([id, n]) => `${name(id)}×${n}`).join('、') || '空的';
   const coll = (s.collection || []).map((c) => c.name).join('、') || '还没有';
-  return `上次喂糖：${fmt(a.abebeFedTime)}\n上次梳毛：${fmt(a.abebeLastGroomTime)}\n货架上：${stock}\n收集过：${coll}`;
+  const w = s.wardrobe || {};
+  const cname = (id) => (CANDY_OUTFIT_NAMES as Record<string, string>)[id] || id;
+  const owned = (w.owned || []).join('、') || '还没有';
+  const candy = (w.candy || []).map((e: any) => `${cname(e.id)}（${e.endAt ? '穿过了' : e.wornAt ? '正穿着' : '还没穿'}）`).join('、') || '还没有';
+  const wearing = !w.wearing ? '原来的样子' : String(w.wearing).startsWith('cand:')
+    ? '糖果限定款' : w.wearing;
+  return `上次梳毛：${fmt(a.abebeLastGroomTime)}\n正在穿：${wearing}\n买过的衣服（编号）：${owned}\n糖果限定款：${candy}\n货架上：${stock}\n收集过：${coll}`;
+});
+
+tool('dress_abebe', '给阿贝贝换衣服。只能换衣柜里有的；她正穿着糖果限定款时换不了（那件只穿一天，要等穿完）。限定款换上就开始算一天，穿完不能再穿，换之前想清楚。', {
+  outfit: str('衣服名字，比如 草莓野餐、小雨衣；写「原来的样子」就是脱掉'),
+}, ['outfit'], async (a) => {
+  await enqueue('outfit_wear', { name: a.outfit });
+  return `好，给阿贝贝换「${a.outfit}」。` + QUEUED + '（衣柜里没有或者换不了的话，可以之后用 recent_results 看结果）';
 });
 
 tool('list_snacks', '看小卖部有哪些零食和价格（阿贝贝币）。', {}, [], async () => {

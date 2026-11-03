@@ -200,6 +200,22 @@ function claudeApply(a){
       abebeLastAction={feed:'fed',groom:'groomed',kiss:'kissed',poke:'poked'}[d.action]||d.action;
       return '陪阿贝贝玩';
     }
+    case 'outfit_wear':{
+      // 爸爸给阿贝贝换衣服：name 是衣服名字，空的就是换回原来的样子
+      if(typeof wardrobeData!=='function') return '衣柜还没打开';
+      const w=wardrobeData(), nm=(d.name||'').trim();
+      if(candyWearing()) return '她正穿着糖果限定款，等穿完再换';
+      if(!nm||nm==='原来的样子'){w.wearing='';applyOutfit();return '给阿贝贝换回了原来的样子';}
+      const ce=w.candy.find(e=>!e.endAt&&(candyOutfitById(e.id)||{}).name===nm);
+      if(ce){w.candyPrev=w.wearing||'';ce.wornAt=Date.now();w.wearing='cand:'+ce.k;applyOutfit();return '给阿贝贝换上了限定款「'+nm+'」，穿一天';}
+      if(w.candy.some(e=>e.endAt&&(candyOutfitById(e.id)||{}).name===nm)) return '「'+nm+'」已经穿过啦，不能再穿';
+      const o=OUTFITS.find(x=>x.name===nm||x.id===nm);
+      if(!o) return '衣柜里没有「'+nm+'」';
+      if(!w.owned.includes(o.id)) return '「'+o.name+'」还没买';
+      w.wearing=o.id;applyOutfit();
+      if(!w.seen.includes(o.id)) return '给阿贝贝换上了「'+o.name+'」（她还没看过这件的故事，等妈妈来看）';
+      return '给阿贝贝换上了「'+o.name+'」';
+    }
     case 'snack_buy':{
       const snack=getAllSnacks().find(x=>x.id===d.id||x.name===d.id);if(!snack) return '小卖部没有这个零食';
       if(!snackOnShelf(snack)) return snack.name+'今天缺货';

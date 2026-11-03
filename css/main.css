@@ -1777,3 +1777,20 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .snd-vol-row input{flex:1;accent-color:var(--pink-400)}
 .snd-vol-row input{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--pink-200);outline:none}
 .snd-vol-row input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--pink-400);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* 糖果数量限定款 */
+.wd-section{grid-column:1/-1;font-size:12px;letter-spacing:1px;color:var(--text-primary);margin:4px 2px -2px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.wd-section span{font-size:10px;letter-spacing:.3px;color:var(--text-muted)}
+.wd-candy-empty{grid-column:1/-1;font-size:10.5px;color:var(--text-muted);line-height:1.6;padding:10px 12px;border:1px dashed var(--border-light);border-radius:12px;text-align:center}
+.wd-candy-tag{font-size:9px;color:var(--text-muted);margin-top:1px}
+.wd-candy.on .wd-candy-tag{color:var(--pink-400)}
+.wd-new{position:absolute;top:6px;left:6px;font-size:9px;color:var(--pink-400);background:var(--bg-card);border:1px solid var(--pink-400);padding:0 6px;border-radius:8px;line-height:15px}
+.wd-candy.spent .wd-img img{filter:grayscale(1);opacity:.45}
+.wd-candy.spent .wd-name{color:var(--text-muted)}
+.wd-stamp{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%) rotate(-14deg);font-size:11px;letter-spacing:2px;color:var(--pink-400);border:1.5px solid var(--pink-400);border-radius:6px;padding:1px 6px;background:rgba(255,255,255,.55);opacity:.85;pointer-events:none}
+.cand-ask{text-align:center}
+.cand-news-img{width:120px;height:120px;object-fit:contain;display:block;margin:2px auto 4px}
+.cand-news-name{font-size:10.5px;color:var(--pink-400);letter-spacing:1px;margin-bottom:8px}
+.cand-ask-text{font-size:13px;line-height:1.7;color:var(--text-primary);padding:2px 6px 12px}
+.cand-ask-btns{display:flex;gap:10px}
+.cand-btn{flex:1;padding:9px 0;border-radius:12px;font-size:12.5px;cursor:pointer;border:1px solid var(--border-light);color:var(--text-secondary,var(--text-muted))}
+.cand-btn.yes{background:var(--pink-400);border-color:var(--pink-400);color:#fff}

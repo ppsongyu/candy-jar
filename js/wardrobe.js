@@ -11,6 +11,7 @@ function wardrobeData(){
   if(!Array.isArray(w.owned)) w.owned=[];
   if(!Array.isArray(w.seen)) w.seen=[];
   if(!Array.isArray(w.rewards)) w.rewards=[];
+  if(!Array.isArray(w.candy)) w.candy=[];
   return w;
 }
 const OSETS=(typeof OUTFIT_SETS!=='undefined')?OUTFIT_SETS:[];
@@ -24,7 +25,9 @@ function ownsOutfit(id){return wardrobeData().owned.includes(id);}
 function applyOutfit(){
   const img=document.querySelector('.abebe-img');
   if(!img) return;
-  const o=outfitById(wardrobeData().wearing);
+  candyExpireCheck();
+  const w=wardrobeData(), ce=candyWearing();
+  const o=ce?candyOutfitById(ce.id):outfitById(w.wearing);
   const src=o?outfitImg(o):ABEBE_DEFAULT_IMG;
   if(img.getAttribute('src')!==src) img.setAttribute('src',src);
 }
@@ -218,7 +221,9 @@ function renderWardrobe(){
     +'<div class="wd-img"><img src="'+src+'" loading="lazy" alt=""></div>'
     +'<div class="wd-name">'+(locked?'？？？':name)+'</div>'+(on?'<div class="wd-on">穿着</div>':'')
     +(story&&!locked?'<div class="wd-story" onclick="event.stopPropagation();'+story+'">故事</div>':'')+'</div>';
-  let h=cell('',ABEBE_DEFAULT_IMG,'原来的样子',!w.wearing,false,'wearOutfit(\'\')','');
+  let h=candyWardrobeHtml();
+  h+='<div class="wd-section">小衣服</div>';
+  h+=cell('',ABEBE_DEFAULT_IMG,'原来的样子',!w.wearing,false,'wearOutfit(\'\')','');
   const done={};
   OUTFITS.forEach(o=>{
     const st=setOfOutfit(o);
@@ -259,9 +264,12 @@ function rereadStory(id){
   showStory(o.name,o.story);
 }
 function wardrobeLocked(){showRepeatLine('这件还没买呢，小香兔子有卖');}
-function wearOutfit(id){
+function wearOutfit(id,sure){
   const w=wardrobeData();
   if(id&&!w.owned.includes(id)) return;
+  const ce=candyWearing();
+  if(ce&&!sure){candyAsk(CANDY_OUTFIT_SWAP,'换吧','再穿会儿',()=>wearOutfit(id,true));return;}
+  if(ce) ce.endAt=Date.now();
   w.wearing=id||'';
   applyOutfit();
   saveApp();
@@ -275,4 +283,131 @@ function wearOutfit(id){
     showBubble(o.lines[Math.floor(Math.random()*o.lines.length)]);
   }
 }
+
+// ===== 糖果数量限定款 =====
+// snackData.wardrobe.candy 里一件一条：{k:'2026-10-60' 哪个月哪一档, id:'c01', got 拿到的时间, wornAt 换上的时间, endAt 结束的时间}
+// 正在穿的时候 wearing 写 'cand:<k>'，candyPrev 记着换上之前穿的那件，穿完换回去
+const CANDY_DAY=24*3600000;
+const COUTFITS=(typeof CANDY_OUTFITS!=='undefined')?CANDY_OUTFITS:[];
+const CTIERS=(typeof CANDY_OUTFIT_TIERS!=='undefined')?CANDY_OUTFIT_TIERS:[60,100,160];
+function candyOutfitById(id){return COUTFITS.find(o=>o.id===id);}
+function candyMonthKey(){const n=new Date();return n.getFullYear()+'-'+n.getMonth();}
+function candyMonthCount(){return (savedCandiesByMonth[candyMonthKey()]||[]).length;}
+function candyEntry(k){return wardrobeData().candy.find(e=>e.k===k);}
+function candyWearing(){
+  const w=wardrobeData();
+  if(!w.wearing||w.wearing.indexOf('cand:')!==0) return null;
+  const e=candyEntry(w.wearing.slice(5));
+  if(!e||e.endAt){w.wearing='';return null;}
+  return e;
+}
+// 穿满 24 小时：变成穿过的，换回原来那件
+function candyExpireCheck(){
+  const w=wardrobeData();
+  if(!w.wearing||w.wearing.indexOf('cand:')!==0) return false;
+  const e=candyEntry(w.wearing.slice(5));
+  if(e&&!e.endAt&&Date.now()<e.wornAt+CANDY_DAY) return false;
+  if(e&&!e.endAt) e.endAt=e.wornAt+CANDY_DAY;
+  w.wearing=(w.candyPrev&&w.owned.includes(w.candyPrev))?w.candyPrev:'';
+  w.candyPrev='';
+  saveApp();
+  if(typeof CANDY_OUTFIT_DONE!=='undefined') setTimeout(()=>{if(typeof showBubble==='function') showBubble(CANDY_OUTFIT_DONE[Math.floor(Math.random()*CANDY_OUTFIT_DONE.length)]);},800);
+  return true;
+}
+// 这个月到档位了就送一件（这个月已经送过的不重复，池子用完了才重复）
+function checkCandyOutfits(){
+  if(typeof appLoaded==='undefined'||!appLoaded||!COUTFITS.length) return;
+  const w=wardrobeData(), mk=candyMonthKey(), n=candyMonthCount();
+  let got=null;
+  CTIERS.forEach(t=>{
+    if(n<t) return;
+    const k=mk+'-'+t; if(candyEntry(k)) return;
+    const used=w.candy.filter(e=>e.k.indexOf(mk+'-')===0).map(e=>e.id);
+    let pool=COUTFITS.filter(o=>!used.includes(o.id)); if(!pool.length) pool=COUTFITS;
+    const o=pool[Math.floor(Math.random()*pool.length)];
+    got={k,id:o.id,got:Date.now(),wornAt:0,endAt:0,tier:t};
+    w.candy.push(got);
+  });
+  if(!got) return;
+  saveApp();
+  candyNews(got);
+}
+function candyNews(e){
+  const sp=document.getElementById('splash');
+  if(sp&&!sp.classList.contains('hidden')){setTimeout(()=>candyNews(e),1500);return;}
+  const o=candyOutfitById(e.id), lines=(typeof CANDY_OUTFIT_NEWS!=='undefined'&&CANDY_OUTFIT_NEWS[e.tier])||['新衣服到啦'];
+  candyAsk(lines[Math.floor(Math.random()*lines.length)],'去衣柜看看','等会儿',()=>{if(typeof switchTab==='function') switchTab('abebe');openWardrobe();},
+    '<img class="cand-news-img" src="'+outfitThumb(o)+'" alt=""><div class="cand-news-name">糖果限定 · '+o.name+'</div>');
+}
+// 小弹窗：阿贝贝说一句，两个按钮
+function candyAsk(text,yes,no,onYes,top){
+  let m=document.getElementById('cand-ask');
+  if(!m){m=document.createElement('div');m.id='cand-ask';m.className='wd-picker-mask';document.body.appendChild(m);}
+  m.onclick=e=>{if(e.target===m) m.classList.remove('show');};
+  m.innerHTML='<div class="wd-picker cand-ask">'+(top||'')+'<div class="cand-ask-text">'+text+'</div>'
+    +'<div class="cand-ask-btns"><div class="cand-btn no">'+no+'</div><div class="cand-btn yes">'+yes+'</div></div></div>';
+  m.querySelector('.no').onclick=()=>m.classList.remove('show');
+  m.querySelector('.yes').onclick=()=>{m.classList.remove('show');onYes&&onYes();};
+  requestAnimationFrame(()=>m.classList.add('show'));
+}
+function wearCandyOutfit(k,sure){
+  const w=wardrobeData(), e=candyEntry(k); if(!e||e.endAt) return;
+  const ce=candyWearing();
+  if(ce&&ce.k===k){closeWardrobe();return;}
+  if(!sure){
+    candyAsk(ce?CANDY_OUTFIT_SWAP:'换上以后能穿一整天（24 小时），穿完就收进衣柜当纪念啦。现在换吗？','换上','等等',()=>wearCandyOutfit(k,true));
+    return;
+  }
+  if(ce) ce.endAt=Date.now(); else w.candyPrev=w.wearing||'';
+  e.wornAt=Date.now();
+  w.wearing='cand:'+k;
+  applyOutfit(); saveApp(); closeWardrobe();
+  const o=candyOutfitById(e.id);
+  if(o&&o.wear&&typeof showBubble==='function') showBubble(o.wear[Math.floor(Math.random()*o.wear.length)]);
+}
+function candyLeftText(e){
+  const ms=e.wornAt+CANDY_DAY-Date.now(), h=Math.floor(ms/3600000), m=Math.max(1,Math.ceil(ms%3600000/60000));
+  return h>0?'还剩 '+h+' 小时':'还剩 '+m+' 分钟';
+}
+function candySpentTap(k){
+  const e=candyEntry(k), o=e&&candyOutfitById(e.id); if(!o) return;
+  const d=new Date(e.wornAt||e.endAt);
+  showRepeatLine('「'+o.name+'」'+(d.getMonth()+1)+'月'+d.getDate()+'日穿过啦，留着看');
+}
+function candyWardrobeHtml(){
+  const w=wardrobeData(), n=candyMonthCount(), next=CTIERS.find(t=>n<t);
+  let h='<div class="wd-section">糖果限定<span>'+(next?'这个月 '+n+' 颗糖 · 离下一件还差 '+(next-n)+' 颗':'这个月 '+n+' 颗糖 · 三件都拿到啦')+'</span></div>';
+  if(!w.candy.length){
+    return h+'<div class="wd-candy-empty">每个月罐子里的糖到 '+CTIERS.join(' / ')+' 颗，阿贝贝会收到一件限定的小衣服</div>';
+  }
+  const ce=candyWearing();
+  // 没穿的在前，穿着的，再是穿过的（新的在前）
+  const list=w.candy.slice().sort((a,b)=>{const r=x=>x.endAt?2:(ce&&ce.k===x.k?0:1);return r(a)-r(b)||b.got-a.got;});
+  list.forEach(e=>{
+    const o=candyOutfitById(e.id); if(!o) return;
+    const on=ce&&ce.k===e.k, spent=!!e.endAt;
+    const ym=e.k.split('-'); const tag=(+ym[1]+1)+'月·'+ym[2]+'颗';
+    h+='<div class="wd-item wd-candy'+(on?' on':'')+(spent?' spent':'')+'" onclick="'+(spent?'candySpentTap(\''+e.k+'\')':'wearCandyOutfit(\''+e.k+'\')')+'">'
+      +'<div class="wd-img"><img src="'+outfitThumb(o)+'" loading="lazy" alt=""></div>'
+      +'<div class="wd-name">'+o.name+'</div>'
+      +'<div class="wd-candy-tag">'+(on?candyLeftText(e):tag)+'</div>'
+      +(on?'<div class="wd-on">穿着</div>':'')
+      +(spent?'<div class="wd-stamp">穿过啦</div>':'')
+      +(!on&&!spent?'<div class="wd-new">限定</div>':'')+'</div>';
+  });
+  return h;
+}
+// 糖罐子的糖一变就看看有没有到档位；穿着限定款时每分钟看一下到没到点
+whenReady(()=>{
+  if(typeof renderJarCandies==='function'){
+    const orig=renderJarCandies;
+    renderJarCandies=function(){const r=orig.apply(this,arguments);setTimeout(checkCandyOutfits,300);return r;};
+  }
+  setTimeout(checkCandyOutfits,2500);
+  setInterval(()=>{
+    if(candyExpireCheck()) applyOutfit();
+    const ov=document.getElementById('overlay-wardrobe');
+    if(ov&&ov.classList.contains('show')&&candyWearing()) renderWardrobe();
+  },60000);
+});
 whenReady(applyOutfit);

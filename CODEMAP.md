@@ -23,7 +23,7 @@
 | `js/theme.js` | 主题、阿贝贝的梦 |
 | `js/games.js` | 糖果接接乐、记忆翻牌 |
 | `js/g2048.js` | 糖糖2048（阿贝贝页的「2048」按钮）：3×3～6×6、每种格子各记最高分、每天第一次玩给1或2个币；存档在 snackData.g2048，棋盘存在手机本地 |
-| `js/wardrobe.js` | 阿贝贝的衣柜：小香兔子卖衣服、衣柜、换装 |
+| `js/wardrobe.js` | 阿贝贝的衣柜：小香兔子卖衣服、衣柜、换装；糖果数量限定款（每月糖到 60/100/160 送一件，换上穿 24 小时，穿完变灰留着；存在 snackData.wardrobe.candy） |
 | `js/avatar.js` | 头像和情侣名 |
 | `js/weather.js` | 天气 |
 | `js/sound.js` | 声音：四首背景音乐（窗边雨、下午茶、拇指琴、小夜灯）和小音效，全部用代码合成；设置 → 声音；小音效是把别处的函数包一层挂上的 |
@@ -33,7 +33,7 @@
 | `data/abebe-words.js` | 阿贝贝的台词：日常、季节、节日 |
 | `data/snacks.js` | 小卖部的零食和零食故事；SNACK_STREET 九家店（ids 店里有什么、always 每天都有货、cover 门口招牌）；SNACK_BUNDLES 套餐；SNACK_STORE_HOURS 营业时间、SNACK_STORE_REST 店休的话、SNACK_NEW 新品上架日 |
 | `data/tastes.js` | 阿贝贝的口味（藏起来的，只在吃东西的反应里露出来）和反应台词 |
-| `data/outfits.js` | 阿贝贝的小衣服：名字、价格、爸爸的话、第一次穿的故事（图在 outfits/）；底下 OUTFIT_SETS 是成套的衣服（bundle 一格卖一组，collect 单件卖、集齐有惊喜） |
+| `data/outfits.js` | 阿贝贝的小衣服：名字、价格、爸爸的话、第一次穿的故事（图在 outfits/）；底下 OUTFIT_SETS 是成套的衣服（bundle 一格卖一组，collect 单件卖、集齐有惊喜）；最下面 CANDY_OUTFITS 是糖果限定款（图 outfits/c01…）和阿贝贝报信的话 |
 | `data/dreams.js` | 阿贝贝的梦 |
 | `data/game2048-words.js` | 糖糖2048的色块颜色和阿贝贝的台词 |
 | `data/fortunes.js` | 今日一签的签文 |
