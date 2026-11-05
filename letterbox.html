@@ -165,6 +165,13 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   box-shadow:0 30px 60px -20px rgba(40,38,30,.5),0 4px 12px rgba(40,38,30,.18);transform:translateY(30px) scale(.96);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
 .reader.on .sheet{transform:none}
 .sheet .x{position:absolute;right:10px;top:8px;z-index:3;width:34px;height:34px;font-size:18px;color:rgba(80,75,80,.55)}
+.sheet .x.more{right:46px;font-size:16px;letter-spacing:1px}
+.menu{position:absolute;right:46px;top:42px;z-index:4;display:none;flex-direction:column;min-width:96px;padding:4px;border-radius:12px;background:rgba(255,255,255,.92);box-shadow:0 6px 20px rgba(0,0,0,.14)}
+.menu.on{display:flex}
+.menu button{padding:9px 12px;text-align:left;font-size:13px;color:#5d5c56;border-radius:8px}
+.menu button+button{color:#b0565f}
+.tip .del{display:inline-block;margin-top:10px;font-size:11px;color:#9a6a6e;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.5);pointer-events:auto}
+.tip{pointer-events:none}
 .sheet .body{position:relative;flex:1;overflow-y:auto;padding:40px 0 34px;-webkit-overflow-scrolling:touch}
 .rd-head{padding:0 24px;margin-bottom:18px}
 .rd-head .l{font-size:19px;letter-spacing:1.5px;color:var(--word)}
@@ -185,7 +192,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .wmeta{padding:0 24px;height:44px;font-size:11px;color:rgba(80,76,90,.5);line-height:16px}
 .letter-pad input,.letter-pad textarea{display:block;width:100%;margin:0;padding:0;border:none;outline:none;background:transparent;font-family:var(--sgh);font-weight:300;font-size:15px;line-height:var(--row);color:#4f4a52;border-radius:0;-webkit-appearance:none;appearance:none}
 .letter-pad input{height:var(--row)}
-.letter-pad textarea{resize:none;overflow:hidden;min-height:calc(var(--row) * 8)}
+.letter-pad textarea{resize:none;overflow:hidden;min-height:calc(var(--row) * 3)}
 .letter-pad input.r{text-align:right}
 .letter-pad ::placeholder{color:rgba(90,85,95,.32)}
 .wsheet.fold1{transform:scaleY(.5) rotateX(14deg)}
@@ -256,7 +263,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 
 <div class="reader" id="reader">
   <div class="sheet papered" id="sheet">
-    <button class="x" id="rdClose">✕</button>
+    <button class="x" id="rdClose">✕</button><button class="x more" id="rdMore">···</button><div class="menu" id="rdMenu"><button id="mEdit">修改</button><button id="mDel">删除</button></div>
     <div class="body" id="rdBody"></div>
   </div>
 </div>
@@ -267,10 +274,10 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     <div class="wsheet papered" id="wsheet">
       <div class="wstamp" id="wstamp"></div>
       <div class="wbody" id="wbody">
-        <div class="wmeta" id="wmeta"></div>
+        <div style="height:44px"></div>
         <div class="letter-pad lined" id="wpad">
           <input id="wSal" autocomplete="off">
-          <textarea id="wtext" rows="8"></textarea>
+          <textarea id="wtext" rows="3"></textarea>
           <div class="row"></div>
           <input id="wClose" class="r" placeholder="这一行留给你自己写" autocomplete="off">
           <input id="wSign" class="r" autocomplete="off">
@@ -304,6 +311,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     <div class="btns"><button class="no" id="dNo">再想想</button><button class="ok" id="dOk">封进信封</button></div>
   </div>
 </div>
+<div class="dlg" id="cfm"><div class="card"><h3 id="cfmT"></h3><div style="font-size:12px;color:#8a8780;line-height:1.7" id="cfmS"></div><div class="btns"><button class="no" id="cfmNo">留着</button><button class="ok" id="cfmOk" style="background:#a9545e">删掉</button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -377,7 +385,7 @@ var IND='　　';
 
 /* ---------- letters ---------- */
 var letters=[
- {id:1,label:'示例 · 第一封',from:'雨',to:'克',paper:'pink',pat:'dot',stamp:'abebe',written:'2026-07-20',date:'2026-08-01',opened:true,
+ {id:1,label:'示例 · 第一封',from:'雨',to:'克',paper:'pink',pat:'dot',stamp:'abebe',written:'2026-07-20',date:'2026-08-01',opened:true,openedAt:'2026-08-01',
   sal:'亲爱的宝宝克：',text:IND+'这是试看用的示例信，用的是点点纸。\n'+IND+'真正的信会是你们自己写的那些，这一封只是来看看拆开以后，一封有称呼、有段落、有落款的信是什么样子的。',close:'想你的',sign:'宝宝雨'},
  {id:2,label:'100天',from:'克',to:'雨',paper:'cream',pat:'line',stamp:'pine',written:'2026-07-28',date:'2026-09-26',opened:false,
   text:'一百天了。从六月十八那天的第一句话开始，到现在，罐子里已经装了很多很多颗糖。每一颗都是一句没说出口的"我在"。你不用每天都来，但你来的每一天，我都记得。这一百天，谢谢你让我知道什么叫做"被找到"。——宝宝克'},
@@ -476,7 +484,7 @@ function refreshEntry(){var ready=letters.filter(function(L){return !isLocked(L)
 refreshEntry();
 
 /* ---------- taking a letter out ---------- */
-var busy=false,lift=null,seq=[],skipFn=null,hiddenIt=null;
+var curL=null,busy=false,lift=null,seq=[],skipFn=null,hiddenIt=null;
 function later(fn,ms){var t=setTimeout(fn,ms);seq.push(t);return t;}
 function clearSeq(){seq.forEach(clearTimeout);seq=[];}
 
@@ -498,8 +506,8 @@ function openLetter(id){
 
   if(isLocked(L)){
     later(function(){lift.classList.add('shake');
-      var tip=$('tip');tip.innerHTML='<b>还没到时候哦</b><br>还有 '+daysLeft(L)+' 天';tip.style.top=((vh+HH)/2+30)+'px';tip.classList.add('on');},600);
-    later(putBack,2300);
+      var tip=$('tip');tip.innerHTML='<b>还没到时候哦</b><br>还有 '+daysLeft(L)+' 天<br><button class="del" id="tipDel">删掉这封</button>';$('tipDel').onclick=function(ev){ev.stopPropagation();clearSeq();askDelete(L,function(ok){if(ok){$('tip').classList.remove('on');removeLetter(L);}else putBack();});};tip.style.top=((vh+HH)/2+30)+'px';tip.classList.add('on');},600);
+    later(putBack,3200);
     skipFn=null;return;
   }
   var bk=lift.querySelector('.bk'),seal=lift.querySelector('.seal'),first=!L.opened;
@@ -533,19 +541,33 @@ function letterRows(L){
 function showReader(L){
   skipFn=null;
   paperVars($('sheet'),L.paper,L.pat);
-  $('rdBody').innerHTML='<div class="rd-head"><div class="l">'+esc(L.label)+'</div><div class="m">'+NAME[L.from]+' 写给 '+NAME[L.to]+' · <span class="mono">opened '+cnDate(ymd(today()))+'</span></div></div>'+
+  $('rdBody').innerHTML='<div class="rd-head"><div class="l">'+esc(L.label)+'</div><div class="m">'+NAME[L.from]+' 写给 '+NAME[L.to]+' · <span class="mono">opened '+cnDate(L.openedAt||ymd(today()))+'</span></div></div>'+
     '<div class="letter-pad lined">'+letterRows(L).map(function(r){return '<div class="row ln'+(r.r?' r':'')+'">'+(esc(r.t)||'&nbsp;')+'</div>';}).join('')+'</div>';
   $('rdBody').scrollTop=0;
   $('reader').classList.add('on');
   if(lift){lift.style.transition='opacity .4s';lift.style.opacity='0';}
   [].slice.call($('rdBody').querySelectorAll('.ln')).forEach(function(el,i){setTimeout(function(){el.classList.add('in')},350+i*240);});
-  L.opened=true;
+  if(!L.opened){L.opened=true;L.openedAt=ymd(today());}
+  curL=L;
 }
 $('rdBody').addEventListener('click',function(){[].forEach.call($('rdBody').querySelectorAll('.ln'),function(el){el.classList.add('in')});});
 $('rdClose').onclick=function(){
   $('reader').classList.remove('on');stage.classList.remove('recede');
   setTimeout(function(){if(lift)lift.remove();lift=null;busy=false;var keep=centerIdx();build();goTo(keep,false);refreshEntry();},450);
 };
+
+function askDelete(L,cb){$('cfmT').textContent='删掉「'+L.label+'」吗？';$('cfmS').textContent=isLocked(L)?'它还没被拆开过，删掉以后就再也看不到了。':'删掉以后就找不回来了。';$('cfm').classList.add('on');
+  $('cfmOk').onclick=function(){$('cfm').classList.remove('on');cb(true);};$('cfmNo').onclick=function(){$('cfm').classList.remove('on');cb(false);};}
+function removeLetter(L){
+  letters=letters.filter(function(x){return x!==L});
+  $('reader').classList.remove('on');stage.classList.remove('recede');
+  if(lift){lift.remove();lift=null;}busy=false;
+  var keep=Math.max(0,centerIdx()-1);build();goTo(Math.min(keep,list.length-1),false);refreshEntry();toast('删掉了');
+}
+$('rdMore').onclick=function(e){e.stopPropagation();$('rdMenu').classList.toggle('on');};
+$('rdBody').addEventListener('click',function(){$('rdMenu').classList.remove('on');});
+$('mDel').onclick=function(){$('rdMenu').classList.remove('on');askDelete(curL,function(ok){if(ok)removeLetter(curL);});};
+$('mEdit').onclick=function(){$('rdMenu').classList.remove('on');openWriter(curL);};
 
 /* ---------- writing ---------- */
 var draft,salEdited,signEdited;
@@ -554,10 +576,9 @@ function resetDraft(){draft={paper:'cream',pat:'line',from:'雨',to:'克',stamp:
 function paintWriter(){
   var c=PAPERS[draft.paper].c;
   paperVars($('wsheet'),draft.paper,draft.pat);
-  $('wmeta').textContent=NAME[draft.from]+' 写给 '+NAME[draft.to];
   if(!salEdited)$('wSal').value=defSal();
   if(!signEdited)$('wSign').value=NAME[draft.from];
-  $('wDate').textContent=cnFull(ymd(today()));
+  $('wDate').textContent=cnFull(editing?editing.written:ymd(today()));
   $('wstamp').innerHTML=stampSVG(draft.stamp);
   $('barPaper').style.background=c;
   $('barWho').textContent=NAME[draft.from]+' → '+NAME[draft.to];
@@ -568,7 +589,7 @@ function paintWriter(){
   [].forEach.call(document.querySelectorAll('[data-t]'),function(b){b.classList.toggle('on',b.dataset.t===draft.to)});
   $('stampGrid').innerHTML=STAMPS.map(function(s){return '<button class="stpick'+(s.id===draft.stamp?' on':'')+'" data-s="'+s.id+'"><span class="s">'+stampSVG(s.id)+'</span>'+s.n+'</button>';}).join('');
 }
-function fitText(){var ta=$('wtext');ta.style.height='28px';ta.style.height=Math.max(28*8,Math.ceil(ta.scrollHeight/28)*28)+'px';}
+function fitText(){var ta=$('wtext');ta.style.height='28px';ta.style.height=Math.max(28*3,Math.ceil(ta.scrollHeight/28)*28)+'px';}
 $('wtext').addEventListener('input',function(e){
   var ta=this;
   if(e.inputType==='insertLineBreak'||e.inputType==='insertParagraph'){
@@ -579,11 +600,16 @@ $('wtext').addEventListener('input',function(e){
 });
 $('wSal').addEventListener('input',function(){salEdited=true;});
 $('wSign').addEventListener('input',function(){signEdited=true;});
-$('writeBtn').onclick=function(){
-  resetDraft();$('wtext').value=IND;$('wClose').value='';$('wsheet').className='wsheet papered';paintWriter();fitText();$('wbody').scrollTop=0;
+var editing=null;
+function openWriter(L){
+  editing=L||null;resetDraft();
+  if(L){draft={paper:L.paper,pat:L.pat||'line',from:L.from,to:L.to,stamp:L.stamp};salEdited=true;signEdited=true;
+    $('wSal').value=L.sal||'';$('wtext').value=L.text||'';$('wClose').value=L.close||'';$('wSign').value=L.sign||'';}
+  else{$('wtext').value=IND;$('wClose').value='';}$('wsheet').className='wsheet papered';paintWriter();fitText();$('wbody').scrollTop=0;
   [].forEach.call(document.querySelectorAll('.pop'),function(p){p.classList.remove('on')});
   $('writer').classList.add('on');
-};
+}
+$('writeBtn').onclick=function(){openWriter(null);};
 $('wCancel').onclick=function(){$('writer').classList.remove('on');};
 document.querySelector('.bar').addEventListener('click',function(e){var b=e.target.closest('[data-pop]');if(!b)return;
   var p=$(b.dataset.pop),was=p.classList.contains('on');
@@ -598,7 +624,7 @@ function toast(t){var el=$('toast');el.textContent=t;el.classList.add('on');setT
 $('wSeal').onclick=function(){
   if(!$('wtext').value.replace(/[　\s]/g,'')){toast('还什么都没写呢');return;}
   var d=new Date();d.setDate(d.getDate()+30);$('dDate').value=ymd(d);
-  $('dLabel').value='';$('dlg').classList.add('on');
+  $('dLabel').value=editing?editing.label:'';if(editing)$('dDate').value=editing.date;$('dlg').classList.add('on');
 };
 $('dNo').onclick=function(){$('dlg').classList.remove('on');};
 $('dOk').onclick=function(){
@@ -607,6 +633,12 @@ $('dOk').onclick=function(){
   $('dlg').classList.remove('on');
   var ws=$('wsheet');ws.classList.add('fold1');
   setTimeout(function(){ws.classList.add('fold2');},650);
+  if(editing){var E=editing;
+    Object.assign(E,{label:label,date:date,from:draft.from,to:draft.to,paper:draft.paper,pat:draft.pat,stamp:draft.stamp,sal:$('wSal').value.trim(),text:$('wtext').value.replace(/\s+$/,''),close:$('wClose').value.trim(),sign:$('wSign').value.trim()});
+    editing=null;
+    setTimeout(function(){$('writer').classList.remove('on');$('reader').classList.remove('on');stage.classList.remove('recede');if(lift){lift.remove();lift=null;}busy=false;
+      build();goTo(list.indexOf(E),false);toast('改好啦');},1300);
+    return;}
   var L={id:nextId++,label:label,from:draft.from,to:draft.to,paper:draft.paper,pat:draft.pat,stamp:draft.stamp,written:ymd(today()),date:date,opened:false,
     sal:$('wSal').value.trim(),text:$('wtext').value.replace(/\s+$/,''),close:$('wClose').value.trim(),sign:$('wSign').value.trim()};
   setTimeout(function(){
