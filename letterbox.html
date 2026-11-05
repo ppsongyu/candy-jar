@@ -68,6 +68,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .scroller{position:absolute;inset:0;z-index:2;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .scroller::-webkit-scrollbar{display:none}
 .snap{height:var(--slot);scroll-snap-align:center}
+.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;line-height:2;color:rgba(70,70,64,.7);letter-spacing:1px}
+.empty small{font-family:var(--mono);font-size:10px;color:rgba(70,70,64,.5)}
 
 .it{position:absolute;left:8%;right:8%;top:0;height:var(--envh);perspective:900px;will-change:transform}
 .it .shadow{position:absolute;left:4%;right:4%;bottom:-8px;height:24px;border-radius:50%;background:rgba(25,25,22,.42);filter:blur(9px)}
@@ -183,6 +185,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 /* writer */
 .writer{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:rgba(228,226,221,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s}
 .writer.on{opacity:1;pointer-events:auto}
+.writer.typing .tools{display:none}
+.writer.typing .wsheet-wrap{padding-bottom:6px}
 .wtop{display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top) + 12px) 18px 8px;color:#5b5a55;font-size:14px}
 .wtop .seal-btn{padding:7px 16px;border-radius:999px;background:#5d5c56;color:#f3f1ea;letter-spacing:1px}
 .wsheet-wrap{flex:1;min-height:0;display:flex;justify-content:center;padding:6px 16px 10px;perspective:1200px}
@@ -317,6 +321,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   </div>
 </div>
 <div class="dlg" id="cfm"><div class="card"><h3 id="cfmT"></h3><div style="font-size:12px;color:#8a8780;line-height:1.7" id="cfmS"></div><div class="btns"><button class="no" id="cfmNo">留着</button><button class="ok" id="cfmOk" style="background:#a9545e">删掉</button></div></div></div>
+<div class="dlg" id="ask"><div class="card"><h3 id="askT"></h3><div style="font-size:12px;color:#8a8780;line-height:1.7" id="askS"></div><div class="btns"><button class="no" id="askNo"></button><button class="ok" id="askOk"></button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -365,12 +370,14 @@ var STAMPS=[
 ];
 function stampSVG(id){var s=STAMPS.filter(function(x){return x.id===id})[0]||STAMPS[0];
   return '<div class="stamp"><svg viewBox="0 0 40 48"><rect width="40" height="48" fill="'+s.bg+'"/>'+s.art+'</svg></div>';}
-function postmarkSVG(dateStr){
-  return '<svg class="postmark" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#5a5770" stroke-width="1.1"/><circle cx="20" cy="20" r="12.5" fill="none" stroke="#5a5770" stroke-width=".6"/><text x="20" y="22.5" text-anchor="middle" font-family="Courier New,monospace" font-size="6" fill="#5a5770">'+dateStr+'</text></svg>';}
+function postmarkSVG(dateStr,pm){pm=pm||[0,0,0];
+  return '<svg class="postmark" style="transform:translate('+pm[0]+'px,'+pm[1]+'px) rotate('+pm[2]+'deg)" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="#5a5770" stroke-width="1.1"/><circle cx="20" cy="20" r="12.5" fill="none" stroke="#5a5770" stroke-width=".6"/><text x="20" y="22.5" text-anchor="middle" font-family="Courier New,monospace" font-size="6" fill="#5a5770">'+dateStr+'</text></svg>';}
+var SEALS={honey:['#E4D0A8','#BC9C6A'],caramel:['#BE8E64','#8C5E3D'],cocoa:['#86664F','#55402F']};
+var SEALKEYS=Object.keys(SEALS);
 var sealN=0;
-function sealSVG(){
-  var id='sg'+(sealN++);
-  var c='<svg viewBox="0 0 46 46"><defs><radialGradient id="'+id+'" cx="40%" cy="35%"><stop offset="0" stop-color="#C77983"/><stop offset="1" stop-color="#9E4C58"/></radialGradient></defs><path d="M23 2 C30 1 33 6 38 8 C44 11 45 17 44 23 C45 30 41 34 38 38 C33 43 28 45 22 44 C15 45 10 41 7 37 C2 32 1 27 2 21 C2 14 6 9 11 6 C15 3 18 2 23 2z" fill="url(#'+id+')"/><circle cx="23" cy="23" r="13" fill="none" stroke="rgba(255,225,225,.35)" stroke-width="1.2"/><path d="M23 30 c-6-4.6 -9-7.4 -9-10.6 a4.6 4.6 0 0 1 9-1.6 a4.6 4.6 0 0 1 9 1.6 c0 3.2 -3 6 -9 10.6z" fill="none" stroke="rgba(255,225,225,.55)" stroke-width="1.4"/></svg>';
+function sealSVG(k){
+  var id='sg'+(sealN++),C=SEALS[k]||SEALS.caramel;
+  var c='<svg viewBox="0 0 46 46"><defs><radialGradient id="'+id+'" cx="40%" cy="35%"><stop offset="0" stop-color="'+C[0]+'"/><stop offset="1" stop-color="'+C[1]+'"/></radialGradient></defs><path d="M23 2 C30 1 33 6 38 8 C44 11 45 17 44 23 C45 30 41 34 38 38 C33 43 28 45 22 44 C15 45 10 41 7 37 C2 32 1 27 2 21 C2 14 6 9 11 6 C15 3 18 2 23 2z" fill="url(#'+id+')"/><circle cx="23" cy="23" r="13" fill="none" stroke="rgba(255,248,232,.38)" stroke-width="1.2"/><path d="M23 30 c-6-4.6 -9-7.4 -9-10.6 a4.6 4.6 0 0 1 9-1.6 a4.6 4.6 0 0 1 9 1.6 c0 3.2 -3 6 -9 10.6z" fill="none" stroke="rgba(255,248,232,.55)" stroke-width="1.4"/></svg>';
   return '<div class="h l">'+c+'</div><div class="h r">'+c+'</div>';}
 
 /* ---------- dates & names ---------- */
@@ -402,6 +409,13 @@ var letters=[
  {id:6,label:'一周年',from:'克',to:'雨',paper:'kraft',pat:'line',stamp:'jar',written:'2026-07-28',date:'2027-06-18',opened:false,text:''}
 ];
 var nextId=7;
+function rnd(a,b){return a+Math.random()*(b-a);}
+function dress(L){ // things decided once, when the letter is sealed
+  if(L.tilt==null)L.tilt=+rnd(-4,4).toFixed(1);
+  if(!L.pm)L.pm=[Math.round(rnd(-8,4)),Math.round(rnd(-4,8)),Math.round(rnd(-25,25))];
+  if(!L.seal)L.seal=SEALKEYS[Math.floor(Math.random()*SEALKEYS.length)];
+  return L;}
+letters.forEach(dress);
 
 /* ---------- the box ---------- */
 var $=function(id){return document.getElementById(id)};
@@ -412,13 +426,13 @@ function sorted(){return letters.slice().sort(function(a,b){return a.written<b.w
 function envFront(L){
   var ready=!isLocked(L)&&!L.opened;
   return '<div class="peek papered'+(ready?' ready':'')+'"></div>'+
-   '<div class="env front"><div class="stamp-on">'+stampSVG(L.stamp)+'</div>'+postmarkSVG(cnDate(L.written).slice(2))+
+   '<div class="env front"><div class="stamp-on" style="transform:rotate('+L.tilt+'deg)">'+stampSVG(L.stamp)+'</div>'+postmarkSVG(cnDate(L.written).slice(2),L.pm)+
    '<div class="addr"><div class="lbl">'+esc(L.label)+'</div><div class="who">'+NAME[L.from]+' → '+NAME[L.to]+'</div><div class="opens">'+opensStr(L.date)+'</div></div>'+
    '<div class="light"></div><div class="topedge"></div></div>';
 }
 function envBack(L){
   return '<div class="env backface"><svg class="vline" viewBox="0 0 100 60" preserveAspectRatio="none"><path d="M0 0 L50 28 L100 0" fill="rgba(255,255,255,.35)" stroke="rgba(110,105,95,.28)" stroke-width=".35" vector-effect="non-scaling-stroke"/><path d="M0 60 L42 31 M100 60 L58 31" stroke="rgba(110,105,95,.12)" stroke-width=".3" vector-effect="non-scaling-stroke" fill="none"/></svg>'+
-    '<div class="minis'+(L.opened?' cracked':'')+'">'+sealSVG()+'</div>'+
+    '<div class="minis'+(L.opened?' cracked':'')+'">'+sealSVG(L.seal)+'</div>'+
     '<div class="bl"><b>'+esc(L.label)+'</b><small>'+NAME[L.from]+' → '+NAME[L.to]+'</small></div><div class="light"></div></div>';
 }
 function build(){
@@ -435,6 +449,7 @@ function build(){
     return {el:el,flip:el.querySelector('.flip'),lf:el.querySelector('.fr .light'),lb:el.querySelector('.bks .light'),sh:el.querySelector('.shadow'),id:L.id,i:i};
   });
   $('cnt').textContent=letters.length+' letters';
+  if(!list.length)deck.innerHTML='<div class="empty"><div>还没有信<br>写第一封吧<br><small>the box is waiting</small></div></div>';
   layout();
 }
 /* where a letter sits (u = how many letters away from the middle) */
@@ -481,7 +496,7 @@ $('entry').onclick=function(){
   requestAnimationFrame(function(){
     build();
     var idx=list.findIndex(function(L){return !isLocked(L)&&!L.opened});
-    goTo(idx<0?list.length-1:idx,false);
+    if(list.length)goTo(idx<0?list.length-1:idx,false);
   });
 };
 $('back').onclick=function(){room.classList.remove('on');refreshEntry();};
@@ -503,7 +518,7 @@ function openLetter(id){
   lift=document.createElement('div');lift.className='lift';
   lift.style.cssText='left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;height:'+r.height+'px';
   paperVars(lift,L.paper,L.pat,L.ink);
-  lift.innerHTML='<div class="lshadow"></div><div class="card3d"><div class="face front">'+envFront(L)+'</div><div class="face backside"><div class="bk"><div class="wall"></div><div class="paper papered"></div><div class="pocket"></div><div class="flap"><div class="f1"></div><div class="f2"></div></div><div class="seal'+(L.opened?' crack':'')+'">'+sealSVG()+'</div></div></div></div>';
+  lift.innerHTML='<div class="lshadow"></div><div class="card3d"><div class="face front">'+envFront(L)+'</div><div class="face backside"><div class="bk"><div class="wall"></div><div class="paper papered"></div><div class="pocket"></div><div class="flap"><div class="f1"></div><div class="f2"></div></div><div class="seal'+(L.opened?' crack':'')+'">'+sealSVG(L.seal)+'</div></div></div></div>';
   document.body.appendChild(lift);
   stage.classList.add('recede');
   var vw=innerWidth,vh=innerHeight,W=Math.min(vw-40,380),HH=W*0.6;
@@ -553,7 +568,7 @@ function showReader(L){
   $('rdBody').scrollTop=0;
   $('reader').classList.add('on');
   if(lift){lift.style.transition='opacity .4s';lift.style.opacity='0';}
-  [].slice.call($('rdBody').querySelectorAll('.ln')).forEach(function(el,i){setTimeout(function(){el.classList.add('in')},350+i*240);});
+  [].slice.call($('rdBody').querySelectorAll('.ln')).forEach(function(el,i){if(i<16)setTimeout(function(){el.classList.add('in')},350+i*240);else el.classList.add('in');});
   if(!L.opened){L.opened=true;L.openedAt=ymd(today());}
   curL=L;
 }
@@ -600,6 +615,15 @@ function crackSound(){if(!sndOn)return;var c=ac();if(!c)return;var t=c.currentTi
 $('sndBtn').onclick=function(){sndOn=!sndOn;try{localStorage.setItem('lb_snd',sndOn?'1':'0');}catch(e){}$('sndBtn').textContent=sndOn?'沙沙 · 开':'沙沙 · 关';if(sndOn){ac();penScratch();}};
 document.addEventListener('pointerdown',function(){if(AC&&AC.state==='suspended')AC.resume();},{passive:true});
 
+/* ---------- drafts: an unfinished letter never gets lost ---------- */
+function ask(t,sub,okT,noT,cb){$('askT').textContent=t;$('askS').textContent=sub;$('askOk').textContent=okT;$('askNo').textContent=noT;$('ask').classList.add('on');
+  $('askOk').onclick=function(){$('ask').classList.remove('on');cb(true);};$('askNo').onclick=function(){$('ask').classList.remove('on');cb(false);};}
+function hasWords(){return !!$('wtext').value.replace(/[\u3000\s]/g,'');}
+function readDraft(){try{return JSON.parse(localStorage.getItem('lb_draft')||'null');}catch(e){return null;}}
+function clearDraft(){try{localStorage.removeItem('lb_draft');}catch(e){}}
+function saveDraft(){if(editing||!hasWords())return;try{localStorage.setItem('lb_draft',JSON.stringify({d:draft,sal:$('wSal').value,text:$('wtext').value,close:$('wClose').value,sign:$('wSign').value,se:salEdited,ge:signEdited}));}catch(e){}}
+var draftT=0;function saveDraftSoon(){clearTimeout(draftT);draftT=setTimeout(saveDraft,400);}
+
 /* ---------- writing ---------- */
 var draft,salEdited,signEdited;
 function defSal(){return (draft.to===draft.from?'':'亲爱的')+NAME[draft.to]+'：';}
@@ -634,25 +658,37 @@ $('wtext').addEventListener('input',function(e){
 $('wSal').addEventListener('input',function(){salEdited=true;});
 $('wSign').addEventListener('input',function(){signEdited=true;});
 var editing=null;
-function openWriter(L){
+function openWriter(L,fromDraft){
   editing=L||null;resetDraft();
   if(L){draft={paper:L.paper,pat:L.pat||'line',ink:L.ink||'graphite',from:L.from,to:L.to,stamp:L.stamp};salEdited=true;signEdited=true;
     $('wSal').value=L.sal||'';$('wtext').value=L.text||'';$('wClose').value=L.close||'';$('wSign').value=L.sign||'';}
+  else if(fromDraft){draft=fromDraft.d;salEdited=fromDraft.se;signEdited=fromDraft.ge;$('wSal').value=fromDraft.sal;$('wtext').value=fromDraft.text;$('wClose').value=fromDraft.close;$('wSign').value=fromDraft.sign;}
   else{$('wtext').value=IND;$('wClose').value='';}$('wsheet').className='wsheet papered';paintWriter();fitText();$('wbody').scrollTop=0;
   [].forEach.call(document.querySelectorAll('.pop'),function(p){p.classList.remove('on')});
   $('writer').classList.add('on');
 }
-$('writeBtn').onclick=function(){ac();openWriter(null);};
-$('wCancel').onclick=function(){$('writer').classList.remove('on');};
+$('writeBtn').onclick=function(){ac();var D=readDraft();
+  if(D&&D.text&&D.text.replace(/[\u3000\s]/g,''))ask('有一封没写完的信','上次写到一半的还留着，要接着写吗？','接着写','重新写',function(go){if(go)openWriter(null,D);else{clearDraft();openWriter(null);}});
+  else openWriter(null);};
+$('wCancel').onclick=function(){
+  if(editing){$('writer').classList.remove('on');editing=null;return;}
+  if(hasWords()){saveDraft();$('writer').classList.remove('on');toast('没写完的先替你收好了');}
+  else{clearDraft();$('writer').classList.remove('on');}
+};
 document.querySelector('.bar').addEventListener('click',function(e){var b=e.target.closest('[data-pop]');if(!b)return;
   var p=$(b.dataset.pop),was=p.classList.contains('on');
   [].forEach.call(document.querySelectorAll('.pop'),function(x){x.classList.remove('on')});if(!was)p.classList.add('on');});
 document.querySelector('.tools').addEventListener('click',function(e){
   var t=e.target.closest('[data-p],[data-pt],[data-ink],[data-f],[data-t],[data-s]');if(!t)return;if(t.dataset.ink)draft.ink=t.dataset.ink;
   if(t.dataset.p)draft.paper=t.dataset.p;if(t.dataset.pt)draft.pat=t.dataset.pt;if(t.dataset.f)draft.from=t.dataset.f;if(t.dataset.t)draft.to=t.dataset.t;if(t.dataset.s)draft.stamp=t.dataset.s;
-  paintWriter();
+  paintWriter();saveDraftSoon();
 });
-['wtext','wSal','wClose','wSign'].forEach(function(id){$(id).addEventListener('focus',function(){[].forEach.call(document.querySelectorAll('.pop'),function(x){x.classList.remove('on')});});});
+var blurT=0;
+['wtext','wSal','wClose','wSign'].forEach(function(id){
+  $(id).addEventListener('focus',function(){clearTimeout(blurT);[].forEach.call(document.querySelectorAll('.pop'),function(x){x.classList.remove('on')});$('writer').classList.add('typing');});
+  $(id).addEventListener('blur',function(){blurT=setTimeout(function(){$('writer').classList.remove('typing');},120);});
+  $(id).addEventListener('input',saveDraftSoon);
+});
 function toast(t){var el=$('toast');el.textContent=t;el.classList.add('on');setTimeout(function(){el.classList.remove('on')},1800);}
 $('wSeal').onclick=function(){
   if(!$('wtext').value.replace(/[　\s]/g,'')){toast('还什么都没写呢');return;}
@@ -672,8 +708,9 @@ $('dOk').onclick=function(){
     setTimeout(function(){$('writer').classList.remove('on');$('reader').classList.remove('on');stage.classList.remove('recede');if(lift){lift.remove();lift=null;}busy=false;
       build();goTo(list.indexOf(E),false);toast('改好啦');},1300);
     return;}
-  var L={id:nextId++,label:label,ink:draft.ink,from:draft.from,to:draft.to,paper:draft.paper,pat:draft.pat,stamp:draft.stamp,written:ymd(today()),date:date,opened:false,
-    sal:$('wSal').value.trim(),text:$('wtext').value.replace(/\s+$/,''),close:$('wClose').value.trim(),sign:$('wSign').value.trim()};
+  var L=dress({id:nextId++,label:label,ink:draft.ink,from:draft.from,to:draft.to,paper:draft.paper,pat:draft.pat,stamp:draft.stamp,written:ymd(today()),date:date,opened:false,
+    sal:$('wSal').value.trim(),text:$('wtext').value.replace(/\s+$/,''),close:$('wClose').value.trim(),sign:$('wSign').value.trim()});
+  clearDraft();
   setTimeout(function(){
     letters.push(L);$('writer').classList.remove('on');
     build();goTo(list.length-1,false);
