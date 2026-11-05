@@ -276,7 +276,12 @@ function wearOutfit(id,sure){
   closeWardrobe();
   const o=outfitById(id);
   if(!o){if(typeof showBubble==='function') showBubble('阿贝贝脱下了小衣服，伸了个懒腰：\'还是光溜溜最舒服\'');return;}
-  if(!w.seen.includes(id)){
+  // storyOf：两件共用一个故事，另一件看过了就不再弹
+  const shared=o.storyOf?[o.storyOf]:OUTFITS.filter(x=>x.storyOf===id).map(x=>x.id);
+  if(!w.seen.includes(id)&&shared.some(x=>w.seen.includes(x))){
+    w.seen.push(id);saveApp();
+    if(typeof showBubble==='function') showBubble(o.lines[Math.floor(Math.random()*o.lines.length)]);
+  }else if(!w.seen.includes(id)){
     w.seen.push(id);saveApp();
     showStory(o.name,o.story);
   }else if(typeof showBubble==='function'){
