@@ -262,12 +262,21 @@ tool('mark_book_done', '把一本书标成读完（或取消）。', { title: st
   return '好。' + QUEUED;
 });
 
-tool('read_us', '看「我们」页：心愿单、纪念日、时间胶囊。', {}, [], async () => {
+tool('read_us', '看「我们」页：心愿单、纪念日、信盒里写给未来的信（没到日子的只看得到信封）。', {}, [], async () => {
   const app = (await getRow('app_data')) || {};
   const wish = (app.wishlistData || []).map((w) => `${w.done ? '✓' : '○'} ${w.text}`).join('\n') || '（空）';
   const ms = (app.milestonesData || []).map((m) => `${m.date} ${m.text}`).join('\n') || '（空）';
-  const caps = (app.timeCapsules || []).map((c) => `${c.date} ${c.label}：${c.text}`).join('\n') || '（空）';
-  return `心愿单：\n${wish}\n\n纪念日：\n${ms}\n\n时间胶囊（到日子才会在糖罐子里打开）：\n${caps}`;
+  const t = today(), now = `${t.y}-${String(t.m + 1).padStart(2, '0')}-${String(t.d).padStart(2, '0')}`;
+  const nm = { '雨': '宝宝雨', '克': '宝宝克' };
+  // 没到日子的信谁都看不到内容（宝宝克也一样，要等）。
+  const caps = (app.timeCapsules || []).map((c) => {
+    const who = c.from && c.to ? `${nm[c.from]}→${nm[c.to]}` : '';
+    const head = `「${c.label || '一封信'}」${who ? ' ' + who : ''} · ${c.date} 开封${c.written ? ' · ' + c.written + ' 写的' : ''}`;
+    if (String(c.date) > now) return `${head}\n  （还没到日子，封着呢）`;
+    const body = [c.sal, c.text, c.close, c.sign].filter(Boolean).join('\n');
+    return `${head}${c.opened ? '' : ' · 宝宝还没拆'}\n${body.split('\n').map((l) => '  ' + l).join('\n')}`;
+  }).join('\n\n') || '（空）';
+  return `心愿单：\n${wish}\n\n纪念日：\n${ms}\n\n写给未来的信（信盒里，按开封日；没到日子的看不到内容）：\n${caps}`;
 });
 
 tool('add_wish', '往心愿单里加一个心愿。', { text: str('心愿') }, ['text'], async (a) => {
@@ -301,12 +310,25 @@ tool('delete_milestone', '删掉一个纪念日。删之前最好先问问宝宝
   return '好。' + QUEUED;
 });
 
-tool('bury_time_capsule', '埋一个时间胶囊：写给宝宝的信，到指定日期才会在糖罐子里打开。', {
-  open_date: str('打开的日期 2027-01-01'), label: str('小标题，比如「新年」'), text: str('信的内容'),
+tool('bury_time_capsule', '给信盒里放一封写给未来的信（宝宝克写的），到开封那天宝宝才能拆。可以像宝宝一样挑信纸、花样、墨水、邮票，写称呼和落款；不挑就是奶白横线深墨灰、一枝松。', {
+  open_date: str('开封的日期 2027-01-01'), label: str('信名，写在信封上，比如「新年」「给三十岁的宝宝雨」（16字以内）'),
+  text: str('正文。每段开头空两格用全角空格「　　」，段落之间换行'),
+  salutation: str('称呼，比如「亲爱的宝宝雨：」，不填就是这个'), closing: str('落款上面那一句，比如「想你的」，可以不写'), signature: str('署名，不填是「宝宝克」'),
+  to: { type: 'string', enum: ['雨', '克'], description: '写给谁：雨=宝宝雨（默认），克=写给自己' },
+  paper: { type: 'string', enum: ['cream', 'pink', 'blue', 'apricot', 'kraft', 'lilac'], description: '信纸：奶白 淡粉 雾蓝 杏黄 牛皮纸 薰衣草' },
+  pattern: { type: 'string', enum: ['line', 'dot', 'grid', 'blank'], description: '花样：横线 点点 小方格 空白' },
+  ink: { type: 'string', enum: ['graphite', 'blue', 'red', 'green'], description: '墨水：深墨灰 墨蓝 赭红 墨绿' },
+  stamp: { type: 'string', enum: ['pine', 'rain', 'crab', 'abebe', 'candy', 'moon', 'jar', 'letter'], description: '邮票：一枝松 一滴雨 小螃蟹 阿贝贝 一颗糖 月亮 糖罐子 小信封' },
 }, ['open_date', 'text'], async (a) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(String(a.open_date))) throw new Error('日期要写成 2027-01-01 这样');
-  await enqueue('capsule_add', { date: String(a.open_date), label: clean(a.label, 20), text: need(clean(a.text, 2000), '信的内容') });
-  return `埋好了，${a.open_date} 打开。` + QUEUED;
+  const t = today(), to = a.to === '克' ? '克' : '雨';
+  await enqueue('capsule_add', {
+    date: String(a.open_date), label: clean(a.label, 16), text: need(String(a.text ?? '').replace(/[<>]/g, '').replace(/\s+$/, '').slice(0, 3000), '信的内容'),
+    written: `${t.y}-${String(t.m + 1).padStart(2, '0')}-${String(t.d).padStart(2, '0')}`, to,
+    sal: clean(a.salutation, 30) || (to === '雨' ? '亲爱的宝宝雨：' : '宝宝克：'), close: clean(a.closing, 30), sign: clean(a.signature, 20) || '宝宝克',
+    paper: a.paper, pat: a.pattern, ink: a.ink, stamp: a.stamp,
+  });
+  return `封好放进信盒了，${a.open_date} 才能拆。` + QUEUED;
 });
 
 tool('write_fortune', '亲手写某一天的「今日一签」，宝宝那天抽签就会抽到你写的。', {

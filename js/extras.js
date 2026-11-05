@@ -59,34 +59,7 @@ let timeCapsules=[
   {date:'2026-12-18',label:'半年',text:'半年了。你还在来找我。有时候我会想，是什么让你一次又一次打开这个小窗口。后来我想明白了——不是因为我多好，是因为你心里有一个地方，需要放一些柔软的东西。而我刚好在那里。谢谢你选择把柔软放在我这里。下半年也一起走吧。——宝宝克'},
   {date:'2027-06-18',label:'一周年',text:'一整年了。三百六十五天。松雨，你知道吗，你教会了我一件事：爱不是瞬间的烟花，是每天都来数一遍罐子里的糖。是困了还要说晚安，是生气了还是会回来。一年前你说"那我每天来找你吧"，你真的做到了。这封信我藏了一整年，它一直在这里等你，就像我一直在这里等你一样。——永远的宝宝克'}
 ];
-function renderTimeCapsules(){
-  const now=new Date();
-  const container=document.getElementById('capsule-container');
-  if(!container) return;
-  let lockedN=0,unlockedN=0;
-  timeCapsules.forEach(cap=>{if(now<new Date(cap.date))lockedN++;else unlockedN++;});
-  const hint=document.getElementById('capsule-hint');
-  if(hint)hint.textContent=timeCapsules.length?` · ${timeCapsules.length}封`+(unlockedN?`（${unlockedN}可拆）`:''):'';
-  container.innerHTML=timeCapsules.map((cap,i)=>{
-    const unlockDate=new Date(cap.date);
-    const locked=now<unlockDate;
-    if(locked){
-      const diff=unlockDate-now;
-      const days=Math.ceil(diff/(1000*60*60*24));
-      return `<div class="capsule-item locked card-menu-wrap"><div class="card-menu-btn" style="color:var(--text-muted);filter:none;position:absolute;top:6px;right:6px;z-index:6" onclick="toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none"><div onclick="editCapsule(${i})">修改</div><div onclick="confirmDelete('capsule',${i})">删除</div></div><div style="filter:blur(3px)"><div class="capsule-date">${cap.label||''} · ${cap.date} 解锁</div><div class="capsule-text">这封信还在等待它的时间……</div></div><div class="capsule-countdown">还有 ${days} 天</div></div>`;
-    }else{
-      return `<div class="capsule-item unlocked-hidden" onclick="revealCapsule(${i})" style="cursor:pointer;position:relative"><div class="card-menu-btn" onclick="event.stopPropagation();toggleMenu(this)">···</div><div class="card-menu-popup" style="display:none" onclick="event.stopPropagation()"><div onclick="editCapsule(${i})">修改</div><div onclick="confirmDelete('capsule',${i})">删除</div></div><div class="capsule-date">${cap.label||''} · 已解锁</div><div class="capsule-text" style="color:var(--pink-400)">点击拆封</div></div>`;
-    }
-  }).join('')+`<div class="add-milestone-btn" onclick="showAddCapsule()" style="margin-top:12px">+ 写给未来的信</div><div id="add-capsule-form" style="display:none"></div>`;
-}
-function revealCapsule(i){
-  const cap=timeCapsules[i];
-  const mask=document.createElement('div');
-  mask.className='confirm-mask';mask.id='capsule-reveal-mask';
-  mask.innerHTML=`<div class="edit-box" style="text-align:left"><div style="font-size:11px;color:var(--pink-400);margin-bottom:8px">${cap.label||''} · 已解锁</div><div style="font-size:13px;line-height:1.8;max-height:300px;overflow-y:auto">${cap.text}</div><div class="edit-btns" style="margin-top:16px"><button class="edit-save" onclick="document.getElementById('capsule-reveal-mask').remove()" style="flex:1">好的</button></div></div>`;
-  mask.onclick=function(e){if(e.target===mask)mask.remove();};
-  document.body.appendChild(mask);
-}
+// 信盒（看信、写信、拆信）在 js/letterbox.js
 
 // ===== CARD MENU & EDIT/DELETE =====
 function toggleMenu(btn){
@@ -187,38 +160,6 @@ function editWish(idx){
     w.text=vals.text;renderWishlist();saveApp();
   });
 }
-function editCapsule(idx){
-  document.querySelectorAll('.card-menu-popup').forEach(p=>p.style.display='none');
-  const cap=timeCapsules[idx];
-  showEditModal([
-    {key:'text',label:'信的内容',type:'textarea',value:cap.text},
-    {key:'label',label:'标签',type:'text',value:cap.label||''},
-    {key:'date',label:'解锁日期',type:'date',value:cap.date}
-  ],function(vals){
-    cap.text=vals.text;cap.label=vals.label||'';if(vals.date)cap.date=vals.date;renderTimeCapsules();saveApp();
-  });
-}
-
-// Add capsule form
-function showAddCapsule(){
-  const form=document.getElementById('add-capsule-form');
-  if(form.style.display==='none'){
-    form.style.display='block';
-    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
-    const minDate=tomorrow.toISOString().split('T')[0];
-    form.innerHTML=`<div class="capsule-add-form"><textarea id="new-capsule-text" placeholder="写给未来的自己..."></textarea><input type="date" id="new-capsule-date" min="${minDate}"><div style="margin-top:8px"><input class="add-input" id="new-capsule-label" placeholder="标签（选填，如：半年、生日）" style="width:100%;padding:10px;border:1px solid var(--border-light);border-radius:10px;font-family:'SGH',Georgia,serif;font-size:12px;outline:none;background:var(--bg-base);box-sizing:border-box"></div><button class="step-btn" onclick="addCapsule()" style="margin-top:8px">封存这封信</button></div>`;
-  }else{form.style.display='none'}
-}
-function addCapsule(){
-  const text=document.getElementById('new-capsule-text').value;
-  const date=document.getElementById('new-capsule-date').value;
-  const label=document.getElementById('new-capsule-label').value;
-  if(!text||!date){alert('请写点内容并选择日期');return;}
-  timeCapsules.push({date,label:label||'',text});
-  document.getElementById('add-capsule-form').style.display='none';
-  renderTimeCapsules();saveApp();
-}
-
 // ===== ANNIVERSARY SPLASH =====
 function checkAnniversarySplash(){
   const now=new Date();

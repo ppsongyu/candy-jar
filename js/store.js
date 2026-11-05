@@ -186,7 +186,15 @@ function claudeApply(a){
       const i=claudeFind(milestonesData,m=>m.text,d.text);if(i<0) return '没找到这个纪念日';
       milestonesData.splice(i,1);return '删了纪念日';
     }
-    case 'capsule_add':timeCapsules.push({date:d.date,label:d.label||'',text:d.text});return '埋了时间胶囊';
+    case 'capsule_add':{
+      // 宝宝克写的信：纸、花样、墨水、邮票他自己挑；没挑的用奶白横线深墨灰。
+      const L={id:'c'+(d.at||Date.now()).toString(36)+Math.random().toString(36).slice(2,6),v:2,
+        label:d.label||'',date:d.date,text:d.text,written:d.written||'',from:'克',to:d.to==='克'?'克':'雨',
+        sal:d.sal||'',close:d.close||'',sign:d.sign||'宝宝克',
+        paper:d.paper||'cream',pat:d.pat||'line',ink:d.ink||'graphite',stamp:d.stamp||'pine',opened:false};
+      if(typeof lbDress==='function')lbDress(L);
+      timeCapsules.push(L);return '寄了一封信';
+    }
     case 'fortune':claudeFortunes[d.dateKey]=d.text;return '写了今日一签';
     case 'pig_meal':{
       if(!pigBellyData[d.dateKey]) pigBellyData[d.dateKey]={};

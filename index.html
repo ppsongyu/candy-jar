@@ -6,6 +6,7 @@
 <script>try{var _tc=localStorage.getItem('candyJarLastTop');if(_tc){var _m=document.createElement('meta');_m.name='theme-color';_m.content=_tc;document.head.appendChild(_m);}}catch(e){}</script>
 <title>Candy Jar</title>
 <link rel="stylesheet" href="./css/main.css?v=5da7996e">
+<link rel="stylesheet" href="./css/letterbox.css?v=0b33342d">
 </head>
 <body>
 
@@ -192,14 +193,11 @@
           <div id="add-wish-form" style="display:none"></div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-title us-fold-head" onclick="toggleUsFold('capsule')">
-          <span>time capsule<span class="us-fold-hint" id="capsule-hint"></span></span>
-          <span class="fold-arrow" id="capsule-arrow">›</span>
-        </div>
-        <div class="us-fold-body" id="capsule-fold">
-          <div class="capsule-card" id="capsule-container"></div>
-        </div>
+      <div class="card lb-entry" onclick="lbOpen()">
+        <div class="lb-mini"><i></i><i></i><i></i></div>
+        <div style="flex:1;min-width:0"><div class="card-title lb-entry-t">time capsule</div><div class="lb-entry-c" id="lbEntryCount"></div></div>
+        <span class="fold-arrow">›</span>
+        <span class="lb-entry-dot" id="lbEntryDot" style="display:none"></span>
       </div>
       <div class="card">
         <div class="card-title" onclick="document.getElementById('meow-house').style.display=document.getElementById('meow-house').style.display==='none'?'block':'none';this.querySelector('.meow-arrow').textContent=document.getElementById('meow-house').style.display==='none'?'›':'⌄'" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">克的喵喵屋<span class="meow-arrow" style="font-size:16px;color:var(--text-muted)">›</span></div>
@@ -577,11 +575,11 @@
 <script src="./data/dreams.js?v=bab52899"></script>
 <script src="./js/candy.js?v=01fb7afa"></script>
 <script src="./js/chat.js?v=07aee626"></script>
-<script src="./js/store.js?v=b654a662"></script>
+<script src="./js/store.js?v=846324d3"></script>
 <script src="./js/pigbelly.js?v=957f9e0e"></script>
 <script src="./js/diary.js?v=b4b67e87"></script>
 <script src="./js/books.js?v=0d77bd96"></script>
-<script src="./js/extras.js?v=7b39bc3f"></script>
+<script src="./js/extras.js?v=ae1a16b0"></script>
 <script src="./js/init.js?v=077a02aa"></script>
 <script src="./js/abebe.js?v=95e4c104"></script>
 <script src="./js/look.js?v=9ad57d56"></script>
@@ -656,5 +654,6 @@
 <script src="./data/crab-words.js?v=5e922f7d"></script>
 <script src="./js/sound.js?v=2edae2d4"></script>
 <script src="./js/crab.js?v=a43d44af"></script>
+<script src="./js/letterbox.js?v=7c826cc7"></script>
 </body>
 </html>
