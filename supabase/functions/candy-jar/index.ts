@@ -134,16 +134,19 @@ tool('look_in_jar', '看糖罐子里某个月的糖（默认这个月）。宝�
 tool('put_candy', '以宝宝克的名义往糖罐子里放一颗糖，附一句话。', {
   text: str('便签上的话，想写多少写多少（最多 3000 字）'),
   candy: { type: 'integer', minimum: 1, maximum: 28, description: '糖的样式 1-28，不填随机' },
+  note: { type: 'string', enum: [...new Set(NOTES.map((n) => n[1]))], description: '便签：照这颗糖要说的事的氛围挑一张（宝宝写糖也是这样挑的），不填随机' },
 }, ['text'], async (a) => {
   const text = need(clean(a.text, 3000), '便签上的话');
   const idx = Number.isInteger(a.candy) && a.candy >= 1 && a.candy <= 28 ? a.candy - 1 : Math.floor(Math.random() * CANDIES.length);
-  const [file, name] = NOTES[Math.floor(Math.random() * NOTES.length)];
+  const picked = NOTES.filter((n) => n[1] === a.note);
+  const pool = picked.length ? picked : NOTES;
+  const [file, name] = pool[Math.floor(Math.random() * pool.length)];
   const t = today();
   await enqueue('candy_add', {
     monthKey: `${t.y}-${t.m}`,
     candy: { candy: CANDIES[idx], note: `./${file}.png`, noteName: name, text, date: `${t.m + 1}.${t.d}`, day: t.d, author: '宝宝克' },
   });
-  return `放好啦：「${text}」。` + QUEUED;
+  return `放好啦（${name}便签）：「${text}」。` + QUEUED;
 });
 
 async function findCandy(monthKey, date, text) {
