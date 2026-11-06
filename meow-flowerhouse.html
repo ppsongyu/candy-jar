@@ -146,7 +146,7 @@ const bigRow=document.getElementById('bigRow');
 BOUQUETS.forEach((b,i)=>{
   const d=document.createElement('div');d.className='big';
   d.innerHTML=mini(b.colors,i)+'<div class="t">'+b.month+' · '+b.name+'</div><div class="d">'+b.date+'</div>';
-  d.onclick=()=>{location.href=b.page;};
+  d.onclick=()=>{location.href=b.page+'?v='+b.date.replace(/\D/g,'');};
   bigRow.appendChild(d);
 });
 // 下一束的空位
