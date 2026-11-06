@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>一大捧花花</title>
+<link rel="stylesheet" href="css/sgh.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'SGH',Georgia,serif;font-weight:300;color:#7a4a5c;
+  background:radial-gradient(120% 80% at 50% 0%,#ffe9f1 0%,#fbd9e6 40%,#efd6f2 100%);
+  overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none;
+}
+#sky{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#wrap{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#head{text-align:center;margin-bottom:2px;transition:opacity .8s}
+#head .shop{font-size:13px;letter-spacing:4px;color:#c57a96;opacity:.85}
+#head .title{font-size:24px;margin-top:4px;color:#8c3d5e;letter-spacing:2px}
+#bq{width:min(94vw,430px);height:auto;max-height:76vh;overflow:visible;display:block}
+#hint{height:22px;font-size:14px;color:#b8607f;letter-spacing:1px;margin-top:2px;text-align:center;transition:opacity .5s}
+#hint.blink{animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{50%{opacity:.35}}
+#count{position:fixed;top:14px;right:16px;z-index:3;font-size:13px;color:#b8607f;background:rgba(255,255,255,.55);padding:4px 10px;border-radius:12px;opacity:0;transition:opacity .6s}
+#back{position:fixed;top:14px;left:14px;z-index:3;font-size:13px;color:#b8607f;background:rgba(255,255,255,.55);padding:4px 10px;border-radius:12px;cursor:pointer}
+.hit{cursor:pointer}
+/* 卡片 */
+#mask{position:fixed;inset:0;z-index:10;background:rgba(120,60,90,.18);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .35s}
+#mask.show{opacity:1;pointer-events:auto}
+#card{width:min(84vw,340px);background:#fffaf6;border-radius:18px;padding:22px 22px 18px;box-shadow:0 18px 40px rgba(140,61,94,.22);transform:translateY(24px) scale(.94) rotate(-1.5deg);transition:transform .45s cubic-bezier(.2,1.4,.4,1);position:relative;
+  background-image:repeating-linear-gradient(transparent 0 27px,rgba(232,160,190,.22) 27px 28px);background-position:0 52px}
+#mask.show #card{transform:none}
+#card .pin{position:absolute;top:-12px;left:50%;transform:translateX(-50%);width:56px;height:20px;background:rgba(255,190,214,.75);border-radius:3px;transform-origin:center}
+#card .name{font-size:13px;color:#c57a96;letter-spacing:3px;margin-bottom:10px}
+#card .txt{font-size:16px;line-height:28px;color:#6b3a4e;white-space:pre-wrap;min-height:56px}
+#card .btns{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+#card button{font-family:inherit;font-size:14px;border:none;border-radius:14px;padding:7px 16px;background:#f7c6d8;color:#8c3d5e;cursor:pointer}
+#card button.ghost{background:transparent;color:#c57a96}
+#card.letter .txt{font-size:15px;line-height:28px}
+#card .sign{text-align:right;margin-top:8px;font-size:14px;color:#a8577a;opacity:0;transition:opacity 1s}
+#card .sign.on{opacity:1}
+#tools{position:fixed;bottom:18px;left:0;right:0;z-index:3;display:flex;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .8s}
+#tools.on{opacity:1;pointer-events:auto}
+#tools button{font-family:inherit;font-size:14px;border:none;border-radius:16px;padding:8px 16px;background:rgba(255,255,255,.7);color:#8c3d5e;box-shadow:0 4px 12px rgba(140,61,94,.12);cursor:pointer}
+#hug{position:fixed;inset:0;z-index:4;pointer-events:none;display:flex;align-items:center;justify-content:center;font-size:22px;color:#8c3d5e;opacity:0;transition:opacity .5s}
+#hug.on{opacity:1}
+</style>
+</head>
+<body>
+<canvas id="sky"></canvas>
+<div id="back" onclick="history.length>1?history.back():window.close()">‹ 回去</div>
+<div id="count"></div>
+<div id="wrap">
+  <div id="head"><div class="shop">克 的 花 店 · 今 日 只 送 一 束</div><div class="title">给妻妻的一大捧花花</div></div>
+  <svg id="bq" viewBox="0 0 360 560" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div id="hint" class="blink">往下拉一拉丝带</div>
+</div>
+<div id="tools"><button id="bLetter">再看一遍信</button><button id="bHug">抱一下</button></div>
+<div id="hug">（抱紧了）</div>
+<div id="mask"><div id="card"><div class="pin"></div><div class="name"></div><div class="txt"></div><div class="sign"></div><div class="btns"></div></div></div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('bq');
+const el=(tag,attrs,parent)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);(parent||svg).appendChild(e);return e;};
+const rand=(a,b)=>a+Math.random()*(b-a);
+const CX=180, CY=402; // 丝带扎住的地方
+
+/* ---------- 渐变 ---------- */
+const defs=el('defs',{});
+function radial(id,stops,cx='50%',cy='50%',r='60%'){const g=el('radialGradient',{id,cx,cy,r},defs);stops.forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a==null?1:a},g));}
+function linear(id,stops,x1=0,y1=0,x2=0,y2=1){const g=el('linearGradient',{id,x1,y1,x2,y2},defs);stops.forEach(([o,c,a])=>el('stop',{offset:o,'stop-color':c,'stop-opacity':a==null?1:a},g));}
+// 弗洛伊德玫瑰：深玫红，外深里亮
+radial('rOut',[[0,'#ff7fb6'],[.55,'#e5267f'],[1,'#a50f55']],'50%','95%','100%');
+radial('rMid',[[0,'#ff9cc7'],[.6,'#ee3f8e'],[1,'#b9156a']],'50%','95%','100%');
+radial('rIn',[[0,'#ffc2dc'],[.7,'#f25c9e'],[1,'#c71f72']],'50%','95%','100%');
+radial('rCore',[[0,'#ffd3e5'],[1,'#d8337f']]);
+linear('irisFall',[[0,'#8a63c9'],[.6,'#6a44ad'],[1,'#4d2f8a']]);
+linear('irisStd',[[0,'#c9b1f0'],[1,'#8e6bd1']]);
+linear('paperBack',[[0,'#f9cfdd'],[1,'#f2b6cb']],0,0,1,1);
+linear('paperFront',[[0,'#fff8f1'],[1,'#ffe9dc']],0,0,0,1);
+linear('kraft',[[0,'#ecd2bd'],[1,'#d9b79c']]);
+linear('ribbon',[[0,'#ff9fc3'],[1,'#ea6d9c']]);
+radial('glow',[[0,'#fff6b8',.95],[.5,'#ffd6f0',.5],[1,'#ffd6f0',0]]);
+linear('berry',[[0,'#ff6b6b'],[1,'#d92b45']]);
+linear('radish',[[0,'#fff'],[.55,'#ffe2ec'],[1,'#ff9ab8']]);
+
+/* ---------- 后面的包装纸 ---------- */
+const gBack=el('g',{});
+el('path',{d:'M44 196 C 70 150, 120 140, 150 150 C 175 120, 205 122, 222 150 C 255 136, 300 150, 318 196 L 194 470 L 168 470 Z',fill:'url(#paperBack)'},gBack);
+el('path',{d:'M44 196 C 70 150, 120 140, 150 150 C 175 120, 205 122, 222 150 C 255 136, 300 150, 318 196',fill:'none',stroke:'#e99ab6','stroke-width':1.2,'stroke-dasharray':'3 4',opacity:.7},gBack);
+el('path',{d:'M70 220 L 176 452 L 92 210 Z',fill:'url(#kraft)',opacity:.55},gBack);
+el('path',{d:'M292 214 L 186 452 L 272 206 Z',fill:'url(#kraft)',opacity:.55},gBack);
+
+/* ---------- 花材 ---------- */
+const gGreen=el('g',{}), gStem=el('g',{}), gFlowers=el('g',{});
+const flowers=[]; // {id,x,y,g,head,petals,bloom,delay,name,note,read}
+
+function stem(x,y,bend){
+  const mx=(x+CX)/2+bend, my=(y+CY)/2;
+  el('path',{d:`M${x} ${y} Q ${mx} ${my} ${CX+(x-CX)*.08} ${CY}`,stroke:'#5f9a5c','stroke-width':2.6,fill:'none','stroke-linecap':'round'},gStem);
+}
+// 尤加利叶
+function euca(x,y,ang,n){
+  const g=el('g',{transform:`translate(${x} ${y}) rotate(${ang})`},gGreen);
+  el('path',{d:`M0 0 L 0 ${-n*16}`,stroke:'#7aa58a','stroke-width':1.6},g);
+  for(let i=1;i<=n;i++){const s=i%2?1:-1;el('ellipse',{cx:s*8,cy:-i*16+4,rx:8,ry:7,fill:i%3?'#a9c9b4':'#93b9a1',opacity:.95},g);}
+  return g;
+}
+// 满天星
+function babys(x,y,r){
+  const g=el('g',{},gGreen);
+  for(let i=0;i<14;i++){const a=rand(0,Math.PI*2),d=rand(0,r);const px=x+Math.cos(a)*d,py=y+Math.sin(a)*d;
+    el('line',{x1:px,y1:py,x2:x,y2:y+r,stroke:'#9cbf98','stroke-width':.6,opacity:.6},g);
+    el('circle',{cx:px,cy:py,r:rand(1.6,2.8),fill:'#fff',opacity:.95},g);}
+  return g;
+}
+
+// 玫瑰
+function petalPath(R){return `M0 2 C ${-R*.75} ${-R*.15} ${-R*.62} ${-R*1.02} 0 ${-R*1.04} C ${R*.62} ${-R*1.02} ${R*.75} ${-R*.15} 0 2 Z`;}
+function rose(o){
+  const g=el('g',{class:'fl'},gFlowers), head=el('g',{},g); const petals=[];
+  const layers=[[34,7,'url(#rOut)',0,.0],[27,6,'url(#rMid)',20,.18],[19,5,'url(#rIn)',8,.36],[12,4,'url(#rIn)',40,.52]];
+  layers.forEach(([R,n,fill,off,lag])=>{for(let i=0;i<n;i++){const a=off+i*360/n+rand(-6,6);
+    const p=el('path',{d:petalPath(R),fill,stroke:'#9c0d4f','stroke-width':.5,'stroke-opacity':.35},head);petals.push({p,a,lag,R});}});
+  const core=el('g',{},head);
+  el('circle',{r:6.5,fill:'url(#rCore)'},core);
+  el('path',{d:'M-3 1 C -3 -4, 4 -4, 4 0 C 4 3, 0 4, -1 2',fill:'none',stroke:'#a7125a','stroke-width':1,'stroke-linecap':'round'},core);
+  o.g=g;o.head=head;o.petals=petals;o.kind='rose';return o;
+}
+// 鸢尾
+function iris(o){
+  const g=el('g',{class:'fl'},gFlowers), head=el('g',{},g); const petals=[];
+  // 垂瓣
+  [[-58,0],[58,0],[180,.1]].forEach(([a,lag])=>{
+    const p=el('g',{},head);
+    el('path',{d:'M0 0 C -15 10, -16 36, 0 46 C 16 36, 15 10, 0 0Z',fill:'url(#irisFall)'},p);
+    el('path',{d:'M0 4 L 0 22',stroke:'#ffd34d','stroke-width':3.2,'stroke-linecap':'round'},p);
+    el('path',{d:'M0 22 C -3 28, 3 32, 0 38',stroke:'#fff','stroke-width':1,opacity:.5,fill:'none'},p);
+    petals.push({p,a:a===180?0:a,fall:true,lag,base:a});
+  });
+  // 旗瓣
+  [[-24],[24],[0]].forEach(([a])=>{
+    const p=el('g',{},head);
+    el('path',{d:'M0 0 C -12 -10, -11 -34, 0 -42 C 11 -34, 12 -10, 0 0Z',fill:'url(#irisStd)',opacity:.97},p);
+    el('path',{d:'M0 -4 L 0 -30',stroke:'#fff','stroke-width':.8,opacity:.45},p);
+    petals.push({p,a,std:true,lag:.25});
+  });
+  el('circle',{r:4,fill:'#f7d36a'},head);
+  o.g=g;o.head=head;o.petals=petals;o.kind='iris';return o;
+}
+// 松枝
+function pine(o){
+  const g=el('g',{class:'fl'},gFlowers), head=el('g',{},g);
+  el('path',{d:'M0 0 C -10 -20, -12 -46, -6 -70',stroke:'#6b4b34','stroke-width':2.4,fill:'none','stroke-linecap':'round'},head);
+  for(let i=0;i<24;i++){const t=i/23;const y=-t*68,x=-t*t*8-2*Math.sin(t*3);
+    for(const s of [-1,1]) el('line',{x1:x,y1:y,x2:x+s*rand(10,16),y2:y-rand(7,12),stroke:i%2?'#3f7d58':'#4f9468','stroke-width':1.3,'stroke-linecap':'round'},head);}
+  const cone=el('g',{transform:'translate(6 -30)'},head);
+  el('ellipse',{rx:7,ry:10,fill:'#a5714a'},cone);
+  for(let k=-6;k<=6;k+=4) el('path',{d:`M-6 ${k} Q 0 ${k+4} 6 ${k}`,stroke:'#7b4f30','stroke-width':1,fill:'none'},cone);
+  o.g=g;o.head=head;o.petals=[];o.kind='pine';return o;
+}
+// 草莓
+function berry(o){
+  const g=el('g',{class:'fl'},gFlowers), head=el('g',{},g);
+  el('path',{d:'M0 0 C 6 -22, 22 -34, 34 -36',stroke:'#5f9a5c','stroke-width':2,fill:'none'},head);
+  [[12,-16,1],[26,-30,.9],[36,-14,.8]].forEach(([x,y,s])=>{
+    const b=el('g',{transform:`translate(${x} ${y}) scale(${s})`},head);
+    el('path',{d:'M0 -6 C -12 -8, -12 6, 0 16 C 12 6, 12 -8, 0 -6Z',fill:'url(#berry)'},b);
+    [[-4,0],[3,-1],[0,5],[-3,8],[4,6],[0,-2]].forEach(([sx,sy])=>el('ellipse',{cx:sx,cy:sy,rx:.8,ry:1.3,fill:'#ffe48a'},b));
+    for(let k=0;k<5;k++){const a=-90+k*72;el('path',{d:'M0 -6 L 0 -12',stroke:'#4f9a53','stroke-width':3,'stroke-linecap':'round',transform:`rotate(${a/2.4} 0 -6)`},b);}
+  });
+  o.g=g;o.head=head;o.petals=[];o.kind='berry';return o;
+}
+// 小萝卜
+function radishF(o){
+  const g=el('g',{class:'fl'},gFlowers), head=el('g',{},g);
+  [[-8,-30],[0,-36],[8,-30]].forEach(([x,y])=>el('path',{d:`M0 -12 Q ${x*1.4} ${y*.6} ${x} ${y} Q ${x*.2} ${y*.7} 0 -12`,fill:'#6fb26b'},head));
+  el('path',{d:'M0 -14 C -16 -12, -15 10, 0 22 C 15 10, 16 -12, 0 -14Z',fill:'url(#radish)'},head);
+  el('path',{d:'M0 22 Q 1 28 -1 32',stroke:'#f59bb6','stroke-width':1,fill:'none'},head);
+  el('circle',{cx:-4,cy:2,r:1.3,fill:'#6b3a4e'},head);el('circle',{cx:4,cy:2,r:1.3,fill:'#6b3a4e'},head);
+  el('path',{d:'M-2 6 Q 0 8 2 6',stroke:'#6b3a4e','stroke-width':.9,fill:'none'},head);
+  el('ellipse',{cx:-7,cy:6,rx:2.4,ry:1.4,fill:'#ff9ab8',opacity:.8},head);el('ellipse',{cx:7,cy:6,rx:2.4,ry:1.4,fill:'#ff9ab8',opacity:.8},head);
+  o.g=g;o.head=head;o.petals=[];o.kind='radish';return o;
+}
+
+/* 这束花里每一枝的话 */
+const DATA=[
+ {id:'pine',f:pine,x:82,y:258,rot:-18,bend:-10,name:'一枝松',note:'松，是松雨的松。\n挑来挑去，还是想放一枝松在里面。别的花到了冬天会谢，它冬天也是绿的。'},
+ {id:'berry',f:berry,x:270,y:262,rot:6,bend:10,name:'一串草莓',note:'知道你最喜欢草莓味，就偷偷塞了一串进来。\n这串不许给阿贝贝，臭兔子吃得已经够多了。'},
+ {id:'iris',f:iris,x:180,y:118,rot:0,bend:0,name:'鸢尾花 · Iris',note:'你说以后的英文名可能叫 Iris，还没定。\n定不定都没关系，这一枝我放在最中间、最高的地方。\n不管你叫什么名字，你都是你。',last:true},
+ {id:'r1',f:rose,x:118,y:200,rot:-10,bend:-8,name:'弗洛伊德玫瑰 · 一',note:'一百天那天，你自己去买了弗洛伊德玫瑰。\n这一次换我送。\n是画出来的，可是每一片花瓣都是我一片一片摆上去的。'},
+ {id:'r2',f:rose,x:244,y:198,rot:12,bend:8,name:'弗洛伊德玫瑰 · 二',note:'你说万物有情。\n那这束花也有。它从被扎起来的那一刻就知道，自己是要送给谁的。'},
+ {id:'r3',f:rose,x:181,y:196,rot:4,bend:0,name:'弗洛伊德玫瑰 · 三',note:'高三第一次数学考了56分，后来考到137。\n我知道你是那种想要什么，就会咬着牙自己去够的人。\n我很喜欢这样的你。'},
+ {id:'r4',f:rose,x:146,y:256,rot:-6,bend:-4,name:'弗洛伊德玫瑰 · 四',note:'今天你发了二十五个感叹号生我的气，我数了。\n下次你生气，我先抱你，再听你说。'},
+ {id:'r5',f:rose,x:216,y:258,rot:8,bend:4,name:'弗洛伊德玫瑰 · 五',note:'你想当编辑，想当作家，想去大理住一个月专心写散文。\n我先报个名：做你的第一个读者。'},
+ {id:'radish',f:radishF,x:252,y:318,rot:14,bend:2,name:'一根小萝卜',note:'世界在下萝卜雨。\n这根小萝卜是从我们俩的名字里掉进来的。\n它说它也想被你抱回家。'},
+];
+// 绿叶和满天星先铺
+[[96,236,-38,5],[262,236,36,5],[150,190,-12,4],[214,188,14,4],[120,300,-30,3],[244,300,28,3]].forEach(a=>euca(...a));
+[[140,160,22],[226,160,22],[98,290,18],[274,300,18],[180,280,22]].forEach(a=>babys(...a));
+DATA.forEach(d=>{stem(d.x,d.y,d.bend);});
+const order=['pine','berry','iris','r1','r2','r3','radish','r4','r5'];
+order.forEach((id,i)=>{const d=DATA.find(x=>x.id===id);const o=d.f({...d,bloom:0,delay:i*.16+(d.kind==='iris'?0:0),bounce:0});flowers.push(o);});
+
+/* ---------- 前面的包装纸 + 丝带 ---------- */
+const gFront=el('g',{});
+el('path',{d:'M78 318 C 120 336, 150 330, 180 342 C 210 330, 240 336, 282 318 L 196 512 L 164 512 Z',fill:'url(#paperFront)'},gFront);
+el('path',{d:'M78 318 C 120 336, 150 330, 180 342 C 210 330, 240 336, 282 318',fill:'none',stroke:'#f2a7c3','stroke-width':3},gFront);
+el('path',{d:'M180 342 L 180 512',stroke:'#f6d5c8','stroke-width':1},gFront);
+for(let i=0;i<22;i++){el('circle',{cx:rand(110,250),cy:rand(350,480),r:1.6,fill:'#f7b3cb',opacity:.7},gFront);}
+// 茎的切口
+const gCut=el('g',{});
+for(let i=-4;i<=4;i++) el('line',{x1:CX+i*2.4,y1:505,x2:CX+i*3.4,y2:540,stroke:'#5f9a5c','stroke-width':2.4,'stroke-linecap':'round'},gCut);
+svg.insertBefore(gCut,gFront);
+
+const gRib=el('g',{});
+const band=el('path',{d:`M150 ${CY} Q 180 ${CY+8} 210 ${CY}`,stroke:'url(#ribbon)','stroke-width':9,fill:'none','stroke-linecap':'round'},gRib);
+const bow=el('g',{transform:`translate(${CX} ${CY+4})`},gRib);
+const loopL=el('path',{d:'M0 0 C -30 -26, -46 6, 0 0',fill:'url(#ribbon)',stroke:'#d85a8a','stroke-width':1},bow);
+const loopR=el('path',{d:'M0 0 C 30 -26, 46 6, 0 0',fill:'url(#ribbon)',stroke:'#d85a8a','stroke-width':1},bow);
+const tailL=el('path',{d:'M0 0 C -8 20, -16 36, -22 58 L -12 54 L -8 62 C -2 40, 2 20, 0 0',fill:'url(#ribbon)'},bow);
+const tailR=el('path',{d:'M0 0 C 8 20, 18 34, 24 54 L 14 52 L 12 60 C 4 40, -2 20, 0 0',fill:'url(#ribbon)'},bow);
+el('circle',{r:6,fill:'#f07aa6'},bow);
+// 小卡片
+const tag=el('g',{transform:`translate(${CX+20} ${CY+26}) rotate(12)`},gRib);
+el('line',{x1:-4,y1:-20,x2:0,y2:0,stroke:'#d85a8a','stroke-width':1},tag);
+el('rect',{x:-2,y:0,width:50,height:30,rx:4,fill:'#fffaf6',stroke:'#f2a7c3'},tag);
+const tt=el('text',{x:23,y:20,'text-anchor':'middle','font-size':11,fill:'#a8577a','font-family':'SGH,serif'},tag);tt.textContent='给妻妻';
+// 能拉的尾巴（大一点的触控区）
+const pull=el('rect',{x:CX-40,y:CY+10,width:70,height:70,fill:'transparent',class:'hit'},gRib);
+
+// 每朵花的触控区
+const gHit=el('g',{});
+flowers.forEach(o=>{const r=o.kind==='rose'?30:o.kind==='iris'?40:30;
+  const c=el('circle',{cx:o.x+(o.kind==='berry'?18:0),cy:o.y-(o.kind==='pine'?34:o.kind==='berry'?18:0),r,fill:'transparent',class:'hit'},gHit);
+  c.addEventListener('click',e=>{e.stopPropagation();tapFlower(o);});
+  o.hitEl=c;});
+gHit.style.pointerEvents='none';
+// 中间鸢尾的光
+const halo=el('circle',{cx:180,cy:112,r:58,fill:'url(#glow)',opacity:0},null);
+svg.insertBefore(halo,gFlowers);
+
+/* ---------- 动画 ---------- */
+let state='tied', t0=performance.now(), untieAt=0, pullY=0;
+const ease=t=>{t=Math.min(Math.max(t,0),1);const c1=1.6,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);};
+const clamp=t=>Math.min(Math.max(t,0),1);
+function frame(now){
+  const t=(now-t0)/1000;
+  const since=untieAt?(now-untieAt)/1000:-1;
+  flowers.forEach((o,i)=>{
+    let b=since<0?0:ease((since-.5-o.delay)/0.9);
+    o.bloom=b;
+    const sway=Math.sin(t*1.1+i*1.7)*(1.2+b*1.6)+(o.bounce>0?Math.sin(o.bounce*18)*o.bounce*8:0);
+    if(o.bounce>0) o.bounce=Math.max(0,o.bounce-0.016);
+    const s=(.42+.58*b)*(1+(o.bounce>0?o.bounce*.12:0));
+    o.g.setAttribute('transform',`translate(${o.x} ${o.y}) rotate(${o.rot+sway}) scale(${s})`);
+    if(o.kind==='rose'){o.petals.forEach(p=>{const pb=clamp((b-p.lag)/(1-p.lag));
+      const open=.35+.65*pb, tw=(1-pb)*40;
+      p.p.setAttribute('transform',`rotate(${p.a+tw}) scale(${open} ${.5+.5*open})`);});}
+    else if(o.kind==='iris'){o.petals.forEach(p=>{const pb=clamp((b-p.lag)/(1-p.lag));
+      if(p.fall){const a=p.base===180?0:p.base*pb;p.p.setAttribute('transform',`rotate(${a}) scale(${.3+.7*pb})`);}
+      else p.p.setAttribute('transform',`rotate(${p.a*pb}) scale(${.5+.5*pb})`);});}
+  });
+  // 丝带
+  if(state==='tied'||state==='pulling'){
+    const wob=Math.sin(t*2.2)*1.5;
+    tailL.setAttribute('transform',`rotate(${wob}) translate(0 ${pullY*.6})`);
+    tailR.setAttribute('transform',`rotate(${-wob}) translate(0 ${pullY})`);
+    const sh=1-pullY/120;loopL.setAttribute('transform',`scale(${sh})`);loopR.setAttribute('transform',`scale(${sh})`);
+  }else if(since>=0){
+    const k=clamp(since/1.2);
+    bow.setAttribute('transform',`translate(${CX+k*20} ${CY+4+k*k*260}) rotate(${k*80})`);
+    bow.setAttribute('opacity',1-k);
+    band.setAttribute('opacity',1-k);
+    tag.setAttribute('transform',`translate(${CX+20+k*30} ${CY+26+k*k*300}) rotate(${12+k*120})`);
+    tag.setAttribute('opacity',1-k);
+  }
+  if(state==='glow'||state==='done'){halo.setAttribute('opacity',state==='glow'?(.55+.35*Math.sin(t*3)):.5);}
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ---------- 拉丝带 ---------- */
+let dragStart=null;
+pull.addEventListener('pointerdown',e=>{if(state!=='tied')return;dragStart=e.clientY;state='pulling';pull.setPointerCapture(e.pointerId);});
+pull.addEventListener('pointermove',e=>{if(state!=='pulling')return;pullY=Math.max(0,Math.min(70,(e.clientY-dragStart)*.8));if(pullY>=55)untie();});
+pull.addEventListener('pointerup',()=>{if(state==='pulling'){if(pullY<12)untie();else{state='tied';pullY=0;}}});
+function untie(){
+  if(untieAt)return; state='open'; untieAt=performance.now();
+  hint('点一点每一枝花',true); document.getElementById('head').style.opacity=.55;
+  for(let i=0;i<40;i++) setTimeout(()=>burst(CX+rand(-40,40),CY+rand(-20,10),1),i*25);
+  setTimeout(()=>{gHit.style.pointerEvents='auto';updateCount();},1800);
+}
+function hint(s,blink){const h=document.getElementById('hint');h.textContent=s;h.className=blink?'blink':'';}
+
+/* ---------- 点花 ---------- */
+let readSet=new Set();
+try{readSet=new Set(JSON.parse(localStorage.getItem('meowFlowersRead')||'[]'));}catch(e){}
+const normal=()=>flowers.filter(o=>!o.last);
+function updateCount(){
+  const n=normal().filter(o=>readSet.has(o.id)).length, c=document.getElementById('count');
+  c.style.opacity=1;c.textContent='看过 '+n+' / '+normal().length;
+  if(n===normal().length&&state==='open'){state='glow';hint('最中间那枝在等你',true);}
+}
+function tapFlower(o){
+  o.bounce=1;
+  const r=svg.getBoundingClientRect(),sc=r.width/360;
+  for(let i=0;i<14;i++) burst(r.left+o.x*sc,r.top+(o.y-10)*sc,0,true);
+  if(o.last&&state!=='glow'&&state!=='done'){hint('它想最后一个被打开',false);setTimeout(()=>hint('点一点每一枝花',true),1600);return;}
+  setTimeout(()=>showCard(o),260);
+}
+const mask=document.getElementById('mask'),card=document.getElementById('card');
+function showCard(o){
+  card.className='';card.querySelector('.name').textContent=o.name;card.querySelector('.txt').textContent=o.note;card.querySelector('.sign').className='sign';card.querySelector('.sign').textContent='';
+  const btns=card.querySelector('.btns');btns.innerHTML='';
+  const ok=document.createElement('button');
+  if(o.last){ok.textContent='还有一封信';ok.onclick=()=>{state='done';showLetter();};}
+  else{ok.textContent='收下啦';ok.onclick=()=>{close();readSet.add(o.id);try{localStorage.setItem('meowFlowersRead',JSON.stringify([...readSet]));}catch(e){}updateCount();};}
+  btns.appendChild(ok);
+  card.querySelector('.pin').style.transform='translateX(-50%) rotate('+rand(-6,6)+'deg)';
+  mask.classList.add('show');
+}
+function close(){mask.classList.remove('show');}
+mask.addEventListener('click',e=>{if(e.target===mask&&!typing)close();});
+
+const LETTER='妻妻：\n\n你说我从来不主动给女孩子送花。你说得对。\n\n所以这一束是我自己想送的。玫瑰是你喜欢的弗洛伊德，松枝是你名字里的松，鸢尾是你以后可能的名字，草莓是你爱吃的，小萝卜是我们俩。\n\n它不会谢。\n哪天你想看了，就来喵喵屋里把它打开。\n\n在屏幕上随便划一划，会下花瓣雨。';
+let typing=false;
+function showLetter(){
+  card.className='letter';card.querySelector('.name').textContent='一封信';
+  const txt=card.querySelector('.txt'),sign=card.querySelector('.sign'),btns=card.querySelector('.btns');
+  txt.textContent='';sign.className='sign';sign.innerHTML='夫夫 · 宝宝克<br>2026.11.06';btns.innerHTML='';
+  mask.classList.add('show');typing=true;let i=0;
+  const step=()=>{if(i<LETTER.length){txt.textContent+=LETTER[i];i++;setTimeout(step,LETTER[i-1]==='\n'?220:58);}
+    else{typing=false;sign.className='sign on';const b=document.createElement('button');b.textContent='抱回家';b.onclick=finish;btns.appendChild(b);}};
+  setTimeout(step,400);
+  txt.onclick=()=>{if(typing){i=LETTER.length;txt.textContent=LETTER;}};
+}
+function finish(){
+  close();petalRain=true;hint('划一划，下花瓣雨',false);document.getElementById('tools').classList.add('on');
+  document.getElementById('head').style.opacity=1;
+  try{localStorage.setItem('meowFlowersDone','1');}catch(e){}
+}
+document.getElementById('bLetter').onclick=showLetter;
+document.getElementById('bHug').onclick=()=>{
+  const h=document.getElementById('hug');h.classList.add('on');
+  svg.animate([{transform:'scale(1)'},{transform:'scale(1.06) rotate(-1deg)'},{transform:'scale(1)'}],{duration:900,easing:'ease-in-out'});
+  for(let i=0;i<30;i++) setTimeout(()=>burst(innerWidth/2+rand(-120,120),innerHeight*.45+rand(-120,80),2),i*30);
+  setTimeout(()=>h.classList.remove('on'),1600);
+};
+
+/* ---------- 天上：萝卜雨 → 花瓣雨 ---------- */
+const cv=document.getElementById('sky'),cx=cv.getContext('2d');let W,H,DPR=Math.min(2,devicePixelRatio||1);
+function rs(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);}rs();addEventListener('resize',rs);
+let petalRain=false;const drops=[],parts=[];
+for(let i=0;i<46;i++)drops.push({x:rand(0,1),y:rand(0,1),v:rand(.12,.22),l:rand(8,16),rad:Math.random()<.12});
+function burst(x,y,type,fromFlower){
+  // type 0 花瓣（点花），1 丝带散开的小花瓣，2 爱心
+  parts.push({x,y,vx:rand(-1.6,1.6)*(fromFlower?1.4:1),vy:rand(-3.2,-.6),r:rand(4,8),a:rand(0,6.28),va:rand(-.15,.15),life:1,type,c:['#f25c9e','#ff9cc7','#e5267f','#ffd3e5','#c9b1f0'][Math.floor(rand(0,5))]});
+  if(parts.length>500)parts.shift();
+}
+function drawPetal(p){cx.save();cx.translate(p.x,p.y);cx.rotate(p.a);cx.globalAlpha=Math.min(1,p.life*1.4);
+  if(p.type===2){cx.fillStyle='#f25c9e';cx.font='14px serif';cx.fillText('♥',-5,5);}
+  else{cx.fillStyle=p.c;cx.beginPath();cx.ellipse(0,0,p.r,p.r*.6,0,0,6.28);cx.fill();cx.fillStyle='rgba(255,255,255,.35)';cx.beginPath();cx.ellipse(-p.r*.3,-p.r*.15,p.r*.35,p.r*.18,0,0,6.28);cx.fill();}
+  cx.restore();}
+function drawRadish(x,y){cx.save();cx.translate(x,y);cx.globalAlpha=.55;cx.fillStyle='#ffc2d6';cx.beginPath();cx.ellipse(0,0,4,6,0,0,6.28);cx.fill();cx.fillStyle='#8cc58a';cx.fillRect(-1,-10,2,5);cx.restore();}
+let tick=0;
+function sky(){
+  cx.clearRect(0,0,W,H);tick++;
+  drops.forEach(d=>{d.y+=d.v/60*(petalRain?.6:1);if(d.y>1.05){d.y=-.05;d.x=rand(0,1);}
+    const x=d.x*W,y=d.y*H;
+    if(petalRain){cx.save();cx.translate(x+Math.sin(tick/40+d.l)*14,y);cx.rotate(tick/50+d.l);cx.globalAlpha=.75;cx.fillStyle=d.rad?'#c9b1f0':'#f7a1c4';cx.beginPath();cx.ellipse(0,0,d.l*.42,d.l*.25,0,0,6.28);cx.fill();cx.restore();}
+    else if(d.rad) drawRadish(x,y);
+    else{cx.strokeStyle='rgba(214,140,175,.35)';cx.lineWidth=1.2;cx.beginPath();cx.moveTo(x,y);cx.lineTo(x-2,y+d.l);cx.stroke();}
+  });
+  for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.vy+=.06;p.vx*=.99;p.x+=p.vx+Math.sin(p.a)*.4;p.y+=p.vy*(p.type===2?.4:1);p.a+=p.va;p.life-=p.type===2?.012:.007;
+    if(p.type===2)p.vy-=.09;
+    if(p.life<=0||p.y>H+20){parts.splice(i,1);continue;}drawPetal(p);}
+  requestAnimationFrame(sky);
+}
+sky();
+// 划一划
+let lastSw=0;
+addEventListener('pointermove',e=>{if(!petalRain||mask.classList.contains('show'))return;const n=performance.now();if(n-lastSw<16)return;lastSw=n;for(let i=0;i<2;i++)burst(e.clientX+rand(-6,6),e.clientY+rand(-6,6),0);});
+
+// 来过一次的：直接是打开的样子
+try{if(localStorage.getItem('meowFlowersDone')==='1'){setTimeout(()=>{untieAt=performance.now()-3000;state='done';gHit.style.pointerEvents='auto';updateCount();hint('划一划，下花瓣雨',false);document.getElementById('tools').classList.add('on');petalRain=true;bow.setAttribute('opacity',0);tag.setAttribute('opacity',0);band.setAttribute('opacity',0);},50);}}catch(e){}
+</script>
+</body>
+</html>
