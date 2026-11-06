@@ -77,7 +77,7 @@ body:before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.35;
 </style>
 </head>
 <body>
-<div id="back" onclick="history.length>1?history.back():window.close()">‹ 回去</div>
+<div id="back" onclick="if(window.parent!==window)parent.postMessage('meow-close','*');else if(history.length>1)history.back();else window.close();">‹ 回去</div>
 <div class="sign"><h1>克的花房</h1><p>大的每月21号到，小的不打招呼</p></div>
 
 <div class="tier"><div class="label">每月一大捧</div><div class="row" id="bigRow"></div><div class="plank"></div><div class="legs"><i></i><i></i></div></div>
@@ -146,7 +146,7 @@ const bigRow=document.getElementById('bigRow');
 BOUQUETS.forEach((b,i)=>{
   const d=document.createElement('div');d.className='big';
   d.innerHTML=mini(b.colors,i)+'<div class="t">'+b.month+' · '+b.name+'</div><div class="d">'+b.date+'</div>';
-  d.onclick=()=>{location.href=b.page+'?v='+b.date.replace(/\D/g,'');};
+  d.onclick=()=>{location.href=b.page+'?v='+b.date.replace(/\D/g,'')+'&from=house';};
   bigRow.appendChild(d);
 });
 // 下一束的空位

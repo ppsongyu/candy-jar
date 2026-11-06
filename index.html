@@ -202,7 +202,7 @@
       <div class="card">
         <div class="card-title" onclick="document.getElementById('meow-house').style.display=document.getElementById('meow-house').style.display==='none'?'block':'none';this.querySelector('.meow-arrow').textContent=document.getElementById('meow-house').style.display==='none'?'›':'⌄'" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between">克的喵喵屋<span class="meow-arrow" style="font-size:16px;color:var(--text-muted)">›</span></div>
         <div id="meow-house" style="display:none">
-          <div class="meow-item" onclick="window.open('./meow-flowerhouse.html?v=1106','_blank')">
+          <div class="meow-item" onclick="openMeowRoom('./meow-flowerhouse.html?v=1106b')">
             <div class="meow-info">
               <div class="meow-name">克的花房</div>
               <div class="meow-desc">每月21号一大捧，平时不打招呼的小花，都摆在花架上</div>
@@ -662,5 +662,17 @@
 <script src="./js/sound.js?v=2edae2d4"></script>
 <script src="./js/crab.js?v=a43d44af"></script>
 <script src="./js/letterbox.js?v=7c826cc7"></script>
+<script>
+// 喵喵屋里的房间直接在糖罐子里打开（不跳新窗口，跳出去会白屏）
+function openMeowRoom(url){
+  let o=document.getElementById('meowRoom');
+  if(!o){o=document.createElement('div');o.id='meowRoom';
+    o.style.cssText='position:fixed;inset:0;z-index:99999;background:#fff3f7;';
+    o.innerHTML='<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0;display:block" allow="autoplay"></iframe>';
+    document.body.appendChild(o);}
+  o.style.display='block';o.querySelector('iframe').src=url;
+}
+window.addEventListener('message',e=>{if(e.data==='meow-close'){const o=document.getElementById('meowRoom');if(o){o.style.display='none';o.querySelector('iframe').src='about:blank';}}});
+</script>
 </body>
 </html>

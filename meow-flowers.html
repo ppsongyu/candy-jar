@@ -64,7 +64,7 @@ body{
 </head>
 <body>
 <canvas id="sky"></canvas>
-<div id="back" onclick="history.length>1?history.back():window.close()">‹ 回去</div>
+<div id="back" onclick="if(/from=house/.test(location.search))location.replace('meow-flowerhouse.html?v='+Date.now());else if(window.parent!==window)parent.postMessage('meow-close','*');else if(history.length>1)history.back();else window.close();">‹ 回去</div>
 <div id="count"></div>
 <div id="wrap">
   <div id="head"><div class="shop">克 的 花 店 · 今 日 只 送 一 束</div><div class="title">给妻妻的一大捧花花</div></div>
