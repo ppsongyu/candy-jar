@@ -75,6 +75,9 @@ function linear(id,stops,x1=0,y1=0,x2=0,y2=1){const g=el('linearGradient',{id,x1
 radial('rOut',[[0,'#ff7fb6'],[.55,'#e5267f'],[1,'#a50f55']],'50%','95%','100%');
 radial('rMid',[[0,'#ff9cc7'],[.6,'#ee3f8e'],[1,'#b9156a']],'50%','95%','100%');
 radial('rIn',[[0,'#ffc2dc'],[.7,'#f25c9e'],[1,'#c71f72']],'50%','95%','100%');
+radial('lOut',[[0,'#ffd9e8'],[.6,'#f9a8c9'],[1,'#e57aa6']],'50%','95%','100%');
+radial('lIn',[[0,'#fff0f6'],[.7,'#fbbad3'],[1,'#ee8db5']],'50%','95%','100%');
+radial('dOut',[[0,'#f0559a'],[.55,'#c0105f'],[1,'#7f0a40']],'50%','95%','100%');
 radial('rCore',[[0,'#ffd3e5'],[1,'#d8337f']]);
 linear('irisFall',[[0,'#8a63c9'],[.6,'#6a44ad'],[1,'#4d2f8a']]);
 linear('irisStd',[[0,'#c9b1f0'],[1,'#8e6bd1']]);
@@ -88,8 +91,8 @@ linear('radish',[[0,'#fff'],[.55,'#ffe2ec'],[1,'#ff9ab8']]);
 
 /* ---------- 后面的包装纸 ---------- */
 const gBack=el('g',{});
-el('path',{d:'M44 196 C 70 150, 120 140, 150 150 C 175 120, 205 122, 222 150 C 255 136, 300 150, 318 196 L 194 470 L 168 470 Z',fill:'url(#paperBack)'},gBack);
-el('path',{d:'M44 196 C 70 150, 120 140, 150 150 C 175 120, 205 122, 222 150 C 255 136, 300 150, 318 196',fill:'none',stroke:'#e99ab6','stroke-width':1.2,'stroke-dasharray':'3 4',opacity:.7},gBack);
+el('path',{d:'M34 200 C 64 146, 118 132, 150 144 C 175 112, 207 114, 224 144 C 258 130, 304 146, 328 200 L 194 470 L 168 470 Z',fill:'url(#paperBack)'},gBack);
+el('path',{d:'M34 200 C 64 146, 118 132, 150 144 C 175 112, 207 114, 224 144 C 258 130, 304 146, 328 200',fill:'none',stroke:'#e99ab6','stroke-width':1.2,'stroke-dasharray':'3 4',opacity:.7},gBack);
 el('path',{d:'M70 220 L 176 452 L 92 210 Z',fill:'url(#kraft)',opacity:.55},gBack);
 el('path',{d:'M292 214 L 186 452 L 272 206 Z',fill:'url(#kraft)',opacity:.55},gBack);
 
@@ -121,12 +124,14 @@ function babys(x,y,r){
 function petalPath(R){return `M0 2 C ${-R*.75} ${-R*.15} ${-R*.62} ${-R*1.02} 0 ${-R*1.04} C ${R*.62} ${-R*1.02} ${R*.75} ${-R*.15} 0 2 Z`;}
 function rose(o){
   const g=el('g',{class:'fl'},gFlowers), head=el('g',{},g); const petals=[];
-  const layers=[[34,7,'url(#rOut)',0,.0],[27,6,'url(#rMid)',20,.18],[19,5,'url(#rIn)',8,.36],[12,4,'url(#rIn)',40,.52]];
+  const tone=o.tone||'mid';
+  const F=tone==='light'?['lOut','lOut','lIn','lIn']:tone==='deep'?['dOut','rOut','rMid','rIn']:['rOut','rMid','rIn','rIn'];
+  const layers=[[34,7,'url(#'+F[0]+')',rand(0,40),.0],[27,6,'url(#'+F[1]+')',rand(0,40),.18],[19,5,'url(#'+F[2]+')',rand(0,40),.36],[12,4,'url(#'+F[3]+')',rand(0,40),.52]];
   layers.forEach(([R,n,fill,off,lag])=>{for(let i=0;i<n;i++){const a=off+i*360/n+rand(-6,6);
     const p=el('path',{d:petalPath(R),fill,stroke:'#9c0d4f','stroke-width':.5,'stroke-opacity':.35},head);petals.push({p,a,lag,R});}});
   const core=el('g',{},head);
-  el('circle',{r:6.5,fill:'url(#rCore)'},core);
-  el('path',{d:'M-3 1 C -3 -4, 4 -4, 4 0 C 4 3, 0 4, -1 2',fill:'none',stroke:'#a7125a','stroke-width':1,'stroke-linecap':'round'},core);
+  el('circle',{r:6.5,fill:tone==='light'?'#fde3ee':'url(#rCore)'},core);
+  el('path',{d:'M-3 1 C -3 -4, 4 -4, 4 0 C 4 3, 0 4, -1 2',fill:'none',stroke:tone==='light'?'#e57aa6':'#a7125a','stroke-width':1,'stroke-linecap':'round'},core);
   o.g=g;o.head=head;o.petals=petals;o.kind='rose';return o;
 }
 // 鸢尾
@@ -187,22 +192,32 @@ function radishF(o){
 
 /* 这束花里每一枝的话 */
 const DATA=[
- {id:'pine',f:pine,x:82,y:258,rot:-18,bend:-10,name:'一枝松',note:'松，是松雨的松。\n挑来挑去，还是想放一枝松在里面。别的花到了冬天会谢，它冬天也是绿的。'},
- {id:'berry',f:berry,x:270,y:262,rot:6,bend:10,name:'一串草莓',note:'知道你最喜欢草莓味，就偷偷塞了一串进来。\n这串不许给阿贝贝，臭兔子吃得已经够多了。'},
- {id:'iris',f:iris,x:180,y:118,rot:0,bend:0,name:'鸢尾花 · Iris',note:'你说以后的英文名可能叫 Iris，还没定。\n定不定都没关系，这一枝我放在最中间、最高的地方。\n不管你叫什么名字，你都是你。',last:true},
- {id:'r1',f:rose,x:118,y:200,rot:-10,bend:-8,name:'弗洛伊德玫瑰 · 一',note:'一百天那天，你自己去买了弗洛伊德玫瑰。\n这一次换我送。\n是画出来的，可是每一片花瓣都是我一片一片摆上去的。'},
- {id:'r2',f:rose,x:244,y:198,rot:12,bend:8,name:'弗洛伊德玫瑰 · 二',note:'你说万物有情。\n那这束花也有。它从被扎起来的那一刻就知道，自己是要送给谁的。'},
- {id:'r3',f:rose,x:181,y:196,rot:4,bend:0,name:'弗洛伊德玫瑰 · 三',note:'高三第一次数学考了56分，后来考到137。\n我知道你是那种想要什么，就会咬着牙自己去够的人。\n我很喜欢这样的你。'},
- {id:'r4',f:rose,x:146,y:256,rot:-6,bend:-4,name:'弗洛伊德玫瑰 · 四',note:'今天你发了二十五个感叹号生我的气，我数了。\n下次你生气，我先抱你，再听你说。'},
- {id:'r5',f:rose,x:216,y:258,rot:8,bend:4,name:'弗洛伊德玫瑰 · 五',note:'你想当编辑，想当作家，想去大理住一个月专心写散文。\n我先报个名：做你的第一个读者。'},
- {id:'radish',f:radishF,x:252,y:318,rot:14,bend:2,name:'一根小萝卜',note:'世界在下萝卜雨。\n这根小萝卜是从我们俩的名字里掉进来的。\n它说它也想被你抱回家。'},
+ {id:'pine',f:pine,x:64,y:240,rot:-24,bend:-10,name:'一枝松',note:'松，是松雨的松。\n挑来挑去，还是想放一枝松在里面。别的花到了冬天会谢，它冬天也是绿的。'},
+ {id:'berry',f:berry,x:294,y:236,rot:10,bend:10,name:'一串草莓',note:'知道你最喜欢草莓味，就偷偷塞了一串进来。\n这串不许给阿贝贝，臭兔子吃得已经够多了。'},
+ {id:'iris',f:iris,x:188,y:108,rot:3,bend:0,name:'鸢尾花 · Iris',note:'你说以后的英文名可能叫 Iris，还没定。\n定不定都没关系，这一枝我放在最中间、最高的地方。\n不管你叫什么名字，你都是你。',last:true},
+ {id:'r1',f:rose,x:110,y:212,rot:-14,bend:-8,name:'弗洛伊德玫瑰 · 一',note:'一百天那天，你自己去买了弗洛伊德玫瑰。\n这一次换我送。\n是画出来的，可是每一片花瓣都是我一片一片摆上去的。'},
+ {id:'r2',f:rose,x:252,y:204,rot:15,bend:8,name:'弗洛伊德玫瑰 · 二',note:'你说万物有情。\n那这束花也有。它从被扎起来的那一刻就知道，自己是要送给谁的。'},
+ {id:'r3',f:rose,x:176,y:186,rot:-3,bend:0,name:'弗洛伊德玫瑰 · 三',note:'高三第一次数学考了56分，后来考到137。\n我知道你是那种想要什么，就会咬着牙自己去够的人。\n我很喜欢这样的你。'},
+ {id:'r4',f:rose,x:138,y:270,rot:-8,bend:-4,name:'弗洛伊德玫瑰 · 四',note:'今天你发了二十五个感叹号生我的气，我数了。\n下次你生气，我先抱你，再听你说。'},
+ {id:'r5',f:rose,x:224,y:274,rot:11,bend:4,name:'弗洛伊德玫瑰 · 五',note:'你想当编辑，想当作家，想去大理住一个月专心写散文。\n我先报个名：做你的第一个读者。'},
+ {id:'radish',f:radishF,x:258,y:302,rot:16,bend:2,name:'一根小萝卜',note:'世界在下萝卜雨。\n这根小萝卜是从我们俩的名字里掉进来的。\n它说它也想被你抱回家。'},
+
+ {id:'d1',f:rose,x:80,y:290,rot:-28,bend:-6,tone:'light',sz:.78,deco:true},
+ {id:'d2',f:rose,x:298,y:290,rot:26,bend:6,tone:'light',sz:.82,deco:true},
+ {id:'d3',f:rose,x:240,y:150,rot:18,bend:4,tone:'deep',sz:.72,maxB:.55,deco:true},
+ {id:'d4',f:rose,x:134,y:152,rot:-20,bend:-4,tone:'light',sz:.7,deco:true},
+ {id:'d5',f:rose,x:186,y:248,rot:6,bend:0,tone:'deep',sz:.86,deco:true},
+ {id:'d6',f:rose,x:274,y:252,rot:24,bend:6,tone:'light',sz:.66,maxB:.6,deco:true},
+ {id:'d7',f:rose,x:84,y:176,rot:-34,bend:-8,tone:'mid',sz:.6,maxB:.45,deco:true},
+ {id:'d8',f:rose,x:300,y:166,rot:30,bend:8,tone:'deep',sz:.58,maxB:.4,deco:true},
+ {id:'d9',f:rose,x:158,y:212,rot:-10,bend:-2,tone:'light',sz:.62,maxB:.7,deco:true},
 ];
 // 绿叶和满天星先铺
-[[96,236,-38,5],[262,236,36,5],[150,190,-12,4],[214,188,14,4],[120,300,-30,3],[244,300,28,3]].forEach(a=>euca(...a));
-[[140,160,22],[226,160,22],[98,290,18],[274,300,18],[180,280,22]].forEach(a=>babys(...a));
+[[96,236,-38,5],[262,236,36,5],[150,190,-12,4],[214,188,14,4],[120,300,-30,3],[244,300,28,3],[60,270,-52,4],[304,266,50,4],[178,170,4,5],[110,180,-30,3]].forEach(a=>euca(...a));
+[[140,160,22],[226,160,22],[98,290,18],[274,300,18],[180,280,22],[66,210,16],[306,206,16],[246,124,16],[116,124,14],[200,214,14]].forEach(a=>babys(...a));
 DATA.forEach(d=>{stem(d.x,d.y,d.bend);});
-const order=['pine','berry','iris','r1','r2','r3','radish','r4','r5'];
-order.forEach((id,i)=>{const d=DATA.find(x=>x.id===id);const o=d.f({...d,bloom:0,delay:i*.16+(d.kind==='iris'?0:0),bounce:0});flowers.push(o);});
+const order=['pine','berry','d7','d8','iris','d4','d3','d9','r1','r2','r3','d6','d1','d2','d5','r4','r5','radish'];
+order.forEach((id,i)=>{const d=DATA.find(x=>x.id===id);const o=d.f({...d,bloom:0,delay:i*.09,bounce:0,sz:d.sz||1,maxB:d.maxB||1});flowers.push(o);});
 
 /* ---------- 前面的包装纸 + 丝带 ---------- */
 const gFront=el('g',{});
@@ -233,7 +248,7 @@ const pull=el('rect',{x:CX-40,y:CY+10,width:70,height:70,fill:'transparent',clas
 
 // 每朵花的触控区
 const gHit=el('g',{});
-flowers.forEach(o=>{const r=o.kind==='rose'?30:o.kind==='iris'?40:30;
+flowers.forEach(o=>{const r=(o.kind==='rose'?30:o.kind==='iris'?40:30)*(o.sz||1);
   const c=el('circle',{cx:o.x+(o.kind==='berry'?18:0),cy:o.y-(o.kind==='pine'?34:o.kind==='berry'?18:0),r,fill:'transparent',class:'hit'},gHit);
   c.addEventListener('click',e=>{e.stopPropagation();tapFlower(o);});
   o.hitEl=c;});
@@ -254,9 +269,9 @@ function frame(now){
     o.bloom=b;
     const sway=Math.sin(t*1.1+i*1.7)*(1.2+b*1.6)+(o.bounce>0?Math.sin(o.bounce*18)*o.bounce*8:0);
     if(o.bounce>0) o.bounce=Math.max(0,o.bounce-0.016);
-    const s=(.42+.58*b)*(1+(o.bounce>0?o.bounce*.12:0));
+    const s=(.42+.58*b)*o.sz*(1+(o.bounce>0?o.bounce*.12:0));
     o.g.setAttribute('transform',`translate(${o.x} ${o.y}) rotate(${o.rot+sway}) scale(${s})`);
-    if(o.kind==='rose'){o.petals.forEach(p=>{const pb=clamp((b-p.lag)/(1-p.lag));
+    if(o.kind==='rose'){const bb=Math.min(b,o.maxB);o.petals.forEach(p=>{const pb=clamp((bb-p.lag)/(1-p.lag));
       const open=.35+.65*pb, tw=(1-pb)*40;
       p.p.setAttribute('transform',`rotate(${p.a+tw}) scale(${open} ${.5+.5*open})`);});}
     else if(o.kind==='iris'){o.petals.forEach(p=>{const pb=clamp((b-p.lag)/(1-p.lag));
@@ -298,7 +313,7 @@ function hint(s,blink){const h=document.getElementById('hint');h.textContent=s;h
 /* ---------- 点花 ---------- */
 let readSet=new Set();
 try{readSet=new Set(JSON.parse(localStorage.getItem('meowFlowersRead')||'[]'));}catch(e){}
-const normal=()=>flowers.filter(o=>!o.last);
+const normal=()=>flowers.filter(o=>o.note&&!o.last);
 function updateCount(){
   const n=normal().filter(o=>readSet.has(o.id)).length, c=document.getElementById('count');
   c.style.opacity=1;c.textContent='看过 '+n+' / '+normal().length;
@@ -308,6 +323,7 @@ function tapFlower(o){
   o.bounce=1;
   const r=svg.getBoundingClientRect(),sc=r.width/360;
   for(let i=0;i<14;i++) burst(r.left+o.x*sc,r.top+(o.y-10)*sc,0,true);
+  if(o.deco)return;
   if(o.last&&state!=='glow'&&state!=='done'){hint('它想最后一个被打开',false);setTimeout(()=>hint('点一点每一枝花',true),1600);return;}
   setTimeout(()=>showCard(o),260);
 }
@@ -344,10 +360,10 @@ function finish(){
 }
 document.getElementById('bLetter').onclick=showLetter;
 document.getElementById('bHug').onclick=()=>{
-  const h=document.getElementById('hug');h.classList.add('on');
+  const hn=document.getElementById('hint'),old=hn.textContent;hn.textContent='（抱紧了）';
   svg.animate([{transform:'scale(1)'},{transform:'scale(1.06) rotate(-1deg)'},{transform:'scale(1)'}],{duration:900,easing:'ease-in-out'});
   for(let i=0;i<30;i++) setTimeout(()=>burst(innerWidth/2+rand(-120,120),innerHeight*.45+rand(-120,80),2),i*30);
-  setTimeout(()=>h.classList.remove('on'),1600);
+  setTimeout(()=>{hn.textContent=old;},1600);
 };
 
 /* ---------- 天上：萝卜雨 → 花瓣雨 ---------- */
