@@ -39,7 +39,8 @@
     border:1px solid rgba(194,154,74,.35);border-radius:999px;padding:11px 26px;letter-spacing:.1em;cursor:pointer
   }
   .btns button:active{transform:scale(.96)}
-  canvas#rain{position:fixed;inset:0;pointer-events:none;z-index:5}
+  canvas#rain{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+  .shop,h1,.stage,.hint,.btns{position:relative;z-index:1}
   .overlay{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;
     background:rgba(120,90,30,.28);padding:24px}
   .overlay.show{display:flex;animation:fade .35s ease}
@@ -222,19 +223,19 @@
   function rs(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
   rs();addEventListener('resize',rs);
   const R=(a,b)=>a+Math.random()*(b-a);
-  const cols=['#FFD23F','#FFE27A','#F7C531','#FFF3C4','#FFFFFF','#F2B544','#FFE9A8'];
+  const cols=['#FFFFFF','#FFFFFF','#FFFDF5','#FFF6DC','#FFF3C4','#FFE9A8','#FFE27A','#F7C531'];
   const P=[];
   function add(x,y,big){
     P.push({x,y,vx:R(-1.6,1.6)*(big?1.4:1),vy:R(-3.2,-.6),r:R(3.5,6.5),a:R(0,6.28),va:R(-.15,.15),life:1,c:cols[(Math.random()*cols.length)|0]});
     if(P.length>500)P.shift();
   }
-  const drops=[];for(let i=0;i<40;i++)drops.push({x:Math.random(),y:Math.random(),v:R(.07,.13),l:R(7,12),w:Math.random()<.2});
+  const drops=[];for(let i=0;i<46;i++)drops.push({x:Math.random(),y:Math.random(),v:R(.12,.22),l:R(8,16),w:Math.random()<.5});
   let tick=0;
   function loop(){
     ctx.clearRect(0,0,W,H);tick++;
-    for(const d of drops){d.y+=d.v/60;if(d.y>1.05){d.y=-.05;d.x=Math.random();}
+    for(const d of drops){d.y+=d.v/60*.6;if(d.y>1.05){d.y=-.05;d.x=Math.random();}
       ctx.save();ctx.translate(d.x*W+Math.sin(tick/40+d.l)*14,d.y*H);ctx.rotate(tick/50+d.l);ctx.globalAlpha=.7;
-      ctx.fillStyle=d.w?'#FFF6D6':'#F9D24E';ctx.beginPath();ctx.ellipse(0,0,d.l*.42,d.l*.25,0,0,6.28);ctx.fill();ctx.restore();}
+      ctx.fillStyle=d.w?'#FFFFFF':'#FBDD6E';ctx.beginPath();ctx.ellipse(0,0,d.l*.42,d.l*.25,0,0,6.28);ctx.fill();ctx.restore();}
     for(let i=P.length-1;i>=0;i--){const p=P[i];p.vy+=.06;p.vx*=.99;p.x+=p.vx+Math.sin(p.a)*.4;p.y+=p.vy;p.a+=p.va;p.life-=.007;
       if(p.life<=0||p.y>H+20){P.splice(i,1);continue;}
       ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.globalAlpha=Math.min(1,p.life*1.4);
