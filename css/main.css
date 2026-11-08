@@ -1794,3 +1794,67 @@ body:not([class*="theme-"]) .cv-row.me .cv-msg{color:#fff}
 .cand-ask-btns{display:flex;gap:10px}
 .cand-btn{flex:1;padding:9px 0;border-radius:12px;font-size:12.5px;cursor:pointer;border:1px solid var(--border-light);color:var(--text-secondary,var(--text-muted))}
 .cand-btn.yes{background:var(--pink-400);border-color:var(--pink-400);color:#fff}
+
+/* ===== 阿贝贝页（2026-11-08 手势版）：直接碰阿贝贝，气泡飘在头顶，四个小图标竖在右下角 ===== */
+.abebe-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:58px 0 8px}
+.abebe-bunny{position:relative;width:min(72vw,44vh,330px);aspect-ratio:1;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:pointer}
+.abebe-bunny .abebe-img{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none;transform-origin:50% 90%;animation:abIdle 3.8s ease-in-out infinite}
+@keyframes abIdle{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+.abebe-bunny .abebe-img.night{animation:abIdle 6.5s ease-in-out infinite}
+.abebe-bunny .abebe-img.poke{animation:abPoke .38s ease}
+@keyframes abPoke{0%{transform:scale(1,1)}35%{transform:scale(1.04,.93)}70%{transform:scale(.98,1.03)}100%{transform:scale(1,1)}}
+.abebe-bunny .abebe-img.grumpy{animation:abShake .45s ease}
+@keyframes abShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px) rotate(-2deg)}40%{transform:translateX(6px) rotate(2deg)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.abebe-bunny .abebe-img.comb{animation:abComb 1.1s ease-in-out infinite}
+@keyframes abComb{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-2.2deg) scale(1.01)}75%{transform:rotate(2.2deg) scale(1.01)}}
+.abebe-bunny .abebe-img.shy{animation:abShy .7s ease}
+@keyframes abShy{0%{transform:scale(1)}30%{transform:scale(1.07) translateY(-6px)}60%{transform:scale(.97)}100%{transform:scale(1)}}
+.abebe-bunny .abebe-img.daze{animation:abDaze 4.5s ease-in-out infinite}
+@keyframes abDaze{0%,100%{transform:rotate(0) translateY(0)}50%{transform:rotate(-1.6deg) translateY(3px)}}
+.abebe-bunny .abebe-img.wake{animation:abWake .5s ease}
+@keyframes abWake{0%{transform:translateY(0)}40%{transform:translateY(-14px)}100%{transform:translateY(0)}}
+.abebe-shadow{position:absolute;left:50%;bottom:1%;width:46%;height:7%;margin-left:-23%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(186,120,150,.22) 0%,rgba(186,120,150,.08) 55%,transparent 72%);pointer-events:none;animation:abShSway 3.8s ease-in-out infinite}
+@keyframes abShSway{0%,100%{transform:translateX(-3%)}50%{transform:translateX(3%)}}
+.abebe-shadow.hop{animation:abShHop .5s ease}
+@keyframes abShHop{40%{transform:scale(.72);opacity:.6}}
+.abebe-shadow.squish{animation:abShSq .38s ease}
+@keyframes abShSq{35%{transform:scale(1.12,1)}}
+/* 气泡：飘在头顶，底边离头顶留一道缝；不占位置 */
+.abebe-bunny .abebe-speech{position:absolute;left:50%;top:-14px;bottom:auto;transform:translate(-50%,-100%) translateY(8px);width:max-content;max-width:min(calc(100vw - 150px),240px);min-height:0;margin:0;display:block;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:6;box-sizing:border-box}
+.abebe-bunny .abebe-speech.visible{opacity:1;transform:translate(-50%,-100%) translateY(0)}
+.abebe-bunny .abebe-speech::after{left:50%;bottom:-5px;width:10px;height:10px;transform:translateX(-50%)}
+.abebe-bunny .abebe-speech.think::after{bottom:-9px;width:9px;height:9px;left:46%}
+.abebe-bunny .abebe-speech.think::before{content:'';position:absolute;left:43%;bottom:-17px;width:5px;height:5px;border-radius:50%;background:inherit}
+.abebe-fx{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5}
+.abebe-heart{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;color:var(--pink-400)}
+.abebe-heart svg{width:100%;height:100%;display:block}
+.abebe-charge{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;color:var(--pink-400);transform:scale(.2);opacity:0;transition:transform .7s cubic-bezier(.3,.8,.4,1),opacity .2s}
+.abebe-charge.grow{transform:scale(1);opacity:.85}
+.abebe-charge.shrink{transition:transform .25s ease,opacity .25s;transform:scale(.1);opacity:0}
+.abebe-fluff{position:absolute;border-radius:50%;background:#fff;box-shadow:0 0 4px rgba(242,175,193,.6)}
+.abebe-spark{position:absolute;width:8px;height:8px;margin:-4px 0 0 -4px;color:var(--pink-300)}
+.abebe-ripple{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:1.5px solid var(--pink-300);animation:abRipple .5s ease-out forwards}
+@keyframes abRipple{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+/* 换衣服：软软的云团把她包起来 */
+.abebe-cloud{position:absolute;inset:0;pointer-events:none;z-index:7}
+.abebe-cloud i{position:absolute;border-radius:50%;background:radial-gradient(circle at 42% 40%,rgba(255,255,255,1) 0%,rgba(255,246,249,.97) 40%,rgba(253,230,240,.82) 58%,rgba(253,226,238,0) 71%);filter:blur(1px);opacity:0;transition:transform .7s cubic-bezier(.3,1.3,.5,1),opacity .5s}
+.abebe-cloud.on i{opacity:1;animation:abPuff 2.4s ease-in-out infinite}
+@keyframes abPuff{0%,100%{scale:1}50%{scale:1.07}}
+.abebe-cloud.out i{opacity:0;transition:transform .8s ease-out,opacity .7s}
+.abebe-ctext{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:70%;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;transition:opacity .4s;pointer-events:none;z-index:8}
+.abebe-ctext.on{opacity:1}
+.abebe-cdots{display:flex;gap:9px}
+.abebe-cdots i{width:8px;height:8px;border-radius:50%;background:var(--pink-400);animation:abCdot 1.1s ease-in-out infinite}
+.abebe-cdots i:nth-child(2){animation-delay:.15s}.abebe-cdots i:nth-child(3){animation-delay:.3s}
+@keyframes abCdot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-8px);opacity:1}}
+.abebe-cline{font-size:12px;color:#a8899a;letter-spacing:.5px;text-align:center;line-height:1.7}
+.abebe-hint{position:absolute;left:50%;bottom:-16px;transform:translateX(-50%);white-space:nowrap;font-size:10.5px;color:var(--text-muted);letter-spacing:1px;opacity:0;transition:opacity .8s;pointer-events:none}
+.abebe-hint.on{opacity:1}
+/* 右下角四个小图标，跟左上角消息、衣柜一样的白底小圆 */
+.abebe-tools{position:absolute;right:-4px;bottom:8px;display:flex;flex-direction:column;gap:10px;z-index:6}
+.abebe-tool{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);color:var(--text-secondary);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s}
+.abebe-tool:active{transform:scale(.92)}
+.abebe-msg-btn{left:4px}
+.dream-btn{right:4px}
+.abebe-status-list{margin-bottom:6px;gap:12px}
+@media (max-height:740px){.abebe-stage{padding-top:52px}.content-fixed .abebe-status-list{gap:9px;margin-bottom:4px}}

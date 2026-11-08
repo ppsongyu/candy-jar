@@ -24,6 +24,7 @@
 | `js/games.js` | 糖果接接乐、记忆翻牌 |
 | `js/g2048.js` | 糖糖2048（阿贝贝页的「2048」按钮）：3×3～6×6、每种格子各记最高分、每天第一次玩给1或2个币；存档在 snackData.g2048，棋盘存在手机本地 |
 | `js/wardrobe.js` | 阿贝贝的衣柜：小香兔子卖衣服、衣柜、换装；糖果数量限定款（每月糖到 60/100/160 送一件，换上穿 24 小时，穿完变灰留着；存在 snackData.wardrobe.candy） |
+| `js/abebe-touch.js` | 阿贝贝页手势版：点一下戳戳、来回划梳毛、按住亲亲（冒小爱心）、一阵子不碰自己发呆、头顶气泡、换衣服的软云团、手势小提示（前三次）。它替换了 abebe.js 的 showBubble、extras.js 的 startIdleChatter、wardrobe.js 的 applyOutfit/openWardrobe，所以放在 wardrobe.js 后面加载 |
 | `js/avatar.js` | 头像和情侣名 |
 | `js/weather.js` | 天气 |
 | `js/sound.js` | 声音：四首背景音乐（窗边雨、下午茶、拇指琴、小夜灯）和小音效，全部用代码合成；设置 → 声音；小音效是把别处的函数包一层挂上的 |

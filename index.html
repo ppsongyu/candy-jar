@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <script>try{var _tc=localStorage.getItem('candyJarLastTop');if(_tc){var _m=document.createElement('meta');_m.name='theme-color';_m.content=_tc;document.head.appendChild(_m);}}catch(e){}</script>
 <title>Candy Jar</title>
-<link rel="stylesheet" href="./css/main.css?v=5da7996e">
+<link rel="stylesheet" href="./css/main.css?v=18fdb879">
 <link rel="stylesheet" href="./css/letterbox.css?v=0b33342d">
 </head>
 <body>
@@ -126,18 +126,25 @@
         <div class="abebe-msg-btn abebe-wd-btn" id="abebe-wd-btn" onclick="openWardrobe()" aria-label="阿贝贝的衣柜"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.2a1.8 1.8 0 1 1 1.8-1.8"/><path d="M12 7.2v1.3L3.2 15.4A1.1 1.1 0 0 0 3.9 17.4h16.2a1.1 1.1 0 0 0 .7-2L12 8.5"/></svg></div>
         <div class="abebe-msg-btn abebe-time-btn" id="abebe-time-btn" style="display:none"></div>
         <div class="dream-btn" id="dream-btn" onclick="showDream()">ᶻ 𝗓 𝐙 𝗓 ᶻ</div>
-        <div class="abebe-scene">
-          <div class="abebe-img-wrap"><img class="abebe-img" src="./愉快阿贝贝.png" alt="阿贝贝"></div>
-          <div class="abebe-speech" id="abebe-speech">阿贝贝在等你...</div>
+        <div class="abebe-stage">
+          <div class="abebe-bunny" id="abebe-bunny">
+            <div class="abebe-shadow" id="abebe-shadow"></div>
+            <img class="abebe-img" src="./愉快阿贝贝.png" alt="阿贝贝">
+            <div class="abebe-cloud" id="abebe-cloud"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="abebe-ctext" id="abebe-ctext"><div class="abebe-cdots"><i></i><i></i><i></i></div><div class="abebe-cline" id="abebe-cline"></div></div>
+            <div class="abebe-fx" id="abebe-fx"></div>
+            <div class="abebe-speech" id="abebe-speech"></div>
+            <div class="abebe-hint" id="abebe-hint">点一下戳戳 · 划一划梳毛 · 按住亲亲</div>
+          </div>
+          <div class="abebe-tools">
+            <div class="abebe-tool" onclick="openSnackShop()" aria-label="小卖部"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 5.5 5h13L20 9.5"/><path d="M4 9.5c0 1.4 1.1 2.3 2.3 2.3S8.7 10.9 8.7 9.5c0 1.4 1.1 2.3 2.3 2.3s2.3-.9 2.3-2.3c0 1.4 1.1 2.3 2.3 2.3S18 10.9 18 9.5c0 1.4.9 2.3 2 2.3"/><path d="M5.5 12v7h13v-7"/><path d="M10 19v-4h4v4"/></svg></div>
+            <div class="abebe-tool" onclick="openCandyGame()" aria-label="小糖果"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M8.3 10.4 4 8v8l4.3-2.4M15.7 10.4 20 8v8l-4.3-2.4"/></svg></div>
+            <div class="abebe-tool" onclick="openMemoryGame()" aria-label="翻糖糖"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="9" height="12.5" rx="1.6" transform="rotate(-8 8 12)"/><rect x="11.5" y="5.5" width="9" height="12.5" rx="1.6" transform="rotate(8 16 12)"/></svg></div>
+            <div class="abebe-tool" onclick="open2048()" aria-label="2048"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></svg></div>
+          </div>
         </div>
         <div class="abebe-status-list" id="abebe-status"></div>
-        <div class="abebe-actions" id="abebe-actions"></div>
-        <div class="abebe-actions" style="margin-top:10px">
-          <div class="abebe-action" onclick="openSnackShop()"><div class="abebe-action-text">小卖部</div></div>
-                    <div class="abebe-action" onclick="openCandyGame()"><div class="abebe-action-text">小糖果</div></div>
-          <div class="abebe-action" onclick="openMemoryGame()"><div class="abebe-action-text">翻糖糖</div></div>
-          <div class="abebe-action" onclick="open2048()"><div class="abebe-action-text">2048</div></div>
-        </div>
+        <div class="abebe-actions" id="abebe-actions" style="display:none"></div>
         <div style="height:16px"></div>
       </div>
     </div>
@@ -598,6 +605,7 @@
 <script src="./js/games.js?v=7d3f83b5"></script>
 <script src="./data/outfits.js?v=757cc0b9"></script>
 <script src="./js/wardrobe.js?v=787747f8"></script>
+<script src="./js/abebe-touch.js?v=2cc9a17c"></script>
 <script src="./js/avatar.js?v=d05e40f4"></script>
 <!-- 猪肚记 overlay (body层级) -->
 <div id="pigbelly-overlay" class="overlay">
