@@ -56,20 +56,8 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-cloud.on i{opacity:1;animation:atPuff 2.4s ease-in-out infinite}
 @keyframes atPuff{0%,100%{scale:1}50%{scale:1.07}}
 .at-cloud.out i{opacity:0;transition:transform .8s ease-out,opacity .7s}
-.at-drape{position:absolute;left:9%;right:9%;top:-2%;height:84%;pointer-events:none;z-index:7}
-.at-rod{position:absolute;left:-4%;right:-4%;top:0;height:5px;border-radius:3px;background:#E3B7C8;opacity:0;transition:opacity .3s}
-.at-drape.on .at-rod{opacity:1}
-.at-drape.out .at-rod{opacity:0;transition-delay:.35s}
-.at-cloth{position:absolute;left:0;right:0;top:3px;bottom:0;transform-origin:50% 0;transform:scaleY(0);transition:transform .55s cubic-bezier(.3,1.2,.5,1);background:repeating-linear-gradient(90deg,#F7CFDC 0 14px,#F3C2D2 14px 22px,#F9D9E3 22px 34px);-webkit-mask:radial-gradient(circle at 12px 100%,transparent 9px,#000 9.5px) 0 0/24px 100% repeat-x;mask:radial-gradient(circle at 12px 100%,transparent 9px,#000 9.5px) 0 0/24px 100% repeat-x;box-shadow:inset 0 10px 18px rgba(255,255,255,.5)}
-.at-drape.on .at-cloth{transform:scaleY(1)}
-.at-drape.out .at-cloth{transform-origin:100% 0;transform:scaleX(.08);opacity:.6;transition:transform .55s ease-in,opacity .55s}
-.at-bunny img.shuffle{animation:atShuffle .9s ease-in-out infinite}
-@keyframes atShuffle{0%,100%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
 .at-ctext{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;transition:opacity .4s;pointer-events:none;z-index:8;width:70%}
 .at-ctext.on{opacity:1}
-.at-mode{display:flex;justify-content:center;gap:8px;margin:0 0 12px}
-.at-mode span{font-size:11px;padding:5px 12px;border-radius:12px;border:1px solid #F5C6D8;color:#a8899a}
-.at-mode span.sel{background:#F2AFC1;color:#fff;border-color:#F2AFC1}
 .at-cdots{display:flex;gap:9px}
 .at-cdots i{width:8px;height:8px;border-radius:50%;background:#E8A0BF;animation:atCdot 1.1s ease-in-out infinite}
 .at-cdots i:nth-child(2){animation-delay:.15s}.at-cdots i:nth-child(3){animation-delay:.3s}
@@ -128,7 +116,6 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
       <div class="at-shadow" id="shadow"></div>
       <img id="bimg" src="./outfits/c03.webp" alt="阿贝贝">
       <div class="at-cloud" id="cloud"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      <div class="at-drape" id="drape"><b class="at-rod"></b><div class="at-cloth"></div></div>
       <div class="at-ctext" id="ctext"><div class="at-cdots"><i></i><i></i><i></i></div><div class="at-cline" id="cline"></div></div>
       <div class="at-hint2" id="hint2">点一下戳戳 · 划一划梳毛 · 按住亲亲</div>
       <div class="at-fx" id="fx"></div>
@@ -147,7 +134,7 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 </div>
 <div class="at-toast" id="toast"></div>
 <div class="at-picker" id="picker" onclick="if(event.target===this)this.classList.remove('on')">
-  <div class="at-sheet"><h3>换件衣服试试手势</h3><p>只是试看，不会真的换掉阿贝贝的衣服</p><div class="at-mode" id="mode"><span data-m="cloud" class="sel" onclick="setMode(this)">云团</span><span data-m="drape" onclick="setMode(this)">小帘子</span></div><div class="at-grid" id="grid"></div></div>
+  <div class="at-sheet"><h3>换件衣服试试手势</h3><p>只是试看，不会真的换掉阿贝贝的衣服</p><div class="at-grid" id="grid"></div></div>
 </div>
 
 <script src="./data/abebe-words.js"></script>
@@ -320,7 +307,6 @@ const cloudLines=["阿贝贝钻进云朵里换衣服啦，不许偷看","云朵�
 const changeLines=["阿贝贝躲到帘子后面换衣服啦，不许偷看","帘子后面窸窸窣窣的……","阿贝贝说：等一下等一下，扣子扣歪了","阿贝贝在镜子前面转了一圈又一圈","嘘——阿贝贝在挑配哪双袜子","帘子动了一下，露出一只耳朵，又缩回去了","阿贝贝小声说：你先闭上眼睛"];
 const changedLines=["当当！好看吗","阿贝贝原地转了个圈，差点把自己转晕","阿贝贝低头看看自己，又抬头看看你","新衣服！阿贝贝站得直直的给你看"];
 let wearing=false,changeMode='cloud';
-function setMode(el){changeMode=el.dataset.m;document.querySelectorAll('#mode span').forEach(x=>x.classList.toggle('sel',x===el));}
 const PUFFS=[[2,12,42],[34,0,46],[58,16,40],[0,44,44],[28,30,56],[60,48,40],[12,66,40],[46,64,42]];
 function showChange(){
   $('cline').textContent=rand(changeMode==='cloud'?cloudLines:changeLines);
