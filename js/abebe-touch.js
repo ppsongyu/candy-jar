@@ -6,6 +6,11 @@
 
 const AB_POKE_MORE=["再戳……再戳我就要咬手指了哦","阿贝贝把脸埋进爪子里：不给戳了","阿贝贝鼓起腮帮子，瞪了你一眼","戳戳戳，你是啄木鸟吗","阿贝贝转过身去，只给你看后脑勺"];
 const AB_POKE_MAX=["哼！阿贝贝生气了，要一根胡萝卜才能哄好","阿贝贝跺了跺脚：我要告诉爸爸！","阿贝贝缩成一个球，谁也不理","不理你了不理你了不理你了"];
+const AB_ANGRY_START=["哼！阿贝贝生气了，要一根胡萝卜才能哄好","阿贝贝跺了跺脚：我要告诉爸爸！","不理你了不理你了不理你了","阿贝贝把头一扭：今天不跟你好了"];
+const AB_ANGRY_POKE=["还戳！","阿贝贝把脸埋进耳朵里，假装这里没有兔子","哼。","阿贝贝背着手，看天花板","不听不听，兔子念经","阿贝贝小声说：再戳我就哭给你看","阿贝贝在心里给你记了一笔","现在是生气时间，请勿打扰"];
+const AB_ANGRY_GROOM=["别以为梳毛我就原谅你了","……左边一点。不是，我是说，哼","阿贝贝眯了一下眼睛，又赶紧瞪回去","梳得还行。但我还在生气","阿贝贝的耳朵偷偷软下来了，她自己没发现"];
+const AB_FORGIVE=["……那好吧，就原谅你这一次","阿贝贝憋了半天，还是笑了","哼，下不为例","阿贝贝把脸凑过来：那你再亲一下","原谅你了。但是胡萝卜还是要给的"];
+const AB_GRUDGE=["你刚才戳了我十下，我都记着呢","又来？我还没完全消气哦","阿贝贝翻出小本本：某年某月某日，有人戳我","戳一下可以，戳十下不行"];
 const AB_WAKE=["啊？我刚刚……没在发呆哦","阿贝贝一激灵，耳朵竖了起来","嗯？你叫我啦？","阿贝贝眨眨眼，好像刚从很远的地方回来"];
 const AB_GROOM_DONE=["阿贝贝的毛被梳得蓬蓬的，像一朵云","阿贝贝舒服得眯起眼，差点睡着了","阿贝贝转了一圈给你看：香香的！"];
 const AB_CLOUD_LINES=["阿贝贝钻进云朵里换衣服啦，不许偷看","云朵里面窸窸窣窣的……","阿贝贝说：等一下等一下，扣子扣歪了","云朵鼓了一下，好像有只爪子在里面乱挥","嘘——阿贝贝在挑配哪双袜子","云朵缝里露出一只耳朵，又缩回去了","阿贝贝小声说：你先闭上眼睛"];
@@ -16,7 +21,19 @@ const AB_PUFFS=[[2,12,42],[34,0,46],[58,16,40],[0,44,44],[28,30,56],[60,48,40],[
 
 let abWearing=false, abPendingLine=null, abBubT=null, abEntering=false;
 let abDazing=false, abIdleT=null, abDazeTalkT=null;
-let abPokeTimes=[];
+let abPokeTimes=[], abAngryUntil=0, abForgivenAt=0, abAngryGroom=0;
+const AB_ANGRY_MS=120000, AB_GRUDGE_MS=60000;
+const abAngry=()=>Date.now()<abAngryUntil;
+function abSetAngry(on){
+  const st=abEl('abebe-bunny'); if(st) st.classList.toggle('angry',on);
+  if(on){abAngryUntil=Date.now()+AB_ANGRY_MS;abAngryGroom=0;clearTimeout(abSetAngry._t);abSetAngry._t=setTimeout(()=>{if(!abAngry()) abSetAngry(false);},AB_ANGRY_MS+50);}
+  else{abAngryUntil=0;}
+}
+function abForgive(){
+  abSetAngry(false); abForgivenAt=Date.now(); abPokeTimes=[];
+  abAnim('shy'); showBubble(randFrom(AB_FORGIVE));
+  abebeState.mood=Math.min(100,abebeState.mood+6); renderAbebeStatus(); saveApp();
+}
 const abEl=id=>document.getElementById(id);
 const abImg=()=>document.querySelector('#abebe-bunny .abebe-img');
 const abPageOn=()=>{const p=abEl('page-abebe');return p&&p.classList.contains('active');};
@@ -75,6 +92,7 @@ startIdleChatter=function(){
 };
 function abStartDaze(){
   if(!abPageOn()||abWearing) return;
+  if(abAngry()){startIdleChatter();return;}
   abDazing=true; const img=abImg(); if(img) img.classList.add('daze');
   abebeState.mood=Math.min(100,abebeState.mood+3);
   showBubble((typeof tummyLineNow==='function'&&tummyLineNow(0.5))||randFrom(abebeLines.dazed),true);
@@ -95,14 +113,16 @@ function abWake(){
 // ---- 戳戳：连着戳多了会烦 ----
 function abPoke(x,y){
   abRipple(x,y);
+  if(abAngry()){abAnim('grumpy');showBubble(randFrom(AB_ANGRY_POKE));abAngryUntil=Math.max(abAngryUntil,Date.now()+30000);return;}
   const now=Date.now(); abPokeTimes=abPokeTimes.filter(t=>now-t<8000); abPokeTimes.push(now);
   const n=abPokeTimes.length;
-  if(n>=6){
-    abAnim('grumpy');
-    if(n>=10) abebeState.mood=Math.max(5,abebeState.mood-2);
-    showBubble(randFrom(n>=10?AB_POKE_MAX:AB_POKE_MORE));
-    renderAbebeStatus(); saveApp();
-  }else{abAnim('poke'); abebeAction('poke');}
+  if(abForgivenAt&&now-abForgivenAt<AB_GRUDGE_MS&&n===1){abAnim('grumpy');showBubble(randFrom(AB_GRUDGE));return;}
+  if(n>=10){
+    abAnim('grumpy'); abSetAngry(true);
+    abebeState.mood=Math.max(5,abebeState.mood-4);
+    showBubble(randFrom(AB_ANGRY_START)); renderAbebeStatus(); saveApp();
+  }else if(n>=6){abAnim('grumpy');showBubble(randFrom(AB_POKE_MORE));}
+  else{abAnim('poke'); abebeAction('poke');}
 }
 
 // ---- 手势 ----
@@ -119,7 +139,7 @@ function abPoke(x,y){
     clearTimeout(g.lpT);
     if(g.mode==='kiss') cancelCharge();
     if(!g.mode&&!g.woke&&Date.now()-g.t<350) abPoke(g.lx,g.ly);
-    if(g.mode==='groom'&&!g.groomSaid&&g.path>90) abebeAction('groom');
+    if(g.mode==='groom'&&!g.groomSaid&&g.path>90){if(abAngry()) showBubble(randFrom(AB_ANGRY_GROOM)); else abebeAction('groom');}
     const img=abImg(); if(img) img.classList.remove('comb');
     g=null; startIdleChatter();
   }
@@ -140,7 +160,8 @@ function abPoke(x,y){
         g.fullT=setTimeout(()=>{
           if(!g||g.mode!=='kiss') return;
           c.remove(); g.charge=null; g.mode='kissed';
-          abBurstHearts(g.lx,g.ly-26); abAnim('shy'); abebeAction('kiss');
+          abBurstHearts(g.lx,g.ly-26);
+          if(abAngry()) abForgive(); else {abAnim('shy'); abebeAction('kiss');}
         },LP_FULL);
       },LP_DELAY);
       clearTimeout(abIdleT);clearTimeout(abDazeTalkT);
@@ -155,8 +176,14 @@ function abPoke(x,y){
       if(g.mode==='groom'){
         const img=abImg(); if(img) img.classList.add('comb');
         g.fluffAcc+=d; while(g.fluffAcc>14){g.fluffAcc-=14;abFluff(p.x,p.y);}
-        if(!g.groomSaid&&g.path>320){g.groomSaid=true;abebeAction('groom');}
-        if(g.groomSaid&&!g.groomDone&&g.path>1100){g.groomDone=true;abebeState.mood=Math.min(100,abebeState.mood+3);showBubble(randFrom(AB_GROOM_DONE));renderAbebeStatus();}
+        if(abAngry()){
+          abAngryGroom+=d;
+          if(!g.groomSaid&&g.path>320){g.groomSaid=true;showBubble(randFrom(AB_ANGRY_GROOM));}
+          if(abAngryGroom>1800){abForgive();g.groomDone=true;}
+        }else{
+          if(!g.groomSaid&&g.path>320){g.groomSaid=true;abebeAction('groom');}
+          if(g.groomSaid&&!g.groomDone&&g.path>1100){g.groomDone=true;abebeState.mood=Math.min(100,abebeState.mood+3);showBubble(randFrom(AB_GROOM_DONE));renderAbebeStatus();}
+        }
       }
     });
     bunny.addEventListener('pointerup',end);
