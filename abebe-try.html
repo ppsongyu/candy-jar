@@ -6,7 +6,7 @@
 <title>阿贝贝 · 试看版</title>
 <link rel="stylesheet" href="./css/main.css">
 <style>
-html,body{height:100%;margin:0}
+html,body{height:100%;margin:0;touch-action:manipulation;overscroll-behavior:none}
 body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#FFF8FA 100%);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .at-page{position:relative;height:100dvh;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 18px);box-sizing:border-box;max-width:430px;margin:0 auto}
 .at-head{text-align:center;flex-shrink:0}
@@ -278,6 +278,10 @@ function openPicker(){
 }
 function wear(src){img.src=src;$('picker').classList.remove('on');setTimeout(()=>say(rand(L('visit'))),300);}
 
+// 不让 Safari 双击、双指把页面放大
+['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouchEnd<350)e.preventDefault();lastTouchEnd=n;},{passive:false});
+document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
 setTimeout(()=>say(rand(L('visit'))),500);
 resetIdle();
 </script>
