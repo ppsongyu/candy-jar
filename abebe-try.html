@@ -35,9 +35,11 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-bunny img.wake{animation:atWake .5s ease}
 @keyframes atWake{0%{transform:translateY(0)}40%{transform:translateY(-14px)}100%{transform:translateY(0)}}
 
-.at-bubble{position:absolute;left:50%;top:2px;transform:translate(-50%,-100%) translateY(8px);max-width:min(calc(100vw - 168px),230px);width:max-content;background:#F2AFC1;color:#fff;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,.22);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:5}
+.at-bubble{position:absolute;left:50%;top:-14px;transform:translate(-50%,-100%) translateY(8px);max-width:min(calc(100vw - 168px),230px);width:max-content;background:#F2AFC1;color:#fff;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,.22);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:5}
 .at-bubble.on{opacity:1;transform:translate(-50%,-100%) translateY(0)}
 .at-bubble::after{content:'';position:absolute;left:50%;bottom:-5px;width:10px;height:10px;background:#F2AFC1;border-radius:50%;transform:translateX(-50%)}
+.at-bubble.think::after{bottom:-9px;width:9px;height:9px;left:46%}
+.at-bubble.think::before{content:'';position:absolute;left:43%;bottom:-17px;width:5px;height:5px;background:#F2AFC1;border-radius:50%}
 .at-dots{position:absolute;left:62%;top:6%;font-size:18px;letter-spacing:3px;color:#c9a0b2;opacity:0;transition:opacity .8s;pointer-events:none}
 .at-dots.on{opacity:1}
 .at-dots i{font-style:normal;display:inline-block;animation:atDot 1.6s ease-in-out infinite}
@@ -135,10 +137,10 @@ const bump=(k,n)=>{st[k]=Math.min(100,st[k]+n);renderStatus();};
 
 // 气泡：飘在头顶，说完淡掉，新的直接换掉旧的
 let bubT=null;
-function say(t){
+function say(t,think){
   const b=$('bubble');clearTimeout(bubT);
   b.classList.remove('on');
-  setTimeout(()=>{b.textContent=t;b.classList.add('on');},b.textContent?120:0);
+  setTimeout(()=>{b.textContent=t;b.classList.toggle('think',!!think);b.classList.add('on');},b.textContent?120:0);
   bubT=setTimeout(()=>b.classList.remove('on'),2600+t.length*90);
 }
 function toast(t){const e=$('toast');e.textContent=t+(t.length<6?' · 试看版里先不进去':'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1500);}
@@ -189,8 +191,8 @@ function resetIdle(){
 }
 function startDaze(){
   dazing=true;img.classList.add('daze');$('dots').classList.add('on');
-  say(rand(L('dazed')));
-  const talk=()=>{dazeTalkT=setTimeout(()=>{if(!dazing)return;const h=new Date().getHours();say(rand((h>=22||h<6)?idleNight:idleDay));talk();},16000+Math.random()*10000);};
+  say(rand(L('dazed')),true);
+  const talk=()=>{dazeTalkT=setTimeout(()=>{if(!dazing)return;const h=new Date().getHours();say(rand((h>=22||h<6)?idleNight:idleDay),true);talk();},16000+Math.random()*10000);};
   talk();
 }
 function wakeUp(){
