@@ -8,7 +8,7 @@
 <style>
 html,body{height:100%;margin:0}
 body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#FFF8FA 100%);-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-.at-page{position:relative;height:100dvh;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 18px) 18px calc(env(safe-area-inset-bottom) + 18px);box-sizing:border-box;max-width:430px;margin:0 auto}
+.at-page{position:relative;height:100dvh;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 18px);box-sizing:border-box;max-width:430px;margin:0 auto}
 .at-head{text-align:center;flex-shrink:0}
 .at-title{font-size:30px;letter-spacing:6px;color:#5a4a4f;font-weight:300}
 .at-sub{font-size:13px;letter-spacing:2px;color:#b9a5ad;margin-top:4px}
@@ -19,8 +19,8 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-dream{position:absolute;right:18px;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:20px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:#8a767d;z-index:6;animation:atFloat 3s ease-in-out infinite}
 @keyframes atFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-.at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
-.at-bunny{position:relative;width:min(94vw,56vh,410px);aspect-ratio:1;touch-action:none;cursor:pointer}
+.at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:62px}
+.at-bunny{position:relative;width:min(92vw,50vh,400px);aspect-ratio:1;touch-action:none;cursor:pointer}
 .at-bunny img{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 90%;-webkit-user-drag:none}
 .at-bunny img.poke{animation:atPoke .38s ease}
 @keyframes atPoke{0%{transform:scale(1,1)}35%{transform:scale(1.04,.93)}70%{transform:scale(.98,1.03)}100%{transform:scale(1,1)}}
@@ -82,14 +82,14 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 <body>
 <div class="at-page" id="page">
   <div class="at-head">
-    <div class="at-title">Abebe</div>
-    <div class="at-sub">柔软的兔子王国</div>
+    <div class="topbar-title">Abebe</div>
+    <div class="topbar-sub">柔软的兔子王国</div>
     <div class="at-hint" id="hint">试看版 · 点一下戳戳 · 来回划梳毛 · 按住亲亲</div>
   </div>
 
-  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 96px);left:18px" onclick="toast('试看版里先不聊天哦')" aria-label="聊天"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17.5H4A1.5 1.5 0 0 1 2.5 16V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/><circle cx="12" cy="11.5" r=".6" fill="currentColor"/><circle cx="16" cy="11.5" r=".6" fill="currentColor"/></svg></div>
-  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 140px);left:18px" onclick="openPicker()" aria-label="换衣服试试"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.2a1.8 1.8 0 1 1 1.8-1.8"/><path d="M12 7.2v1.3L3.2 15.4A1.1 1.1 0 0 0 3.9 17.4h16.2a1.1 1.1 0 0 0 .7-2L12 8.5"/></svg></div>
-  <div class="at-dream" style="top:calc(env(safe-area-inset-top) + 98px)">ᶻ 𝗓 𝐙 𝗓 ᶻ</div>
+  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 84px);left:18px" onclick="toast('试看版里先不聊天哦')" aria-label="聊天"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17.5H4A1.5 1.5 0 0 1 2.5 16V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/><circle cx="12" cy="11.5" r=".6" fill="currentColor"/><circle cx="16" cy="11.5" r=".6" fill="currentColor"/></svg></div>
+  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 128px);left:18px" onclick="openPicker()" aria-label="换衣服试试"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.2a1.8 1.8 0 1 1 1.8-1.8"/><path d="M12 7.2v1.3L3.2 15.4A1.1 1.1 0 0 0 3.9 17.4h16.2a1.1 1.1 0 0 0 .7-2L12 8.5"/></svg></div>
+  <div class="at-dream" style="top:calc(env(safe-area-inset-top) + 86px)">ᶻ 𝗓 𝐙 𝗓 ᶻ</div>
 
   <div class="at-stage">
     <div class="at-bunny" id="bunny">
