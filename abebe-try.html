@@ -12,7 +12,6 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-head{text-align:center;flex-shrink:0}
 .at-title{font-size:30px;letter-spacing:6px;color:#5a4a4f;font-weight:300}
 .at-sub{font-size:13px;letter-spacing:2px;color:#b9a5ad;margin-top:4px}
-.at-hint{font-size:10.5px;color:#c9a9b6;letter-spacing:1px;margin-top:8px;transition:opacity .6s}
 
 .at-icon{position:absolute;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#8a767d;cursor:pointer;z-index:6;transition:transform .15s}
 .at-icon:active{transform:scale(.9)}
@@ -23,6 +22,7 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-bunny{position:relative;width:min(74vw,48vh,340px);aspect-ratio:1;touch-action:none;cursor:pointer}
 .at-bunny img{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 90%;-webkit-user-drag:none;animation:atIdle 3.8s ease-in-out infinite}
 @keyframes atIdle{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+.at-bunny img.night{animation:atIdle 6.5s ease-in-out infinite}
 .at-bunny img.poke{animation:atPoke .38s ease}
 @keyframes atPoke{0%{transform:scale(1,1)}35%{transform:scale(1.04,.93)}70%{transform:scale(.98,1.03)}100%{transform:scale(1,1)}}
 .at-bunny img.grumpy{animation:atShake .45s ease}
@@ -41,12 +41,25 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-bubble::after{content:'';position:absolute;left:50%;bottom:-5px;width:10px;height:10px;background:#F2AFC1;border-radius:50%;transform:translateX(-50%)}
 .at-bubble.think::after{bottom:-9px;width:9px;height:9px;left:46%}
 .at-bubble.think::before{content:'';position:absolute;left:43%;bottom:-17px;width:5px;height:5px;background:#F2AFC1;border-radius:50%}
-.at-dots{position:absolute;left:62%;top:6%;font-size:18px;letter-spacing:3px;color:#c9a0b2;opacity:0;transition:opacity .8s;pointer-events:none}
-.at-dots.on{opacity:1}
-.at-dots i{font-style:normal;display:inline-block;animation:atDot 1.6s ease-in-out infinite}
-.at-dots i:nth-child(2){animation-delay:.25s}.at-dots i:nth-child(3){animation-delay:.5s}
 @keyframes atDot{0%,100%{transform:translateY(0);opacity:.35}50%{transform:translateY(-5px);opacity:1}}
 
+
+.at-shadow{position:absolute;left:50%;bottom:1%;width:46%;height:7%;margin-left:-23%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(186,120,150,.22) 0%,rgba(186,120,150,.08) 55%,transparent 72%);pointer-events:none;transform-origin:50% 50%}
+.at-shadow.sway{animation:atShSway 3.8s ease-in-out infinite}
+@keyframes atShSway{0%,100%{transform:translateX(-3%)}50%{transform:translateX(3%)}}
+.at-shadow.hop{animation:atShHop .5s ease}
+@keyframes atShHop{40%{transform:scale(.72);opacity:.6}}
+.at-shadow.squish{animation:atShSq .38s ease}
+@keyframes atShSq{35%{transform:scale(1.12,1)}}
+.at-curtain{position:absolute;inset:4% 8%;border-radius:46%;background:rgba(255,246,250,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .45s ease;z-index:7}
+.at-curtain.on{opacity:1;pointer-events:auto}
+.at-cdots{display:flex;gap:9px}
+.at-cdots i{width:8px;height:8px;border-radius:50%;background:#E8A0BF;animation:atCdot 1.1s ease-in-out infinite}
+.at-cdots i:nth-child(2){animation-delay:.15s}.at-cdots i:nth-child(3){animation-delay:.3s}
+@keyframes atCdot{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-8px);opacity:1}}
+.at-cline{font-size:12px;color:#a8899a;letter-spacing:.5px;text-align:center;max-width:78%;line-height:1.7}
+.at-hint2{position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);white-space:nowrap;font-size:10.5px;color:#c9a9b6;letter-spacing:1px;opacity:0;transition:opacity .8s;pointer-events:none}
+.at-hint2.on{opacity:1}
 .at-fx{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:4}
 .at-heart{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px}
 .at-heart svg{width:100%;height:100%;display:block}
@@ -59,7 +72,7 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 @keyframes atRipple{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
 
 .at-tools{position:absolute;right:-12px;bottom:0;display:flex;flex-direction:column;gap:10px;z-index:6}
-.at-tool{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.75);border:1px solid #F5C6D8;display:flex;align-items:center;justify-content:center;color:#a8899a;font-size:10px;letter-spacing:.3px;cursor:pointer;transition:transform .15s}
+.at-tool{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#8a767d;font-size:10px;letter-spacing:.3px;cursor:pointer;transition:transform .15s}
 .at-tool:active{transform:scale(.9)}
 .at-tool b{font-weight:300;font-size:10.5px}
 
@@ -87,7 +100,6 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
   <div class="at-head">
     <div class="topbar-title">Abebe</div>
     <div class="topbar-sub">柔软的兔子王国</div>
-    <div class="at-hint" id="hint">试看版 · 点一下戳戳 · 来回划梳毛 · 按住亲亲</div>
   </div>
 
   <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 84px);left:6px" onclick="toast('试看版里先不聊天哦')" aria-label="聊天"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17.5H4A1.5 1.5 0 0 1 2.5 16V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/><circle cx="12" cy="11.5" r=".6" fill="currentColor"/><circle cx="16" cy="11.5" r=".6" fill="currentColor"/></svg></div>
@@ -96,8 +108,10 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 
   <div class="at-stage">
     <div class="at-bunny" id="bunny">
+      <div class="at-shadow" id="shadow"></div>
       <img id="bimg" src="./outfits/c03.webp" alt="阿贝贝">
-      <div class="at-dots" id="dots"><i>·</i><i>·</i><i>·</i></div>
+      <div class="at-curtain" id="curtain"><div class="at-cdots"><i></i><i></i><i></i></div><div class="at-cline" id="cline"></div></div>
+      <div class="at-hint2" id="hint2">点一下戳戳 · 划一划梳毛 · 按住亲亲</div>
       <div class="at-fx" id="fx"></div>
       <div class="at-bubble" id="bubble"></div>
     </div>
@@ -105,7 +119,7 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
       <div class="at-tool" onclick="toast('小卖部')" aria-label="小卖部"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 5.5 5h13L20 9.5"/><path d="M4 9.5c0 1.4 1.1 2.3 2.3 2.3S8.7 10.9 8.7 9.5c0 1.4 1.1 2.3 2.3 2.3s2.3-.9 2.3-2.3c0 1.4 1.1 2.3 2.3 2.3S18 10.9 18 9.5c0 1.4.9 2.3 2 2.3"/><path d="M5.5 12v7h13v-7"/><path d="M10 19v-4h4v4"/></svg></div>
       <div class="at-tool" onclick="toast('小糖果')" aria-label="小糖果"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M8.3 10.4 4 8v8l4.3-2.4M15.7 10.4 20 8v8l-4.3-2.4"/></svg></div>
       <div class="at-tool" onclick="toast('翻糖糖')" aria-label="翻糖糖"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="9" height="12.5" rx="1.6" transform="rotate(-8 8 12)"/><rect x="11.5" y="5.5" width="9" height="12.5" rx="1.6" transform="rotate(8 16 12)"/></svg></div>
-      <div class="at-tool" onclick="toast('2048')" aria-label="2048"><b>2048</b></div>
+      <div class="at-tool" onclick="toast('2048')" aria-label="2048"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.6"/><rect x="13" y="4" width="7" height="7" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="13" y="13" width="7" height="7" rx="1.6"/></svg></div>
     </div>
   </div>
 
@@ -147,7 +161,9 @@ function say(t,think){
 function toast(t){const e=$('toast');e.textContent=t+(t.length<6?' · 试看版里先不进去':'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1500);}
 
 const img=$('bimg'),fx=$('fx'),bunny=$('bunny');
-function anim(cls){img.classList.remove('poke','grumpy','shy','wake');void img.offsetWidth;img.classList.add(cls);setTimeout(()=>img.classList.remove(cls),750);}
+const shadow=$('shadow');
+function anim(cls){img.classList.remove('poke','grumpy','shy','wake');void img.offsetWidth;img.classList.add(cls);setTimeout(()=>img.classList.remove(cls),750);
+  const sc={poke:'squish',grumpy:'squish',shy:'hop',wake:'hop'}[cls];if(sc){shadow.classList.remove('hop','squish');void shadow.offsetWidth;shadow.classList.add(sc);setTimeout(()=>shadow.classList.remove(sc),600);}}
 
 // 小爱心：淡淡的、半透明、颜色跟主题粉
 const HEART='<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.5 2.7C19.5 15.9 12 20.5 12 20.5z" fill="#F2AFC1" stroke="#fff" stroke-width="1.2"/></svg>';
@@ -191,14 +207,14 @@ function resetIdle(){
   idleT=setTimeout(startDaze,18000);
 }
 function startDaze(){
-  dazing=true;img.classList.add('daze');$('dots').classList.add('on');
+  dazing=true;img.classList.add('daze');
   say(rand(L('dazed')),true);
   const talk=()=>{dazeTalkT=setTimeout(()=>{if(!dazing)return;const h=new Date().getHours();say(rand((h>=22||h<6)?idleNight:idleDay),true);talk();},16000+Math.random()*10000);};
   talk();
 }
 function wakeUp(){
   if(!dazing) return false;
-  dazing=false;img.classList.remove('daze');$('dots').classList.remove('on');
+  dazing=false;img.classList.remove('daze');
   anim('wake');say(rand(wakeLines));return true;
 }
 
@@ -219,7 +235,7 @@ const LP_DELAY=180, LP_FULL=720, MOVE_TOL=12;
 function pos(e){const r=bunny.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
 bunny.addEventListener('pointerdown',e=>{
   e.preventDefault();bunny.setPointerCapture(e.pointerId);
-  $('hint').style.opacity=0;
+  $('hint2').classList.remove('on');
   const woke=wakeUp();
   const p=pos(e);
   g={id:e.pointerId,sx:p.x,sy:p.y,lx:p.x,ly:p.y,t:Date.now(),path:0,mode:null,woke,fluffAcc:0,groomSaid:false,charge:null};
@@ -276,15 +292,37 @@ bunny.addEventListener('contextmenu',e=>e.preventDefault());
 function openPicker(){
   const list=[{src:'./愉快阿贝贝.png'}].concat(['c01','c02','c03'].map(id=>({src:'./outfits/'+id+'.webp',th:'./outfits/'+id+'_s.webp'})))
     .concat((typeof OUTFITS!=='undefined'?OUTFITS:[]).map(o=>({src:'./outfits/'+o.id+'.webp'+(o.v?'?v='+o.v:''),th:'./outfits/'+o.id+'_s.webp'+(o.v?'?v='+o.v:'')})));
+  preloadAll(list);
   $('grid').innerHTML=list.map(o=>`<div onclick="wear('${o.src}')"><img src="${o.th||o.src}" loading="lazy"></div>`).join('');
   $('picker').classList.add('on');
 }
-function wear(src){img.src=src;$('picker').classList.remove('on');setTimeout(()=>say(rand(L('visit'))),300);}
+const changeLines=["阿贝贝躲到帘子后面换衣服啦，不许偷看","帘子后面窸窸窣窣的……","阿贝贝说：等一下等一下，扣子扣歪了","阿贝贝在镜子前面转了一圈又一圈","嘘——阿贝贝在挑配哪双袜子","帘子动了一下，露出一只耳朵，又缩回去了","阿贝贝小声说：你先闭上眼睛"];
+const changedLines=["当当！好看吗","阿贝贝原地转了个圈，差点把自己转晕","阿贝贝低头看看自己，又抬头看看你","新衣服！阿贝贝站得直直的给你看"];
+let wearing=false;
+function wear(src){
+  $('picker').classList.remove('on');
+  if(wearing||img.getAttribute('src')===src) return;
+  wearing=true;clearTimeout(bubT);$('bubble').classList.remove('on');$('cline').textContent=rand(changeLines);$('curtain').classList.add('on');
+  const t0=Date.now();let done=false;
+  const finish=()=>{if(done)return;done=true;
+    setTimeout(()=>{img.src=src;
+      setTimeout(()=>{$('curtain').classList.remove('on');anim('wake');
+        const r=bunny.getBoundingClientRect();for(let i=0;i<10;i++)setTimeout(()=>fluff(r.width*(.3+Math.random()*.4),r.height*(.25+Math.random()*.45)),i*40);
+        say(rand(changedLines));wearing=false;},120);
+    },Math.max(0,1100-(Date.now()-t0)));};
+  const pre=new Image();pre.onload=finish;pre.onerror=finish;pre.src=src;setTimeout(finish,8000);
+}
+// 打开衣柜时先把衣服图偷偷下载好
+const preloaded={};
+function preloadAll(list){list.forEach(o=>{if(preloaded[o.src])return;const im=new Image();im.src=o.src;preloaded[o.src]=im;});}
 
 // 不让 Safari 双击、双指把页面放大
 ['gesturestart','gesturechange','gestureend'].forEach(t=>document.addEventListener(t,e=>e.preventDefault(),{passive:false}));
 let lastTouchEnd=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouchEnd<350)e.preventDefault();lastTouchEnd=n;},{passive:false});
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+{const h=new Date().getHours();if(h>=22||h<6)img.classList.add('night');}
+shadow.classList.add('sway');
+try{const n=+(localStorage.getItem('abebeGestureHint')||0);if(n<3){localStorage.setItem('abebeGestureHint',n+1);setTimeout(()=>$('hint2').classList.add('on'),900);setTimeout(()=>$('hint2').classList.remove('on'),9000);}}catch(e){}
 setTimeout(()=>say(rand(L('visit'))),500);
 resetIdle();
 </script>
