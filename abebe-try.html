@@ -21,7 +21,8 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 
 .at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:104px;margin-bottom:14px}
 .at-bunny{position:relative;width:min(74vw,48vh,340px);aspect-ratio:1;touch-action:none;cursor:pointer}
-.at-bunny img{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 90%;-webkit-user-drag:none}
+.at-bunny img{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 90%;-webkit-user-drag:none;animation:atIdle 3.8s ease-in-out infinite}
+@keyframes atIdle{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
 .at-bunny img.poke{animation:atPoke .38s ease}
 @keyframes atPoke{0%{transform:scale(1,1)}35%{transform:scale(1.04,.93)}70%{transform:scale(.98,1.03)}100%{transform:scale(1,1)}}
 .at-bunny img.grumpy{animation:atShake .45s ease}
