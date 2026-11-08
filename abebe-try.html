@@ -16,10 +16,10 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 
 .at-icon{position:absolute;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#8a767d;cursor:pointer;z-index:6;transition:transform .15s}
 .at-icon:active{transform:scale(.9)}
-.at-dream{position:absolute;right:18px;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:20px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:#8a767d;z-index:6;animation:atFloat 3s ease-in-out infinite}
+.at-dream{position:absolute;right:6px;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:20px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:#8a767d;z-index:6;animation:atFloat 3s ease-in-out infinite}
 @keyframes atFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-.at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:62px}
+.at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:84px}
 .at-bunny{position:relative;width:min(82vw,44vh,350px);aspect-ratio:1;touch-action:none;cursor:pointer}
 .at-bunny img{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 90%;-webkit-user-drag:none}
 .at-bunny img.poke{animation:atPoke .38s ease}
@@ -35,7 +35,7 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-bunny img.wake{animation:atWake .5s ease}
 @keyframes atWake{0%{transform:translateY(0)}40%{transform:translateY(-14px)}100%{transform:translateY(0)}}
 
-.at-bubble{position:absolute;left:50%;top:14px;transform:translate(-50%,-100%) translateY(8px);max-width:min(calc(100vw - 190px),214px);width:max-content;background:#F2AFC1;color:#fff;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,.22);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:5}
+.at-bubble{position:absolute;left:50%;top:14px;transform:translate(-50%,-100%) translateY(8px);max-width:min(calc(100vw - 168px),230px);width:max-content;background:#F2AFC1;color:#fff;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,.22);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:5}
 .at-bubble.on{opacity:1;transform:translate(-50%,-100%) translateY(0)}
 .at-bubble::after{content:'';position:absolute;left:50%;bottom:-5px;width:10px;height:10px;background:#F2AFC1;border-radius:50%;transform:translateX(-50%)}
 .at-dots{position:absolute;left:62%;top:6%;font-size:18px;letter-spacing:3px;color:#c9a0b2;opacity:0;transition:opacity .8s;pointer-events:none}
@@ -87,8 +87,8 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
     <div class="at-hint" id="hint">试看版 · 点一下戳戳 · 来回划梳毛 · 按住亲亲</div>
   </div>
 
-  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 84px);left:18px" onclick="toast('试看版里先不聊天哦')" aria-label="聊天"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17.5H4A1.5 1.5 0 0 1 2.5 16V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/><circle cx="12" cy="11.5" r=".6" fill="currentColor"/><circle cx="16" cy="11.5" r=".6" fill="currentColor"/></svg></div>
-  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 128px);left:18px" onclick="openPicker()" aria-label="换衣服试试"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.2a1.8 1.8 0 1 1 1.8-1.8"/><path d="M12 7.2v1.3L3.2 15.4A1.1 1.1 0 0 0 3.9 17.4h16.2a1.1 1.1 0 0 0 .7-2L12 8.5"/></svg></div>
+  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 84px);left:6px" onclick="toast('试看版里先不聊天哦')" aria-label="聊天"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 3.5V17.5H4A1.5 1.5 0 0 1 2.5 16V7A1.5 1.5 0 0 1 4 5.5z"/><circle cx="8" cy="11.5" r=".6" fill="currentColor"/><circle cx="12" cy="11.5" r=".6" fill="currentColor"/><circle cx="16" cy="11.5" r=".6" fill="currentColor"/></svg></div>
+  <div class="at-icon" style="top:calc(env(safe-area-inset-top) + 128px);left:6px" onclick="openPicker()" aria-label="换衣服试试"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7.2a1.8 1.8 0 1 1 1.8-1.8"/><path d="M12 7.2v1.3L3.2 15.4A1.1 1.1 0 0 0 3.9 17.4h16.2a1.1 1.1 0 0 0 .7-2L12 8.5"/></svg></div>
   <div class="at-dream" style="top:calc(env(safe-area-inset-top) + 86px)">ᶻ 𝗓 𝐙 𝗓 ᶻ</div>
 
   <div class="at-stage">
