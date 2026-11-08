@@ -19,8 +19,8 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-dream{position:absolute;right:6px;background:rgba(255,255,255,.7);backdrop-filter:blur(6px);border-radius:20px;padding:4px 10px;font-size:11px;letter-spacing:1px;color:#8a767d;z-index:6;animation:atFloat 3s ease-in-out infinite}
 @keyframes atFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-.at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:84px}
-.at-bunny{position:relative;width:min(82vw,44vh,350px);aspect-ratio:1;touch-action:none;cursor:pointer}
+.at-stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding-top:104px;margin-bottom:14px}
+.at-bunny{position:relative;width:min(74vw,48vh,340px);aspect-ratio:1;touch-action:none;cursor:pointer}
 .at-bunny img{width:100%;height:100%;object-fit:contain;pointer-events:none;transform-origin:50% 90%;-webkit-user-drag:none}
 .at-bunny img.poke{animation:atPoke .38s ease}
 @keyframes atPoke{0%{transform:scale(1,1)}35%{transform:scale(1.04,.93)}70%{transform:scale(.98,1.03)}100%{transform:scale(1,1)}}
@@ -35,7 +35,7 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-bunny img.wake{animation:atWake .5s ease}
 @keyframes atWake{0%{transform:translateY(0)}40%{transform:translateY(-14px)}100%{transform:translateY(0)}}
 
-.at-bubble{position:absolute;left:50%;top:14px;transform:translate(-50%,-100%) translateY(8px);max-width:min(calc(100vw - 168px),230px);width:max-content;background:#F2AFC1;color:#fff;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,.22);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:5}
+.at-bubble{position:absolute;left:50%;top:2px;transform:translate(-50%,-100%) translateY(8px);max-width:min(calc(100vw - 168px),230px);width:max-content;background:#F2AFC1;color:#fff;border-radius:18px;padding:9px 14px;font-size:12px;line-height:1.7;text-align:center;box-shadow:0 4px 16px rgba(212,120,158,.22);opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s ease;z-index:5}
 .at-bubble.on{opacity:1;transform:translate(-50%,-100%) translateY(0)}
 .at-bubble::after{content:'';position:absolute;left:50%;bottom:-5px;width:10px;height:10px;background:#F2AFC1;border-radius:50%;transform:translateX(-50%)}
 .at-dots{position:absolute;left:62%;top:6%;font-size:18px;letter-spacing:3px;color:#c9a0b2;opacity:0;transition:opacity .8s;pointer-events:none}
@@ -55,8 +55,8 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
 .at-ripple{position:absolute;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:1.5px solid rgba(242,175,193,.8);animation:atRipple .5s ease-out forwards}
 @keyframes atRipple{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
 
-.at-tools{display:flex;justify-content:flex-end;gap:10px;margin:4px 2px 12px;flex-shrink:0}
-.at-tool{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.75);border:1px solid #F5C6D8;display:flex;align-items:center;justify-content:center;color:#a8899a;font-size:10px;letter-spacing:.3px;cursor:pointer;transition:transform .15s}
+.at-tools{position:absolute;right:-12px;bottom:0;display:flex;flex-direction:column;gap:10px;z-index:6}
+.at-tool{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.75);border:1px solid #F5C6D8;display:flex;align-items:center;justify-content:center;color:#a8899a;font-size:10px;letter-spacing:.3px;cursor:pointer;transition:transform .15s}
 .at-tool:active{transform:scale(.9)}
 .at-tool b{font-weight:300;font-size:10.5px}
 
@@ -98,14 +98,14 @@ body{overflow:hidden;background:linear-gradient(180deg,#FFF8FA 0%,#F7F1FB 50%,#F
       <div class="at-fx" id="fx"></div>
       <div class="at-bubble" id="bubble"></div>
     </div>
+    <div class="at-tools">
+      <div class="at-tool" onclick="toast('小卖部')" aria-label="小卖部"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 5.5 5h13L20 9.5"/><path d="M4 9.5c0 1.4 1.1 2.3 2.3 2.3S8.7 10.9 8.7 9.5c0 1.4 1.1 2.3 2.3 2.3s2.3-.9 2.3-2.3c0 1.4 1.1 2.3 2.3 2.3S18 10.9 18 9.5c0 1.4.9 2.3 2 2.3"/><path d="M5.5 12v7h13v-7"/><path d="M10 19v-4h4v4"/></svg></div>
+      <div class="at-tool" onclick="toast('小糖果')" aria-label="小糖果"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M8.3 10.4 4 8v8l4.3-2.4M15.7 10.4 20 8v8l-4.3-2.4"/></svg></div>
+      <div class="at-tool" onclick="toast('翻糖糖')" aria-label="翻糖糖"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="9" height="12.5" rx="1.6" transform="rotate(-8 8 12)"/><rect x="11.5" y="5.5" width="9" height="12.5" rx="1.6" transform="rotate(8 16 12)"/></svg></div>
+      <div class="at-tool" onclick="toast('2048')" aria-label="2048"><b>2048</b></div>
+    </div>
   </div>
 
-  <div class="at-tools">
-    <div class="at-tool" onclick="toast('小卖部')" aria-label="小卖部"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5 5.5 5h13L20 9.5"/><path d="M4 9.5c0 1.4 1.1 2.3 2.3 2.3S8.7 10.9 8.7 9.5c0 1.4 1.1 2.3 2.3 2.3s2.3-.9 2.3-2.3c0 1.4 1.1 2.3 2.3 2.3S18 10.9 18 9.5c0 1.4.9 2.3 2 2.3"/><path d="M5.5 12v7h13v-7"/><path d="M10 19v-4h4v4"/></svg></div>
-    <div class="at-tool" onclick="toast('小糖果')" aria-label="小糖果"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M8.3 10.4 4 8v8l4.3-2.4M15.7 10.4 20 8v8l-4.3-2.4"/></svg></div>
-    <div class="at-tool" onclick="toast('翻糖糖')" aria-label="翻糖糖"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="6" width="9" height="12.5" rx="1.6" transform="rotate(-8 8 12)"/><rect x="11.5" y="5.5" width="9" height="12.5" rx="1.6" transform="rotate(8 16 12)"/></svg></div>
-    <div class="at-tool" onclick="toast('2048')" aria-label="2048"><b>2048</b></div>
-  </div>
 
   <div class="at-status" id="status"></div>
 </div>
