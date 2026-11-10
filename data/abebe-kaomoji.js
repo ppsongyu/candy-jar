@@ -4,7 +4,7 @@
 // kiss=按住不放（喜欢妈妈：爱心、黏人） sleepy=深夜（22点到6点）多冒困困的
 // 宝宝雨挑的颜文字按心情混在各组里，和别的一样平等地冒（她说不用专门多弄她的）
 // mama 一栏留着备用：放进去的会更常冒出来
-const ABK_LINE_CHANCE = 0.15;   // 冒原来语录的概率
+const ABK_LINE_CHANCE = 0.3;    // 冒话的概率（宝宝雨定的 7:3）
 const ABK_MAMA_CHANCE = 0.35;   // mama 不空时，从 mama 里挑的概率
 const ABK_SLEEPY_CHANCE = 0.5;  // 深夜时冒困困颜文字的概率
 
