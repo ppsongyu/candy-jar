@@ -377,7 +377,7 @@ function abebeAction(type){
   }
   const lines=abebeLines[abebeLastAction]||abebeLines.hiddenDefault;
   const kao=(typeof abebeKaomoji==='function')&&(type==='poke'||type==='groom'||type==='kiss')&&Math.random()>=ABK_LINE_CHANCE;
-  showBubble((type!=='goodnight'&&tummyLineNow(0.5))||(kao?abebeKaomoji(type):randFrom(lines)));
+  showBubble((type!=='goodnight'&&tummyLineNow(0.5))||(kao?abebeKaomoji(type):((typeof ABEBE_TUTU!=='undefined')&&(type==='poke'||type==='groom'||type==='kiss')&&Math.random()<ABK_TUTU_CHANCE?randFrom(ABEBE_TUTU):randFrom(lines))));
   renderAbebeStatus();
   renderAbebeActions();
   saveApp();
