@@ -376,7 +376,8 @@ function abebeAction(type){
     abebeState.mood=Math.min(100,abebeState.mood+5);
   }
   const lines=abebeLines[abebeLastAction]||abebeLines.hiddenDefault;
-  showBubble((type!=='goodnight'&&tummyLineNow(0.5))||randFrom(lines));
+  const kao=(typeof abebeKaomoji==='function')&&(type==='poke'||type==='groom'||type==='kiss')&&Math.random()>=ABK_LINE_CHANCE;
+  showBubble((type!=='goodnight'&&tummyLineNow(0.5))||(kao?abebeKaomoji(type):randFrom(lines)));
   renderAbebeStatus();
   renderAbebeActions();
   saveApp();
