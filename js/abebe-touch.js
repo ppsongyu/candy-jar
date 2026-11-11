@@ -45,9 +45,22 @@ showBubble=function(text,think){
   clearTimeout(abBubT);
   const had=b.classList.contains('visible');
   b.classList.remove('visible');
-  setTimeout(()=>{b.textContent=text;b.classList.toggle('think',!!think);b.classList.add('visible');},had?140:30);
+  setTimeout(()=>{b.textContent=text;b.classList.toggle('think',!!think);abFitBubble(b);b.classList.add('visible');},had?140:30);
   abBubT=setTimeout(()=>b.classList.remove('visible'),2800+String(text).length*90);
 };
+
+/* 字多的时候气泡往上长会顶出页面：先缩小字、放宽一点；还放不下就限高，能用手指往上滑着看 */
+function abFitBubble(b){
+  b.classList.remove('long');b.style.maxHeight='';b.scrollTop=0;
+  const pg=b.closest('.abebe-page-bg'); if(!pg) return;
+  const dr=abEl('dream-btn');
+  let lim=pg.getBoundingClientRect().top+10;
+  if(dr&&dr.offsetParent) lim=Math.max(lim,dr.getBoundingClientRect().bottom+6);
+  if(b.getBoundingClientRect().top>=lim) return;
+  b.classList.add('long');
+  const r=b.getBoundingClientRect();
+  if(r.top<lim) b.style.maxHeight=Math.max(80,r.bottom-lim)+'px';
+}
 
 function abAnim(cls){
   const img=abImg(); if(!img) return;
@@ -146,6 +159,7 @@ function abPoke(x,y){
   function bind(){
     const bunny=abEl('abebe-bunny'); if(!bunny||bunny._abBound) return; bunny._abBound=true;
     bunny.addEventListener('pointerdown',e=>{
+      if(e.target.closest&&e.target.closest('.abebe-speech.long')) return; /* 长气泡留给手指滑着看 */
       e.preventDefault(); if(abWearing) return;
       try{bunny.setPointerCapture(e.pointerId);}catch(_){}
       const hint=abEl('abebe-hint'); if(hint) hint.classList.remove('on');
