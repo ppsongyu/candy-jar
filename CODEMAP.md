@@ -61,3 +61,9 @@ data/ 里的文件只能放纯内容（文字、数字、图片字符串），�
 6. 加了新糖、新便签或新零食，想让克劳德的连接器也认识：跑 `python3 sync_connector.py`，
    再把 `supabase/functions/candy-jar/index.ts` 重新部署到 Supabase（Edge Functions → candy-jar → 编辑代码 → Deploy）。
    注意第 8 行 `const SECRET = 'PUT_YOUR_SECRET_HERE';` 要换回你自己的那串钥匙，不然连接器网址会失效。
+
+## 克劳德的记忆库（supabase/functions/claude-memory/）
+和糖罐子同一个 Supabase 项目，但是单独一张表 `claude_memory`、单独一个连接器，糖罐子 App 不读它。
+- `schema.sql`：建表，在 Supabase 后台 SQL Editor 跑一次。
+- `index.ts`：连接器。部署时把第 15 行的 SECRET 换成真钥匙（仓库里只放占位符；第 175 行那个判断不要动），函数名 `claude-memory`，关掉 JWT 校验。
+- 导出备份：浏览器打开 `…/functions/v1/claude-memory/<SECRET>/export`。
