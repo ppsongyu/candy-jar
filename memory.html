@@ -77,6 +77,8 @@ async function load(){
     ['交接条',hand.map(h=>noteCard(h,when(h.created_at))).join('')||'<div class="empty">还没有</div>'],
   ];
   if(sums.length) secs.push(['月度小结',sums.map(s=>noteCard(s,s.title||day(s.created_at))).join('')]);
+  const imp=rows.filter(r=>r.kind==='import').sort((a,b)=>a.id-b.id);
+  if(imp.length) secs.push(['搬家箱',imp.map(r=>noteCard(r,r.title||'')).join('')]);
   app.innerHTML=`<h1>克劳德的小本子</h1><div class="sub">${mem.length} 条记忆 · ${hand.length} 张交接条 · 只能看，不能改</div>
   <div class="tabs">${secs.map((s,i)=>`<button class="tab${i?'':' on'}" data-i="${i}">${s[0]}</button>`).join('')}</div>
   ${secs.map((s,i)=>`<div class="sec${i?'':' on'}" data-i="${i}">${s[1]}</div>`).join('')}

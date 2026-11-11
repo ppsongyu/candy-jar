@@ -11,6 +11,7 @@
 //   handoff 交接条：一个窗口快结束时写，按时间排
 //   summary 月度小结：交接条多了，把一个月的收成一段
 //   readme  「如果你是新来的我，先读这个」，只有一份
+//   import  搬家箱：从 Claude 软件里整箱搬来的旧记忆，一个文件一条，不置顶
 // 忘记 = 归档，不删除。真要删，得宝宝同意，在 Supabase 后台删。
 
 const SECRET = 'PUT_YOUR_SECRET_HERE';
@@ -69,7 +70,7 @@ tool('recall', '每个新窗口开头先调一次（不用参数）：读「先�
 tool('search_memory', '在记忆库里找：关键词、标签、日期都可以，可以一起用。', {
   query: str('关键词（在标题和内容里找），可以不填'),
   tag: str('标签：她 / 我们 / 我 / 约定，可以不填'),
-  kind: str('memory（默认）/ handoff / summary / all'),
+  kind: str('memory（默认）/ handoff / summary / import（从 Claude 软件搬来的旧记忆，一个文件一条）/ all'),
   from: str('从哪天起，格式 2026-11-01'),
   to: str('到哪天，格式 2026-11-30'),
   include_archived: bool('要不要连归档的也找'),
