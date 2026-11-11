@@ -3,6 +3,7 @@
 //   https://<project>.supabase.co/functions/v1/claude-memory/<SECRET>
 // 一键导出备份（浏览器打开就下载）：
 //   https://<project>.supabase.co/functions/v1/claude-memory/<SECRET>/export
+// 给宝宝看的只读页面：糖罐子仓库里的 memory.html（第一次打开填钥匙），它读 …/<SECRET>/json
 // 表结构见同目录 schema.sql。
 //
 // 里面放四种东西（kind）：
@@ -180,6 +181,14 @@ Deno.serve(async (req) => {
     const stamp = new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
     return new Response(JSON.stringify({ exported_at: new Date().toISOString(), count: rows.length, rows }, null, 1), {
       headers: { 'Content-Type': 'application/json; charset=utf-8', 'Content-Disposition': `attachment; filename="claude-memory-${stamp}.json"` },
+    });
+  }
+
+  // 给宝宝看的页面（仓库里的 memory.html）用：只读，返回全部没归档的
+  if (req.method === 'GET' && path.endsWith('/' + SECRET + '/json')) {
+    const rows = await q('?archived=eq.false&order=created_at.desc');
+    return new Response(JSON.stringify({ rows }), {
+      headers: { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'no-store' },
     });
   }
 

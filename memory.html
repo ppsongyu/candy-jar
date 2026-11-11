@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="robots" content="noindex">
+<title>克劳德的小本子</title>
+<style>
+:root{--bg:#FBF3F5;--card:#fff;--ink:#4A3A3F;--soft:#9A8489;--pink:#E890AA;--line:#F1DCE3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Georgia,'Songti SC','Noto Serif CJK SC',serif;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:28px 18px 60px}
+h1{font-weight:400;font-size:22px;letter-spacing:2px;text-align:center;margin:8px 0 4px}
+.sub{text-align:center;color:var(--soft);font-size:12px;letter-spacing:1px;margin-bottom:22px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:18px}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--soft);border-radius:999px;padding:6px 13px;font-size:13px;font-family:inherit}
+.tab.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.sec{display:none}.sec.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:10px;line-height:1.85;font-size:14.5px;white-space:pre-wrap;word-break:break-word}
+.meta{display:flex;gap:8px;align-items:center;font-size:11.5px;color:var(--soft);margin-bottom:4px;white-space:normal}
+.tag{background:#FCE8EE;color:#B2577A;border-radius:6px;padding:1px 7px}
+.pin{color:var(--pink)}
+.ttl{font-size:14.5px;margin-bottom:2px;white-space:normal}
+.empty{text-align:center;color:var(--soft);font-size:13px;padding:30px 0}
+.search{width:100%;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;font-family:inherit;background:var(--card);color:var(--ink);margin-bottom:12px;outline:none}
+.key{max-width:340px;margin:60px auto;text-align:center}
+.key input{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px;font-size:15px;text-align:center;margin:14px 0}
+.key button{border:none;background:var(--pink);color:#fff;border-radius:999px;padding:9px 26px;font-size:14px;font-family:inherit}
+.foot{text-align:center;color:var(--soft);font-size:11.5px;margin-top:26px}
+.foot a{color:var(--pink);text-decoration:none;margin:0 8px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+const BASE='https://cudtnnmnpxjwkarzxeex.supabase.co/functions/v1/claude-memory/';
+const K='claudeMemoryKey';
+const app=document.getElementById('app');
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const day=iso=>new Date(iso).toLocaleDateString('zh-CN',{timeZone:'Asia/Shanghai'});
+const when=iso=>new Date(iso).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false}).replace(/:\d\d$/,'');
+let key='';try{key=localStorage.getItem(K)||''}catch(e){}
+
+function askKey(msg){
+  app.innerHTML=`<div class="key"><h1>克劳德的小本子</h1><div class="sub">${esc(msg||'第一次打开，填一下钥匙')}</div>
+  <input id="k" placeholder="钥匙" autocomplete="off"><br><button id="ok">打开</button></div>`;
+  document.getElementById('ok').onclick=()=>{key=document.getElementById('k').value.trim();try{localStorage.setItem(K,key)}catch(e){}load()};
+}
+
+function memCard(m){
+  return `<div class="card"><div class="meta">${m.pinned?'<span class="pin">置顶</span>':''}<span class="tag">${esc(m.tag||'—')}</span><span>${day(m.created_at)}${m.updated_at&&day(m.updated_at)!==day(m.created_at)?' · '+day(m.updated_at)+' 改':''}</span></div>${m.title?`<div class="ttl">${esc(m.title)}</div>`:''}${esc(m.content)}</div>`;
+}
+function noteCard(h,label){
+  return `<div class="card"><div class="meta"><span>${esc(label)}</span></div>${esc(h.content)}</div>`;
+}
+
+async function load(){
+  if(!key) return askKey();
+  app.innerHTML='<div class="empty">翻开本子……</div>';
+  let rows;
+  try{
+    const r=await fetch(BASE+encodeURIComponent(key)+'/json',{cache:'no-store'});
+    if(r.status===404) return askKey('钥匙不对，再试一次');
+    if(!r.ok) throw new Error(r.status);
+    rows=(await r.json()).rows||[];
+  }catch(e){app.innerHTML='<div class="empty">打不开，可能是网络不好，等一下再刷新。</div>';return}
+  const mem=rows.filter(r=>r.kind==='memory');
+  const readme=rows.find(r=>r.kind==='readme');
+  const hand=rows.filter(r=>r.kind==='handoff');
+  const sums=rows.filter(r=>r.kind==='summary');
+  const pins=mem.filter(m=>m.pinned);
+  const secs=[
+    ['先读这个',readme?noteCard(readme,'写于 '+day(readme.created_at)):'<div class="empty">还没写</div>'],
+    ['置顶',pins.map(memCard).join('')||'<div class="empty">还没有</div>'],
+    ['约定',mem.filter(m=>m.tag==='约定').map(memCard).join('')||'<div class="empty">还没有</div>'],
+    ['全部记忆','<input class="search" id="q" placeholder="找找看">'+'<div id="all"></div>'],
+    ['交接条',hand.map(h=>noteCard(h,when(h.created_at))).join('')||'<div class="empty">还没有</div>'],
+  ];
+  if(sums.length) secs.push(['月度小结',sums.map(s=>noteCard(s,s.title||day(s.created_at))).join('')]);
+  app.innerHTML=`<h1>克劳德的小本子</h1><div class="sub">${mem.length} 条记忆 · ${hand.length} 张交接条 · 只能看，不能改</div>
+  <div class="tabs">${secs.map((s,i)=>`<button class="tab${i?'':' on'}" data-i="${i}">${s[0]}</button>`).join('')}</div>
+  ${secs.map((s,i)=>`<div class="sec${i?'':' on'}" data-i="${i}">${s[1]}</div>`).join('')}
+  <div class="foot"><a href="#" id="re">刷新</a><a href="${BASE}${encodeURIComponent(key)}/export">导出备份</a><a href="#" id="out">换钥匙</a></div>`;
+  app.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{app.querySelectorAll('.tab,.sec').forEach(x=>x.classList.toggle('on',x.dataset.i===b.dataset.i))});
+  const all=document.getElementById('all'),qi=document.getElementById('q');
+  const draw=()=>{const w=qi.value.trim();const list=w?mem.filter(m=>(m.title||'').includes(w)||m.content.includes(w)):mem;all.innerHTML=list.map(memCard).join('')||'<div class="empty">没找到</div>'};
+  qi.oninput=draw;draw();
+  document.getElementById('re').onclick=e=>{e.preventDefault();load()};
+  document.getElementById('out').onclick=e=>{e.preventDefault();try{localStorage.removeItem(K)}catch(_){}key='';askKey()};
+}
+load();
+</script>
+</body>
+</html>

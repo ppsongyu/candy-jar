@@ -65,5 +65,6 @@ data/ 里的文件只能放纯内容（文字、数字、图片字符串），�
 ## 克劳德的记忆库（supabase/functions/claude-memory/）
 和糖罐子同一个 Supabase 项目，但是单独一张表 `claude_memory`、单独一个连接器，糖罐子 App 不读它。
 - `schema.sql`：建表，在 Supabase 后台 SQL Editor 跑一次。
-- `index.ts`：连接器。部署时把第 15 行的 SECRET 换成真钥匙（仓库里只放占位符；第 175 行那个判断不要动），函数名 `claude-memory`，关掉 JWT 校验。
+- `index.ts`：连接器。部署时把第 16 行的 SECRET 换成真钥匙（仓库里只放占位符；第 176 行那个判断不要动），函数名 `claude-memory`，关掉 JWT 校验。
 - 导出备份：浏览器打开 `…/functions/v1/claude-memory/<SECRET>/export`。
+- 只读查看页：仓库根目录 `memory.html`（第一次打开填钥匙，存在手机里），读 `…/<SECRET>/json`。
